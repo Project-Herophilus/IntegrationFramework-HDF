@@ -23,6 +23,8 @@ import org.apache.camel.component.hl7.HL7MLLPNettyDecoderFactory;
 import org.apache.camel.component.hl7.HL7MLLPNettyEncoderFactory;
 import org.apache.camel.component.kafka.KafkaComponent;
 import org.apache.camel.component.kafka.KafkaEndpoint;
+import org.apache.camel.component.servlet.CamelHttpTransportServlet;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,14 +65,30 @@ public class CamelConfiguration extends RouteBuilder {
         return kafka;
     }
 
-    private String getKafkaTopicUri(String topic) {
-        return "kafka:" + topic +
-               "?brokers=" +
-               config.getKafkaBrokers();
+    @Bean
+    ServletRegistrationBean camelServlet() {
+        // use a @Bean to register the Camel servlet which we need to do
+        // because we want to use the camel-servlet component for the Camel REST service
+        ServletRegistrationBean mapping = new ServletRegistrationBean();
+        mapping.setName("CamelServlet");
+        mapping.setLoadOnStartup(1);
+        mapping.setServlet(new CamelHttpTransportServlet());
+        mapping.addUrlMappings("/iDaaS/*");
+        return mapping;
     }
 
+    private String getKafkaTopicUri(String topic) {
+        return "kafka:" + topic +
+                "?brokers=" +
+                config.getKafkaBrokers();
+    }
     private String getHL7Uri(int port) {
-        return "netty:tcp://0.0.0.0:" + port + "?sync=true&decoders=#hl7Decoder&encoders=#hl7Encoder";
+        String s = "netty4:tcp://0.0.0.0:" + port + "?sync=true&decoder=#hl7Decoder&encoder=#hl7Encoder";
+        return s;
+    }
+
+    private String getHL7UriDirectory(String dirName) {
+        return "file:src/" + dirName + "?delete=true?noop=true";
     }
 
     /*
@@ -171,21 +189,198 @@ public class CamelConfiguration extends RouteBuilder {
         .setHeader("bodySize").exchangeProperty("bodySize")
         .wireTap("direct:hidn")
     ;
+
+        /*
+         *
+         * HL7 File Based Implementations
+         *  ------------------------------
+         *  HL7 implementation based upon https://camel.apache.org/components/latest/dataformats/hl7-dataformat.html
+         *  Much like the upstream effort this code is based on:
+         *  The fictitious medical org.: MCTN
+         *  The fictitious app: MMS
+         *
+         */
+
+        // ADT
+        from(getHL7UriDirectory(config.getHl7ADT_Directory()))
+             .routeId("hl7FileBasedAdmissions")
+             .convertBodyTo(String.class)
+             // set Auditing Properties
+             .setProperty("processingtype").constant("data")
+             .setProperty("appname").constant("iDAAS-Connect-HL7")
+             .setProperty("industrystd").constant("HL7")
+             .setProperty("messagetrigger").constant("ADT")
+             .setProperty("componentname").simple("${routeId}")
+             .setProperty("processname").constant("Input")
+             .setProperty("camelID").simple("${camelId}")
+             .setProperty("exchangeID").simple("${exchangeId}")
+             .setProperty("internalMsgID").simple("${id}")
+             .setProperty("bodyData").simple("${body}")
+             .setProperty("auditdetails").constant("ADT message received")
+             // iDAAS KIC Event
+             .wireTap("direct:auditing")
+             // Send to Topic
+             .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.adtTopicName}}"))
+        ;
+        // ORM
+        from(getHL7UriDirectory(config.getHl7ORM_Directory()))
+            .routeId("hl7FileBasedOrders")
+            .convertBodyTo(String.class)
+            // set Auditing Properties
+            .setProperty("processingtype").constant("data")
+            .setProperty("appname").constant("iDAAS-Connect-HL7")
+            .setProperty("industrystd").constant("HL7")
+            .setProperty("messagetrigger").constant("ORM")
+            .setProperty("componentname").simple("${routeId}")
+            .setProperty("processname").constant("Input")
+            .setProperty("camelID").simple("${camelId}")
+            .setProperty("exchangeID").simple("${exchangeId}")
+            .setProperty("internalMsgID").simple("${id}")
+            .setProperty("bodyData").simple("${body}")
+            .setProperty("auditdetails").constant("ORM message received")
+            // iDAAS KIC Processing
+            .wireTap("direct:auditing")
+            // Send to Topic
+            .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.ormTopicName}}"))
+        ;
+        // ORU
+        from(getHL7UriDirectory(config.getHl7ORU_Directory()))
+            .routeId("hl7FileBasedResults")
+            .convertBodyTo(String.class)
+            // set Auditing Properties
+            .setProperty("processingtype").constant("data")
+            .setProperty("appname").constant("iDAAS-Connect-HL7")
+            .setProperty("industrystd").constant("HL7")
+            .setProperty("messagetrigger").constant("ORU")
+            .setProperty("componentname").simple("${routeId}")
+            .setProperty("processname").constant("Input")
+            .setProperty("camelID").simple("${camelId}")
+            .setProperty("exchangeID").simple("${exchangeId}")
+            .setProperty("internalMsgID").simple("${id}")
+            .setProperty("bodyData").simple("${body}")
+            .setProperty("auditdetails").constant("ORU message received")
+            // iDAAS KIC Processing
+            .wireTap("direct:auditing")
+            // Send to Topic
+            .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.oruTopicName}}"))
+        ;
+        // MFN
+        from(getHL7UriDirectory(config.getHl7MFN_Directory()))
+            .routeId("hl7FileBasedMasterFiles")
+            .convertBodyTo(String.class)
+            // set Auditing Properties
+            .setProperty("processingtype").constant("data")
+            .setProperty("appname").constant("iDAAS-Connect-HL7")
+            .setProperty("industrystd").constant("HL7")
+            .setProperty("messagetrigger").constant("MFN")
+            .setProperty("componentname").simple("${routeId}")
+            .setProperty("processname").constant("Input")
+            .setProperty("camelID").simple("${camelId}")
+            .setProperty("exchangeID").simple("${exchangeId}")
+            .setProperty("internalMsgID").simple("${id}")
+            .setProperty("bodyData").simple("${body}")
+            .setProperty("auditdetails").constant("MFN message received")
+            // iDAAS KIC Processing
+            .wireTap("direct:auditing")
+            // Send to Topic
+            .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.mfnTopicName}}"))
+        ;
+        // MDM
+        from(getHL7UriDirectory(config.getHl7MDM_Directory()))
+            .routeId("hl7FileBasedMasterDocs")
+            .convertBodyTo(String.class)
+            // set Auditing Properties
+            .setProperty("processingtype").constant("data")
+            .setProperty("appname").constant("iDAAS-Connect-HL7")
+            .setProperty("industrystd").constant("HL7")
+            .setProperty("messagetrigger").constant("MDM")
+            .setProperty("componentname").simple("${routeId}")
+            .setProperty("processname").constant("Input")
+            .setProperty("camelID").simple("${camelId}")
+            .setProperty("exchangeID").simple("${exchangeId}")
+            .setProperty("internalMsgID").simple("${id}")
+            .setProperty("bodyData").simple("${body}")
+            .setProperty("auditdetails").constant("MDM message received")
+            // iDAAS KIC Processing
+            .wireTap("direct:auditing")
+            // Send to Topic
+            .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.mdmTopicName}}"))
+        ;
+        // RDE
+        from(getHL7UriDirectory(config.getHl7RDE_Directory()))
+             .routeId("hl7FilePharmacy")
+             .convertBodyTo(String.class)
+             // set Auditing Properties
+             .setProperty("processingtype").constant("data")
+             .setProperty("appname").constant("iDAAS-Connect-HL7")
+             .setProperty("industrystd").constant("HL7")
+             .setProperty("messagetrigger").constant("RDE")
+             .setProperty("componentname").simple("${routeId}")
+             .setProperty("processname").constant("Input")
+             .setProperty("camelID").simple("${camelId}")
+             .setProperty("exchangeID").simple("${exchangeId}")
+             .setProperty("internalMsgID").simple("${id}")
+             .setProperty("bodyData").simple("${body}")
+             .setProperty("auditdetails").constant("RDE message received")
+             // iDAAS KIC Processing
+             .wireTap("direct:auditing")
+             // Send to Topic
+             .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.rdeTopicName}}"))
+        ;
+        // SCH
+        from(getHL7UriDirectory(config.getHl7SCH_Directory()))
+            .routeId("hl7FileSchedules")
+            .convertBodyTo(String.class)
+            // set Auditing Properties
+            .setProperty("processingtype").constant("data")
+            .setProperty("appname").constant("iDAAS-Connect-HL7")
+            .setProperty("industrystd").constant("HL7")
+            .setProperty("messagetrigger").constant("SCH")
+            .setProperty("componentname").simple("${routeId}")
+            .setProperty("processname").constant("Input")
+            .setProperty("camelID").simple("${camelId}")
+            .setProperty("exchangeID").simple("${exchangeId}")
+            .setProperty("internalMsgID").simple("${id}")
+            .setProperty("bodyData").simple("${body}")
+            .setProperty("auditdetails").constant("SCH message received")
+            // iDAAS KIC Processing
+            .wireTap("direct:auditing")
+            // Send to Topic
+            .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.schTopicName}}"))
+        ;
+        // VXU
+        from(getHL7UriDirectory(config.getHl7VXU_Directory()))
+            .routeId("hl7FileVaccinations")
+            .convertBodyTo(String.class)
+            // set Auditing Properties
+            .setProperty("processingtype").constant("data")
+            .setProperty("appname").constant("iDAAS-Connect-HL7")
+            .setProperty("industrystd").constant("HL7")
+            .setProperty("messagetrigger").constant("VXU")
+            .setProperty("componentname").simple("${routeId}")
+            .setProperty("processname").constant("Input")
+             .setProperty("camelID").simple("${camelId}")
+             .setProperty("exchangeID").simple("${exchangeId}")
+             .setProperty("internalMsgID").simple("${id}")
+             .setProperty("bodyData").simple("${body}")
+             .setProperty("auditdetails").constant("VXU message received")
+             // iDAAS KIC Processing
+             .wireTap("direct:auditing")
+             // Send to Topic
+             .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.vxuTopicName}}"))
+        ;
+
         /*
          *
          * HL7 v2x Server Implementations
          *  ------------------------------
          *  HL7 implementation based upon https://camel.apache.org/components/latest/dataformats/hl7-dataformat.html
-         *  For leveraging HL7 based files:
-         *  from("file:src/data-in/hl7v2/adt?delete=true?noop=true")
-         *
          *  Much like the upstream effort this code is based on:
          *  The fictitious medical org.: MCTN
          *  The fictitious app: MMS
          *
          */
         // ADT
-        //from(getHL7Uri(config.getAdtPort()))
         from(getHL7Uri(config.getAdtPort()))
              .routeId("hl7Admissions")
              .convertBodyTo(String.class)
@@ -224,7 +419,6 @@ public class CamelConfiguration extends RouteBuilder {
              .wireTap("direct:auditing");
         
         // ORM
-        //from(getHL7Uri(config.getAdtPort()))
         from(getHL7Uri(config.getOrmPort()))
              .routeId("hl7Orders")
              .convertBodyTo(String.class)
@@ -263,7 +457,6 @@ public class CamelConfiguration extends RouteBuilder {
             .wireTap("direct:auditing");
 
         // ORU
-        //from(getHL7Uri(config.getAdtPort()))
         from(getHL7Uri(config.getOruPort()))
             .routeId("hl7Results")
             .convertBodyTo(String.class)
@@ -302,7 +495,6 @@ public class CamelConfiguration extends RouteBuilder {
             .wireTap("direct:auditing");
 
         // MFN
-        //from(getHL7Uri(config.getAdtPort()))
         from(getHL7Uri(config.getMfnPort()))
             .routeId("hl7MasterFiles")
             .convertBodyTo(String.class)
