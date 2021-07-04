@@ -4,7 +4,7 @@
     <!--Internal Project Details-->
     <groupId>io.connectedhealth_idaas.thirdparty</groupId>
     <artifactId>io.connectedhealth_idaas.thridparty</artifactId>
-    <version>2021.04</version>
+    <version>04.01</version>
 
     <properties>
         <camel.version>3.9.0</camel.version>
@@ -61,6 +61,7 @@
         </dependency>
         <!-- Apache Camel Components -->
         <!-- HTTP -->
+        <!-- depricated and will be removed in future -->
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-netty</artifactId>
@@ -83,6 +84,11 @@
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-bean</artifactId>
+        </dependency>
+        <!-- Http -->
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-http</artifactId>
         </dependency>
         <!-- Logging -->
         <dependency>
@@ -111,26 +117,23 @@
             <artifactId>jakarta.xml.bind-api</artifactId>
             <version>2.3.2</version>
         </dependency>
-        <!-- Third Party JDBC Drivers -->
+        <!--https://stackoverflow.com/questions/48722138/how-to-monitor-apache-camel-routes-in-a-java-project-using-hawtio-->
+        <!-- UI -->
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.22</version>
+            <groupId>io.hawt</groupId>
+            <artifactId>hawtio-springboot</artifactId>
+            <version>2.13.4</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.jolokia/jolokia-jvm -->
         <dependency>
-            <groupId>postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>9.1-901-1.jdbc4</version>
+            <groupId>org.jolokia</groupId>
+            <artifactId>jolokia-jvm</artifactId>
+            <version>1.6.2</version>
         </dependency>
+        <!-- This dependency is mandatory for enabling Camel management via JMX / Hawtio. -->
         <dependency>
-            <groupId>net.snowflake</groupId>
-            <artifactId>snowflake-jdbc</artifactId>
-            <version>3.13.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mongodb</groupId>
-            <artifactId>mongo-java-driver</artifactId>
-            <version>3.12.8</version>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-management</artifactId>
         </dependency>
     </dependencies>
 

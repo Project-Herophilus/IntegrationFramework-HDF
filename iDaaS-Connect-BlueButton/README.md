@@ -1,48 +1,26 @@
-# iDAAS-Connect-ThirdParty
-This is the upstream community for or RedHat Healthcare's <a href="https://github.com/RedHat-Healthcare/iDaaS-Connect/tree/master/iDaaS-Connect-ThirdParty" target="_blank">iDaaS Connect ThirdParty</a>.<br/>
-iDAAS has several key components that provide many capabilities. iDAAS Connect is intended ONLY
-to enable iDAAS connectivity. iDAAS-Connect-ThirdParty specifically is ONLY intended to deal with enabling
-iDAAS to all sorts of third party connectivity. For example: RDBMS, Kafka, Mainframe, Files, SFTP, etc.
-plus dozens of others are supported.
+# iDAAS Connect BlueButton
+This project fetches Medicare data of an authenticated beneficiary through the [Blue Button API](https://bluebutton.cms.gov/) and sends it to a Kafka topic. The fuse application serves as a webserver. User opens the served URL using a web browser and log into the Medicare database. The application will automatically fetch its part A, B, C, and D data and sends it to a Kafka topic. Then other processors can subscribe to the topic to process the data.
 
-## Add-Ons
-This solution contains three supporting directories. The intent of these artifacts to enable
-resources to work locally: <br/>
-+ platform-ddl: DDL usecd within this accelerator (MySQL 8 based).
-+ platform-scripts: support running kafka, creating/listing and deleting topics needed for this solution
-and also building and packaging the solution as well. All the scripts are named to describe their capabilities <br/>
-+ platform-testdata: sample transactions to leverage for using the platform. 
+## Prerequisites
+1. Sign up for the blue button [developer sandbox](https://bluebutton.cms.gov/).
+2. Create a new application with the following. Then write down the resulting Client ID and Client Secret
+* OAuth - Client Type: confidential
+* OAuth - Grant Type: authorization-code
+* Callback URLS: http://localhost:8890/callback (or another url more appropriate)
 
-## Pre-Requisites
-For all iDaaS design patterns it should be assumed that you will either install as part of this effort, or have the following:
+## Solution Pre-Requisities
 1. An existing Kafka (or some flavor of it) up and running. Red Hat currently implements AMQ-Streams based on Apache Kafka; however, we
-have implemented iDaaS with numerous Kafka implementations. Please see the following files we have included to try and help: <br/>
-[Kafka](https://github.com/RedHat-Healthcare/iDaaS-Demos/blob/master/Kafka.md)<br/>
-[KafkaWindows](https://github.com/RedHat-Healthcare/iDaaS-Demos/blob/master/KafkaWindows.md)<br/>
-No matter the platform chosen it is important to know that the Kafka out of the box implementation might require some changes depending
-upon your implementation needs. Here are a few we have made to ensure: <br/>
-In <kafka>/config/consumer.properties file we will be enhancing the property of auto.offset.reset to earliest. This is intended to enable any new
-system entering the group to read ALL the messages from the start. <br/>
-auto.offset.reset=earliest <br/>
+   have implemented iDaaS with numerous Kafka implementations. Please see the following files we have included to try and help: <br/>
+   [Kafka](https://github.com/RedHat-Healthcare/iDaaS-Demos/blob/master/Kafka.md)<br/>
+   [KafkaWindows](https://github.com/RedHat-Healthcare/iDaaS-Demos/blob/master/KafkaWindows.md)<br/>
+   No matter the platform chosen it is important to know that the Kafka out of the box implementation might require some changes depending
+   upon your implementation needs. Here are a few we have made to ensure: <br/>
+   In <kafka>/config/consumer.properties file we will be enhancing the property of auto.offset.reset to earliest. This is intended to enable any new
+   system entering the group to read ALL the messages from the start. <br/>
+   auto.offset.reset=earliest <br/>
 2. Some understanding of building, deploying Java artifacts and the commands associated. If using Maven commands then Maven would need to be intalled and runing for the environment you are using. More details about Maven can be found [here](https://maven.apache.org/install.html)<br/>
 3. An internet connection with active internet connectivity, this is to ensure that if any Maven commands are
-run and any libraries need to be pulled down they can.<br/>
-
-We also leverage [Kafka Tools](https://kafkatool.com/) to help us show Kafka details and transactions; however, you can leverage
-code or various other Kafka technologies ot view the topics.
-
-# Scenario(s): Kafka Integration 
-This repository follows a very common general implementation. The only connector currently in this code
-base is a Kafka topic. The key sceanrio this can demonstrate is data being processed from a data science 
-kafka topic.
-
-## Integration Data Flow Steps
-1. The Kafka client connects to a particular broker and topic and checks if there is any data to process. 
-2. If there is data it will audit the transaction processing 
-3. The transaction will be routed for processing within iDAAS KIC
-    
-# Start The Engine!!!
-This section covers the running of the solution. There are several options to start the Engine Up!!!
+   run and any libraries need to be pulled down they can.<br/>
 
 ## Step 1: Kafka Server To Connect To
 In order for ANY processing to occur you must have a Kafka server running that this accelerator is configured to connect to.
@@ -50,88 +28,80 @@ Please see the following files we have included to try and help: <br/>
 [Kafka](https://github.com/RedHat-Healthcare/iDaaS-Demos/blob/master/Kafka.md)<br/>
 [KafkaWindows](https://github.com/RedHat-Healthcare/iDaaS-Demos/blob/master/KafkaWindows.md)<br/>
 
-## Step 2: Running the App: Maven or Code Editor
+## Step 2: Running the App: Maven Commands or Code Editor
 This section covers how to get the application started.
++ Maven: The following steps are needed to run the code. Either through your favorite IDE or command line
+```
+git clone <repo name>
+For example:
+git clone https://github.com/RedHat-Healthcare/iDaaS-Connect.git
+ ```
+You can either compile at the base directory or go to the specific iDaaS-Connect acceelerator. Specifically, you want to
+be at the same level as the POM.xml file and execute the following command: <br/>
+```
+mvn clean install
+```
+You can run the individual efforts with a specific command, it is always recommended you run the mvn clean install first.
+Here is the command to run the design pattern from the command line: <br/>
+```
+mvn spring-boot:run
+ ```
+Depending upon if you have every run this code before and what libraries you have already in your local Maven instance
+it could take a few minutes.
++ Code Editor: You can right click on the Application.java in the /src/<application namespace> and select Run
+
+# Running the Java JAR
+If you don't run the code from an editor or from the maven commands above. You can compile the code through the maven
+commands above to build a jar file. Then, go to the /target directory and run the following command: <br/>
+```
+java -jar <jarfile>.jar 
+ ```
+
+## Design Pattern/Accelerator Configuration
+Each design pattern/accelerator has a unique and specific application.properties for its usage and benefit. Please make
+sure to look at these as there is a lot of power in these and the goal is to minimize hard coded anything.
+Leverage the respective application.properties file in the correct location to ensure the properties are properly set
+and use a custom location. You can compile the code through the maven commands above to build a jar file. Then, go
+to the /target directory and run the following command: <br/>
+```
+java -jar <jarfile>.jar --spring.config.location=file:./config/application.properties
+ ```
+# Admin Interface - Management and Insight of Components
+Within each specific repository there is an administrative user interface that allows for monitoring and insight into the
+connectivity of any endpoint. Additionally, there is also the implementation to enable implementations to build there own
+by exposing the metadata. The data is exposed and can be used in numerous very common tools like Data Dog, Prometheus and so forth.
+This capability to enable would require a few additional properties to be set.
+
+Below is a generic visual of how this looks (the visual below is specific to iDaaS Connect HL7): <br/>
+
+![iDaaS Platform - Visuals - iDaaS Data Flow - Detailed.png](https://github.com/RedHat-Healthcare/iDAAS/blob/master/images/iDAAS-Platform/iDaaS-Mgmt-UI.png)
 
 ### Design Pattern/Accelerator Configuration
-All iDaaS Design Pattern/Accelelrators have application.properties files to enable some level of reusability of code and simplfying configurational enhancements.<br/>
-In order to run multiple iDaaS integration applications we had to ensure the internal http ports that
-the application uses. In order to do this we MUST set the server.port property otherwise it defaults to port 8080 and ANY additional
-components will fail to start. iDaaS Connect HL7 uses 9980. You can change this, but you will have to ensure other applications are not
-using the port you specify.
-
-```properties
-server.port=9980
+All iDaaS Design Pattern/Accelelrators have application.properties files to enable some level of reusability of code and simplfying configurational enhancements. Configure src/main/resources/application.properties with the prerequisite data, for example,
 ```
-Once built you can run the solution by executing `./platform-scripts/start-solution.sh`.
-The script will startup Kafka and iDAAS server.
-
-Alternatively, if you have a running instance of Kafka, you can start a solution with:
-`./platform-scripts/start-solution-with-kafka-brokers.sh --idaas.kafkaBrokers=host1:port1,host2:port2`.
-The script will startup iDAAS server.
-
-It is possible to overwrite configuration by:
-1. Providing parameters via command line e.g.
-`./start-solution.sh --idaas.adtPort=10009`
-2. Creating an application.properties next to the idaas-connect-hl7.jar in the target directory
-3. Creating a properties file in a custom location `./start-solution.sh --spring.config.location=file:./config/application.properties`
-
-Supported properties include:
-```properties
-# Server - Internal
-server.host=9983
-# Kafka
-kafkaBrokers=localhost:9092
-# Reporting Directory and File Name
-#mandatory.reporting.directory=/MandatoryReporting
-mandatory.reporting.directory=src/data/MandatoryReporting
-mandatory.reporting.file=ReportingExample.csv
-# Covid Directory and File Ext
-covid.reporting.directory=src/data/CovidData
-covid.reporting.extension=*.csv
-# Reseach Data Directory and File Ext
-research.data.directory=src/data/ResearchData
-covid.reporting.extension=*.csv
-# JDBC Database
-spring.datasource.url=jdbc:mysql://localhost/idaas
-                     #jdbc:postgresql://localhost:5432/idaas
-spring.datasource.username=idaas
-spring.datasource.password=@idaas123
-#spring.database.driver-class-name=com.mysql.cj.jdbc.Driver
-#org.postgresql.Driver
+bluebutton.callback.path=callback
+bluebutton.callback.host=localhost
+bluebutton.callback.port=8890
 ```
+http://localhost:8890/callback is the callback URL you registered with bluebutton.cms.gov. http://localhost:8890/bluebutton will be the service URL for iDAAS-Connect-BlueButton.
+Every asset has its own defined specific port, we have done this to ensure multiple solutions can be run simultaneously.
 
-### Running the App: Maven
-You can use Maven from the command line, you would need to go the specific directory where this code exists and has a pom.xml and then run the
-command: mvn clean install
+## Administrative Interface(s) Specifics
+For all the URL links we have made them localhost based, simply change them to the server the solution is running on.
 
-### Running the App: From Your Code Editor/IDE
-You can right click on Application.java file and select Run in the src directory.
+|<b> iDaaS Connect Asset | Port | Admin URL / JMX URL |
+| :---        | :----   | :--- | 
+|iDaaS Connect BlueButton| 9982| http://localhost:9982/actuator/hawtio/index.html / http://localhost:9982/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=*|  
 
-### Running the App from Command Line
-You will need to have built the application into a jar.
-
-1. You download the code
-2. You build the code into a jar
-3. Move the application.properties file from the \src\main\resources to where you would like it or just remember the location as it
-it will be needed later
-4. Make sure you have a Kafka instance up and running to process data with
-5. Go to a command line and execute java -jar <jarlocation>/<jarname.jar> --spring.config.location=file: ./<directory>/application.properties`
+If you would like to contribute feel free to, contributions are always welcome!!!!
 
 Happy using and coding....
+## Additional Information
+* Download the [CSV file](https://bluebutton.cms.gov/synthetic_users_by_claim_count_full.csv) which contains 100 sample data with id, user name, and password.
+* Build the project by running `platform-scripts/build-solution.sh`
+* Start the project by running `platform-scripts/start-solution.sh`. It will start the Kafka cluster on port 9092 and the Fuse application which listens on port 8890.
+* In a web browser type http://localhost:8890/bluebutton
+* It will automatically redirect you to Blue Buttons's authentication page. Fill in the user name and password
+* Patient, Coverage, and ExplanationOfBenifit data will be sent to Kafka topic `bluebutton`.
 
-## Ongoing Enhancements
-We maintain all enhancements within the Git Hub portal under the 
-<a href="https://github.com/RedHat-Healthcare/iDAAS-Connect-ThirdParty/projects" target="_blank">projects tab</a>
-
-## Defects/Bugs
-All defects or bugs should be submitted through the Git Hub Portal under the 
-<a href="https://github.com/RedHat-Healthcare/iDAAS-Connect-ThirdPartyt/issues" target="_blank">issues tab</a>
-
-## Chat and Collaboration
-You can always leverage <a href="https://redhathealthcare.zulipchat.com" target="_blank">Red Hat Healthcare's ZuilpChat area</a>
-and find all the specific areas for iDAAS-Connect-ThirdParty. We look forward to any feedback!!
-
-If you would like to contribute feel free to, contributions are always welcome!!!! 
-
-Happy using and coding....
+Happy Coding!!!!
