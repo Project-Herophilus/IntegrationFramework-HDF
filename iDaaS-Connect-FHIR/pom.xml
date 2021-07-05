@@ -4,7 +4,7 @@
     <!--Internal Project Details-->
     <groupId>io.connectedhealth_idaas.fhir</groupId>
     <artifactId>io.connectedhealth_idaas.fhir</artifactId>
-    <version>2021.04</version>
+    <version>4.01</version>
 
     <properties>
         <camel.version>3.9.0</camel.version>
@@ -95,6 +95,24 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.12</version>
+        </dependency>
+        <!--https://stackoverflow.com/questions/48722138/how-to-monitor-apache-camel-routes-in-a-java-project-using-hawtio-->
+        <!-- UI -->
+        <dependency>
+            <groupId>io.hawt</groupId>
+            <artifactId>hawtio-springboot</artifactId>
+            <version>2.13.4</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.jolokia/jolokia-jvm -->
+        <dependency>
+            <groupId>org.jolokia</groupId>
+            <artifactId>jolokia-jvm</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+        <!-- This dependency is mandatory for enabling Camel management via JMX / Hawtio. -->
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-management</artifactId>
         </dependency>
     </dependencies>
 

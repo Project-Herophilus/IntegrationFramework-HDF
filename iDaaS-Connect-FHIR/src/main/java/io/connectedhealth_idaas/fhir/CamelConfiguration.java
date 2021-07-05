@@ -36,7 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.jms.connection.JmsTransactionManager;
 //import javax.jms.ConnectionFactory;
 import org.springframework.stereotype.Component;
-import sun.util.calendar.BaseCalendar;
+//import sun.util.calendar.BaseCalendar;
 import java.time.LocalDate;
 
 @Component
@@ -109,6 +109,7 @@ public class CamelConfiguration extends RouteBuilder {
      * : Unstructured data, st
      */
     from("direct:hidn")
+         .routeId("HIDN-Endpoint")
          .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
          .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
          .setHeader("eventdate").simple("eventdate")
@@ -139,6 +140,7 @@ public class CamelConfiguration extends RouteBuilder {
      *
      */
     from("direct:auditing")
+        .routeId("iDaaS-KIC")
         .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
         .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
         .setHeader("processingtype").exchangeProperty("processingtype")
@@ -157,6 +159,7 @@ public class CamelConfiguration extends RouteBuilder {
     *  Logging
     */
     from("direct:logging")
+        .routeId("Logging")
         .log(LoggingLevel.INFO, log, "FHIR Message: [${body}]")
         //To invoke Logging
         //.to("direct:logging")
