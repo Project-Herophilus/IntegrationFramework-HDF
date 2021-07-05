@@ -101,31 +101,33 @@ public class CamelConfiguration extends RouteBuilder {
      * : Unstructured data, st
      */
     from("direct:hidn")
-            .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
-            .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
-            .setHeader("eventdate").simple("eventdate")
-            .setHeader("eventtime").simple("eventtime")
-            .setHeader("processingtype").exchangeProperty("processingtype")
-            .setHeader("industrystd").exchangeProperty("industrystd")
-            .setHeader("component").exchangeProperty("componentname")
-            .setHeader("processname").exchangeProperty("processname")
-            .setHeader("organization").exchangeProperty("organization")
-            .setHeader("careentity").exchangeProperty("careentity")
-            .setHeader("customattribute1").exchangeProperty("customattribute1")
-            .setHeader("customattribute2").exchangeProperty("customattribute2")
-            .setHeader("customattribute3").exchangeProperty("customattribute3")
-            .setHeader("camelID").exchangeProperty("camelID")
-            .setHeader("exchangeID").exchangeProperty("exchangeID")
-            .setHeader("internalMsgID").exchangeProperty("internalMsgID")
-            .setHeader("bodyData").exchangeProperty("bodyData")
-            .setHeader("bodySize").exchangeProperty("bodySize")
-            .convertBodyTo(String.class).to(getKafkaTopicUri("hidn"))
+        .routeId("HIDN Processing")
+        .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
+        .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
+        .setHeader("eventdate").simple("eventdate")
+        .setHeader("eventtime").simple("eventtime")
+        .setHeader("processingtype").exchangeProperty("processingtype")
+        .setHeader("industrystd").exchangeProperty("industrystd")
+        .setHeader("component").exchangeProperty("componentname")
+        .setHeader("processname").exchangeProperty("processname")
+        .setHeader("organization").exchangeProperty("organization")
+        .setHeader("careentity").exchangeProperty("careentity")
+        .setHeader("customattribute1").exchangeProperty("customattribute1")
+        .setHeader("customattribute2").exchangeProperty("customattribute2")
+        .setHeader("customattribute3").exchangeProperty("customattribute3")
+        .setHeader("camelID").exchangeProperty("camelID")
+        .setHeader("exchangeID").exchangeProperty("exchangeID")
+        .setHeader("internalMsgID").exchangeProperty("internalMsgID")
+        .setHeader("bodyData").exchangeProperty("bodyData")
+        .setHeader("bodySize").exchangeProperty("bodySize")
+        .convertBodyTo(String.class).to(getKafkaTopicUri("hidn"))
     ;
     /*
      *  Direct actions used across platform
      *
      */
     from("direct:auditing")
+        .routeId("iDaaS-KIC")
         .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
         .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
         .setHeader("processingtype").exchangeProperty("processingtype")
@@ -144,6 +146,7 @@ public class CamelConfiguration extends RouteBuilder {
      *  Logging
      */
     from("direct:logging")
+        .routeId("Logging")
         .log(LoggingLevel.INFO, log, "Transaction Message: [${body}]")
     ;
 
