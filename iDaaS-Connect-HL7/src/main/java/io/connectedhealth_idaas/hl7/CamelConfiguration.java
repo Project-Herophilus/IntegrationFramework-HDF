@@ -85,6 +85,7 @@ public class CamelConfiguration extends RouteBuilder {
 
     private String getHL7Uri2(int port) {
         String s = "mllp:0.0.0.0:" + port;
+        //camel.dataformat.hl7.validate=false
         return s;
     }
 
@@ -383,6 +384,7 @@ public class CamelConfiguration extends RouteBuilder {
          *  The fictitious medical org.: MCTN
          *  The fictitious app: MMS
          *
+         * https://camel.apache.org/components/2.x/dataformats/hl7-dataformat.html
          */
         // ADT
         from(getHL7Uri2(config.getAdtPort()))
@@ -402,7 +404,7 @@ public class CamelConfiguration extends RouteBuilder {
              .setProperty("auditdetails").constant("ADT message received")
              // iDaaS KIC Processing
              .wireTap("direct:auditing")
-             // Send to Topic
+                // Send to Topic
              .convertBodyTo(String.class).to(getKafkaTopicUri(config.getadtTopicName()))
              //Response to HL7 Message Sent Built by platform
              .choice().when(simple("{{idaas.adtACKResponse}}"))
