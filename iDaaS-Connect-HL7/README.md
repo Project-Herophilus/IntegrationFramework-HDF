@@ -61,17 +61,28 @@ Server socket (one socket per datatype) and typically stay connected.
     if the client does not get this in a timely manner it will resend the same message again until he receives an ACK).<br/>
     d. The acknowledgement is also sent to the auditing topic location.<br/>
 
-# Start The Engine!!!
-This section covers the running of the solution. There are several options to start the Engine Up!!!
 
-## Step 1: Kafka Server To Connect To
-In order for ANY processing to occur you must have a Kafka server running that this accelerator is configured to connect to.
-Please see the following files we have included to try and help: <br/>
-[Kafka](https://github.com/RedHat-Healthcare/iDaaS-Demos/blob/master/Kafka.md)<br/>
-[KafkaWindows](https://github.com/RedHat-Healthcare/iDaaS-Demos/blob/master/KafkaWindows.md)<br/>
-
-## Step 2: Running the App: Maven or Code Editor
+## Step 2: Running the App: Maven Commands or Code Editor
 This section covers how to get the application started.
++ Maven: go to the directory of where you have this code. Specifically, you want to be at the same level as the POM.xml file and execute the
+following command: <br/>
+```
+mvn clean install
+ ```
+You can run the individual efforts with a specific command, it is always recommended you run the mvn clean install first.
+Here is the command to run the design pattern from the command line: <br/>
+```
+mvn spring-boot:run
+ ```
+Depending upon if you have every run this code before and what libraries you have already in your local Maven instance it could take a few minutes.
++ Code Editor: You can right click on the Application.java in the /src/<application namespace> and select Run
+
+# Running the Java JAR
+If you don't run the code from an editor or from the maven commands above. You can compile the code through the maven
+commands above to build a jar file. Then, go to the /target directory and run the following command: <br/>
+```
+java -jar <jarfile>.jar 
+ ```
 
 ### Design Pattern/Accelerator Configuration
 All iDaaS Design Pattern/Accelelrators have application.properties files to enable some level of reusability of code and simplfying configurational enhancements.<br/>
@@ -96,48 +107,37 @@ It is possible to overwrite configuration by:
 2. Creating an application.properties next to the idaas-connect-hl7.jar in the target directory
 3. Creating a properties file in a custom location `./start-solution.sh --spring.config.location=file:./config/application.properties`
 
-Supported properties include:
+Supported properties include (for this accelerator there is a block per message type that follows the same pattern):
 ```properties
-idaas.kafkaBrokers=localhost:9092 #a comma separated list of kafka brokers e.g. host1:port1,host2:port2
-#ports to listen for HL7 messages on
-idaas.adtPort=10001 
-idaas.ormPort=10002
-idaas.oruPort=10003
-idaas.rdePort=10004
-idaas.mfnPort=10005
-idaas.mdmPort=10006
-idaas.schPort=10007
-idaas.vxuPort=10008
+server.port=9980
+# Kafka Configuration - use comma if multiple kafka servers are needed
+idaas.kafkaBrokers=localhost:9092
+# Basics on properties
+idaas.hl7ADT_Directory=data/adt
+idaas.adtPort=10001
+idaas.adtACKResponse=true
+idaas.adtTopicName=mctn_mms_adt
+idaas.hl7ORM_Directory=data/orm
 ```
+# Admin Interface - Management and Insight of Components
+Within each specific repository there is an administrative user interface that allows for monitoring and insight into the
+connectivity of any endpoint. Additionally, there is also the implementation to enable implementations to build there own
+by exposing the metadata. The data is exposed and can be used in numerous very common tools like Data Dog, Prometheus and so forth.
+This capability to enable would require a few additional properties to be set.
 
-### Running the App: Maven
-You can use Maven from the command line, you would need to go the specific directory where this code exists and has a pom.xml and then run the
-command: mvn clean install
+Below is a generic visual of how this looks (the visual below is specific to iDaaS Connect HL7): <br/>
+![iDaaS Platform - Visuals - iDaaS Data Flow - Detailed.png](https://github.com/RedHat-Healthcare/iDAAS/blob/master/images/iDAAS-Platform/iDaaS-Mgmt-UI.png)
 
-### Running the App: From Your Code Editor/IDE
-You can right click on Application.java file and select Run in the src directory.
+Every asset has its own defined specific port, we have done this to ensure multiple solutions can be run simultaneously.
 
-### Running the App from Command Line
-You will need to have built the application into a jar.
+## Administrative Interface(s) Specifics
+For all the URL links we have made them localhost based, simply change them to the server the solution is running on.
 
-1. You download the code
-2. You build the code into a jar
-3. Move the application.properties file from the \src\main\resources to where you would like it or just remember the location as it
-it will be needed later
-4. Make sure you have a Kafka instance up and running to process data with
-5. Go to a command line and execute java -jar <jarlocation>/<jarname.jar> --spring.config.location=file: ./<directory>/application.properties`
+|<b> iDaaS Connect Asset | Port | Admin URL / JMX URL |
+| :---        | :----   | :--- | 
+|iDaaS Connect HL7 | 9980| http://localhost:9980/actuator/hawtio/index.html / http://localhost:9980/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* | 
 
-Happy using and coding....
-
-# Getting Involved
-Here are a few ways you can get or stay involved.
-
-## Ongoing Enhancements
-We maintain all enhancements within the Git Hub portal under the projects tab, please feel free to make recommendations our goal is to continually improve.
-
-## Defects/Bugs
-All defects or bugs should be submitted through the Git Hub Portal under the issues tab
-
-
+If you would like to contribute feel free to, contributions are always welcome!!!! 
 
 Happy using and coding....
+
