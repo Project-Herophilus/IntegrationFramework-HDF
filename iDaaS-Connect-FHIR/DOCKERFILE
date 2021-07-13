@@ -1,16 +1,13 @@
 FROM openjdk:8-jdk-alpine
+FROM maven:3.5.2-jdk-8-alpine
 USER root
-RUN mkdir -p /app
-# Expose port to listen to
-EXPOSE 9081
-# Copy the MicroProfile starter app
-COPY /target/io.connectedhealth_idaas.fhir-4.01.jar /app/
-# Copy the script from the source; run-java.sh has specific parameters to run a Thorntail app from the command line in a container. More on the script can be found at https://github.com/sshaaf/rhel7-jre-image/blob/master/run-java.sh
-# COPY /platform-scripts/start-solution-with-kafka-brokers-docker.sh /app/
-# Setting up permissions for the script to run
-# RUN chmod 755 /app/start-solution-with-kafka-brokers-docker.sh
+
 WORKDIR /app
-ENV KAFKA_END_POINT=localhost:9092
-RUN echo ${KAFKA_END_POINT}
-#CMD ["./start-solution-with-kafka-brokers-docker.sh","--idaas.kafkaBrokers=169.47.93.106:9092"]
-#CMD ["./start-solution-with-kafka-brokers-docker.sh","--idaas.kafkaBrokers","${KAFKA_END_POINT}"]
+
+COPY pom.xml ./
+
+COPY src ./src
+
+RUN mvn clean install
+
+CMD ["mvn", "spring-boot:run"]
