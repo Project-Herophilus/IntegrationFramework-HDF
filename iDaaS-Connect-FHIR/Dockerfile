@@ -10,6 +10,6 @@ COPY src /app/
 
 WORKDIR /app
 
-RUN mvn clean install
+RUN mvn -Duser.home=/var/maven "$@" && mvn clean install
 
 CMD ["mvn", "spring-boot:run"]
