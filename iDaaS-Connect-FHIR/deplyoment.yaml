@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: idaas-connect-fhir
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: idaas-connect-fhir
+  template:
+    metadata:
+      labels:
+        app: idaas-connect-fhir
+    spec:
+      containers:
+      - name: idaas-connect-fhir
+        image: us.icr.io/clinical_data_platform/idaas-connect-fhir:6
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 5000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: idaas-connect-fhir
+  labels:
+    app: idaas-connect-fhir
+spec:
+  type: NodePort
+  ports:
+    - port: 5000
+  selector:
+    app: idaas-connect-fhir
