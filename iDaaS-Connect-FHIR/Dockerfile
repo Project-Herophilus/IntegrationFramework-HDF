@@ -8,6 +8,8 @@ COPY pom.xml /app/
 
 COPY src /app/
 
+WORKDIR /app
+
 RUN mvn clean install
 
 CMD ["mvn", "spring-boot:run"]
