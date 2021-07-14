@@ -1,15 +1,12 @@
 FROM openjdk:8-jdk-alpine
 FROM maven:3.5.2-jdk-8-alpine
-USER root
-RUN mkdir -p /app
-# Expose port to listen to
-EXPOSE 8080
+USER ROOT
 
 WORKDIR /app
 
-COPY pom.xml ./
+COPY pom.xml ./app
 
-COPY src ./src
+COPY src ./app/src
 
 RUN mvn clean install
 
