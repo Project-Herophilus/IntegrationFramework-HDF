@@ -1,7 +1,9 @@
 FROM openjdk:8-jdk-alpine
 FROM maven:3.5.2-jdk-8-alpine
-RUN addgroup -S spring && adduser -S spring -G spring
-USER spring:spring
+USER root
+RUN mkdir -p /app
+# Expose port to listen to
+EXPOSE 8080
 
 WORKDIR /app
 
