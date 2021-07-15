@@ -1,11 +1,15 @@
-FROM openjdk:8-jdk-alpine
-FROM maven:3.5.2-jdk-8-alpine
+FROM maven:3.5.2-jdk-8-alpine AS MAVEN_BUILD
 
-COPY src /app/
+COPY pom.xml /build/
+COPY src /build/src/
 
-COPY pom.xml /tmp/pom.xml
-RUN mvn -B -f /tmp/pom.xml -s /usr/share/maven/ref/settings-docker.xml dependency:resolve
+WORKDIR /build/
+RUN mvn package
+
+FROM openjdk:8-jre-alpine
 
 WORKDIR /app
 
-CMD ["mvn", "spring-boot:run"]
+COPY --from=MAVEN_BUILD /build/target/io.connectedhealth_idaas.fhir-4.05.jar /app/
+
+ENTRYPOINT ["java", "-jar", "io.connectedhealth_idaas.fhir-4.05.jar"]
