@@ -12,4 +12,4 @@ WORKDIR /app
 
 COPY --from=MAVEN_BUILD /build/target/io.connectedhealth_idaas.fhir-4.05.jar /app/
 
-ENTRYPOINT ["mvn", "spring-boot:run"]
+ENTRYPOINT ["java", "-jar", "io.connectedhealth_idaas.fhir-4.05.jar"]
