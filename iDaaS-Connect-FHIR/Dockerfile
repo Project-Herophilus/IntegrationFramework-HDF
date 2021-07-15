@@ -12,4 +12,4 @@ WORKDIR /app
 
 COPY --from=MAVEN_BUILD /build/target/io.connectedhealth_idaas.fhir-4.05.jar /app/
 
-ENTRYPOINT ["java", "-jar", "io.connectedhealth_idaas.fhir-4.05.jar"]
+ENTRYPOINT ["java", "-cp", "io.connectedhealth_idaas.fhir-4.05.jar", "Main"]
