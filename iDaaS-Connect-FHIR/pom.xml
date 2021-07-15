@@ -143,12 +143,8 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${springboot.version}</version>
-            </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.places.main</mainClass>
+                    <mainClass>io.connectedhealth_idaas.fhir.Application</mainClass>
                 </configuration>
         
                 <executions>
