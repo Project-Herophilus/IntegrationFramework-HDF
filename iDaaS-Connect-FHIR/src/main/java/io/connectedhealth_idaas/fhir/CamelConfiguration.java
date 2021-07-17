@@ -197,7 +197,49 @@ public class CamelConfiguration extends RouteBuilder {
     /*
      *  Any endpoint defined would be managed by access http(s)://<servername>:<serverport>/<resource name>
      */
+    /*
+     *  Bundle Processing
+    */
+        from("servlet://bundle").noAutoStartup()
+        .routeId("FHIRBundles")
+        .convertBodyTo(String.class)
+        // set Auditing Properties
+        .setProperty("processingtype").constant("data")
+        .setProperty("appname").constant("iDAAS-Connect-FHIR")
+        .setProperty("messagetrigger").constant("Bundles")
+        .setProperty("component").simple("${routeId}")
+        .setProperty("camelID").simple("${camelId}")
+        .setProperty("exchangeID").simple("${exchangeId}")
+        .setProperty("internalMsgID").simple("${id}")
+        .setProperty("bodyData").simple("${body}")
+        .setProperty("processname").constant("Input")
+        .setProperty("auditdetails").constant("Bundle resource/bundle received")
+        // iDAAS DataHub Processing
+        .wireTap("direct:auditing")
+        // Send to FHIR Server
+        .choice().when(simple("{{idaas.processToFHIR}}"))
+            .setHeader(Exchange.CONTENT_TYPE,constant("application/json"))
+            .to(getFHIRServerUri("Bundles"))
+            //Process Response and Implement core to this should leverage event Builder
+            // as a Bean
 
+            .convertBodyTo(String.class)
+            // set Auditing Properties – will be inside a loop one per defined resource
+            .setProperty("processingtype").constant("data")
+            .setProperty("appname").constant("iDAAS-Connect-FHIR")
+            .setProperty("industrystd").constant("FHIR")
+            .setProperty("messagetrigger").constant("Bundles")
+            .setProperty("component").simple("${routeId}")
+            .setProperty("processname").constant("Response")
+            .setProperty("camelID").simple("${camelId}")
+            .setProperty("exchangeID").simple("${exchangeId}")
+            .setProperty("internalMsgID").simple("${id}")
+            .setProperty("bodyData").simple("${body}")
+            .setProperty("auditdetails").constant("Bundles response resource/bundle received")
+            // iDAAS DataHub Processing
+            .wireTap("direct:auditing")// Invoke External FHIR Server
+        .endChoice();
+        ;
     /*
      *  Genomics - Molecular Research
      */
