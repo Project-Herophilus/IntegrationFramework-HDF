@@ -41,6 +41,7 @@ public class ConfigProperties {
     private String hl7RDE_Directory;
     private String hl7SCH_Directory;
     private String hl7VXU_Directory;
+    private String hl7CCDA_Directory;
     // Platform Topics
     private String adtTopicName;
     private String ormTopicName;
@@ -50,7 +51,7 @@ public class ConfigProperties {
     private String rdeTopicName;
     private String schTopicName;
     private String vxuTopicName;
-
+    private String ccdaTopicName;
     // Getters
     // Getters: Kafka Brokers
     public String getKafkaBrokers() {
@@ -90,6 +91,7 @@ public class ConfigProperties {
     public String getHl7RDE_Directory() { return hl7RDE_Directory; }
     public String getHl7SCH_Directory() { return hl7SCH_Directory; }
     public String getHl7VXU_Directory() { return hl7VXU_Directory; }
+    public String getHl7CCDA_Directory() { return hl7CCDA_Directory; }
     // Getters: Platform Topics
     public String getadtTopicName() { return adtTopicName; }
     public String getormTopicName() { return ormTopicName; }
@@ -99,7 +101,7 @@ public class ConfigProperties {
     public String getrdeTopicName() { return rdeTopicName; }
     public String getschTopicName() { return schTopicName; }
     public String getvxuTopicName() { return vxuTopicName; }
-
+    public String getccdaTopicNameTopicName() { return ccdaTopicName; }
     // Setters
     // Setters: Kafka Brokers
     public void setKafkaBrokers(String kafkaBrokers) {
@@ -140,6 +142,7 @@ public class ConfigProperties {
     public void setHl7RDE_Directory(String hl7RDE_Directory) { this.hl7MFN_Directory = hl7RDE_Directory; }
     public void setHl7SCH_Directory(String hl7SCH_Directory) { this.hl7SCH_Directory = hl7SCH_Directory; }
     public void setHl7VXU_Directory(String hl7VXU_Directory) { this.hl7VXU_Directory = hl7VXU_Directory; }
+    public void setHl7CCDA_Directory(String hl7CCDA_Directory) { this.hl7CCDA_Directory = hl7CCDA_Directory; }
     // Setters: Kafka Topics
     public void setadtTopicName(String adtTopicName) { this.adtTopicName = adtTopicName; }
     public void setormTopicName(String ormTopicName) { this.ormTopicName = ormTopicName; }
@@ -148,6 +151,6 @@ public class ConfigProperties {
     public void setmdmTopicName(String mdmTopicName) { this.mdmTopicName = mdmTopicName; }
     public void setrdeTopicName(String rdeTopicName) { this.rdeTopicName = rdeTopicName; }
     public void setschTopicName(String schTopicName) { this.schTopicName = schTopicName; }
-    public void setvxuTopicName(String vxuTopicName) { this.vxuTopicName = vxuTopicName; }
+    public void setccdaTopicName(String ccdaTopicName) { this.ccdaTopicName = ccdaTopicName; }
 
 }
