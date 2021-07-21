@@ -30,6 +30,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
+import io.connectedhealth_idaas.eventbuilder.converters.ccda;
+import io.connectedhealth_idaas.eventbuilder.converters.ccda.validators;
 
 @Component
 public class CamelConfiguration extends RouteBuilder {
@@ -52,6 +54,17 @@ public class CamelConfiguration extends RouteBuilder {
         decoder.setCharset("iso-8859-1");
         return decoder;
     }*/
+    @Bean 
+    private CCDATransformer ccdaTransformer(String cdaDocument){
+        CCDATransformer ccdaTransformer = new CCDATransformer();
+        return ccdaTransformer;
+    }
+
+    @Bean 
+    private CCDAValidator ccdaValidator(String cdaDocument){
+        CCDATransformer ccdaValidator = new CCDAValidator();
+        return ccdaTransformer;
+    }
 
     @Bean
     private KafkaEndpoint kafkaEndpoint() {
