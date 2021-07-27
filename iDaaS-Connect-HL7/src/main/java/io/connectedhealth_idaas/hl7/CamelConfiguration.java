@@ -29,9 +29,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-import io.connectedhealth_idaas.eventbuilder.converters.ccda;
-import io.connectedhealth_idaas.eventbuilder.converters.ccda.validators;
+import io.connectedhealth_idaas.eventbuilder.converters.ccda.CdaConversionService;
+import io.connectedhealth_idaas.eventbuilder.converters.ccda.validation.ValidatorImpl;
+import java.io.OutputStream;
 
 @Component
 public class CamelConfiguration extends RouteBuilder {
@@ -43,7 +45,7 @@ public class CamelConfiguration extends RouteBuilder {
     /*@Bean
     private HL7MLLPNettyEncoderFactory hl7Encoder() {
         HL7MLLPNettyEncoderFactory encoder = new HL7MLLPNettyEncoderFactory();
-        encoder.setCharset("iso-8859-1");
+        encoder.setCharset("iso-8q859-1");
         //encoder.setConvertLFtoCR(true);
         return encoder;
     }
@@ -54,17 +56,18 @@ public class CamelConfiguration extends RouteBuilder {
         decoder.setCharset("iso-8859-1");
         return decoder;
     }*/
+    //Call getFhirJsonFromCdaXMLString method and pass in cda document
     @Bean 
-    private CCDATransformer ccdaTransformer(String cdaDocument){
-        CCDATransformer ccdaTransformer = new CCDATransformer();
+    private CdaConversionService ccdaTransformer(){
+        CdaConversionService ccdaTransformer = new CdaConversionService();
         return ccdaTransformer;
     }
 
-    @Bean 
-    private CCDAValidator ccdaValidator(String cdaDocument){
-        CCDATransformer ccdaValidator = new CCDAValidator();
-        return ccdaTransformer;
-    }
+    // @Bean 
+    // private OutputStream ccdaValidator(String bundle){
+    //     ValidatorImpl ccdaValidator = new ValidatorImpl();
+    //     return ccdaValidator.validateBundle(bundle);
+    // }
 
     @Bean
     private KafkaEndpoint kafkaEndpoint() {
@@ -106,6 +109,9 @@ public class CamelConfiguration extends RouteBuilder {
         return "file:src/" + dirName + "?delete=true";
     }
 
+    private String getHL7CCDADirectory(String dirName){
+        return "file:src/" + dirName + "?delete=true";
+    }
     /*
      * Kafka implementation based upon https://camel.apache.org/components/latest/kafka-component.html
      *
@@ -155,21 +161,21 @@ public class CamelConfiguration extends RouteBuilder {
          *   https://camel.apache.org/components/latest/languages/simple-language.html
          *
          */
-        from("direct:auditing")
-            .routeId("iDaaS-KIC")
-            .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
-            .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
-            .setHeader("processingtype").exchangeProperty("processingtype")
-            .setHeader("industrystd").exchangeProperty("industrystd")
-            .setHeader("component").exchangeProperty("componentname")
-            .setHeader("messagetrigger").exchangeProperty("messagetrigger")
-            .setHeader("processname").exchangeProperty("processname")
-            .setHeader("auditdetails").exchangeProperty("auditdetails")
-            .setHeader("camelID").exchangeProperty("camelID")
-            .setHeader("exchangeID").exchangeProperty("exchangeID")
-            .setHeader("internalMsgID").exchangeProperty("internalMsgID")
-            .setHeader("bodyData").exchangeProperty("bodyData")
-            .convertBodyTo(String.class).to(getKafkaTopicUri("opsmgmt_platformtransactions"));
+        // from("direct:auditing")
+        //     .routeId("iDaaS-KIC")
+        //     .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
+        //     .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
+        //     .setHeader("processingtype").exchangeProperty("processingtype")
+        //     .setHeader("industrystd").exchangeProperty("industrystd")
+        //     .setHeader("component").exchangeProperty("componentname")
+        //     .setHeader("messagetrigger").exchangeProperty("messagetrigger")
+        //     .setHeader("processname").exchangeProperty("processname")
+        //     .setHeader("auditdetails").exchangeProperty("auditdetails")
+        //     .setHeader("camelID").exchangeProperty("camelID")
+        //     .setHeader("exchangeID").exchangeProperty("exchangeID")
+        //     .setHeader("internalMsgID").exchangeProperty("internalMsgID")
+        //     .setHeader("bodyData").exchangeProperty("bodyData")
+        //     .convertBodyTo(String.class).to(getKafkaTopicUri("opsmgmt_platformtransactions"));
 
         /*
          * Transactional Audit
@@ -421,8 +427,8 @@ public class CamelConfiguration extends RouteBuilder {
         ;
 
         // CCDA
-        from(getHL7CCDADirectory(config.getHl7CCDA_Directory()))
-                .routeId("ccdaProcessor")
+        from("servlet://ccda-processor")
+                .routeId("ccda-processor")
                 .convertBodyTo(String.class)
                 // set Auditing Properties
                 .setProperty("processingtype").constant("data")
@@ -439,7 +445,7 @@ public class CamelConfiguration extends RouteBuilder {
                 // iDAAS KIC Processing
                 .wireTap("direct:auditing")
                 // Unmarshall from XML Doc against XSD - or Bean to encapsulate features
-
+                .bean(CdaConversionService.class, "getFhirJsonFromCdaXMLString(${body})")
                 // Send to Topic
                 .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.vxuTopicName}}"))
         ;

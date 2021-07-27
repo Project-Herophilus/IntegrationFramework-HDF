@@ -132,7 +132,6 @@ public class ConfigProperties {
     public void setVxuPort(int vxuPort) {
         this.vxuPort = vxuPort;
     }
-
     // Setters: HL7 Directories
     public void setHl7ADT_Directory(String hl7ADT_Directory) { this.hl7ADT_Directory = hl7ADT_Directory; }
     public void setHl7ORM_Directory(String hl7ORM_Directory) { this.hl7ORM_Directory = hl7ORM_Directory; }
@@ -152,5 +151,6 @@ public class ConfigProperties {
     public void setrdeTopicName(String rdeTopicName) { this.rdeTopicName = rdeTopicName; }
     public void setschTopicName(String schTopicName) { this.schTopicName = schTopicName; }
     public void setccdaTopicName(String ccdaTopicName) { this.ccdaTopicName = ccdaTopicName; }
+    public void setvxuTopicName(String vxuTopicName) { this.vxuTopicName = vxuTopicName; }
 
 }
