@@ -12,7 +12,7 @@ fi
 
 # Initialize script variables
 NAME="idaas-connect-fhir"
-IMAGE="us.icr.io/clinical_data_platform/idaas-connect-fhir"
+IMAGE="us.icr.io/clinical_data_platform/idaas-connect-fhir:$PIPELINE_STAGE_INPUT_REVS"
 if [ -z IMAGE ]; then
   echo "$IMAGE not set. If using $PIPELINE_IMAGE_URL this variable is only configured when a "Container Registry" build job is used as the stage input."
   exit 1
@@ -52,7 +52,7 @@ spec:
       containers:
       - name: $NAME
         image: $IMAGE
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         ports:
         - containerPort: 5000
 ---
@@ -105,4 +105,3 @@ echo "URL=http://$ip_addr"
 echo "PORT=$port"
 echo ""
 echo "$NAME running at: http://$ip_addr:$port"
-

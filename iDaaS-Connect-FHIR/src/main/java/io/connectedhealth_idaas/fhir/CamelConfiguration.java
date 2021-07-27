@@ -197,7 +197,49 @@ public class CamelConfiguration extends RouteBuilder {
     /*
      *  Any endpoint defined would be managed by access http(s)://<servername>:<serverport>/<resource name>
      */
+    /*
+     *  Bundle Processing
+    */
+        from("servlet://bundle").noAutoStartup()
+        .routeId("FHIRBundles")
+        .convertBodyTo(String.class)
+        // set Auditing Properties
+        .setProperty("processingtype").constant("data")
+        .setProperty("appname").constant("iDAAS-Connect-FHIR")
+        .setProperty("messagetrigger").constant("Bundles")
+        .setProperty("component").simple("${routeId}")
+        .setProperty("camelID").simple("${camelId}")
+        .setProperty("exchangeID").simple("${exchangeId}")
+        .setProperty("internalMsgID").simple("${id}")
+        .setProperty("bodyData").simple("${body}")
+        .setProperty("processname").constant("Input")
+        .setProperty("auditdetails").constant("Bundle resource/bundle received")
+        // iDAAS DataHub Processing
+        .wireTap("direct:auditing")
+        // Send to FHIR Server
+        .choice().when(simple("{{idaas.processToFHIR}}"))
+            .setHeader(Exchange.CONTENT_TYPE,constant("application/json"))
+            .to(getFHIRServerUri("Bundles"))
+            //Process Response and Implement core to this should leverage event Builder
+            // as a Bean
 
+            .convertBodyTo(String.class)
+            // set Auditing Properties – will be inside a loop one per defined resource
+            .setProperty("processingtype").constant("data")
+            .setProperty("appname").constant("iDAAS-Connect-FHIR")
+            .setProperty("industrystd").constant("FHIR")
+            .setProperty("messagetrigger").constant("Bundles")
+            .setProperty("component").simple("${routeId}")
+            .setProperty("processname").constant("Response")
+            .setProperty("camelID").simple("${camelId}")
+            .setProperty("exchangeID").simple("${exchangeId}")
+            .setProperty("internalMsgID").simple("${id}")
+            .setProperty("bodyData").simple("${body}")
+            .setProperty("auditdetails").constant("Bundles response resource/bundle received")
+            // iDAAS DataHub Processing
+            .wireTap("direct:auditing")// Invoke External FHIR Server
+        .endChoice();
+        ;
     /*
      *  Genomics - Molecular Research
      */
@@ -284,42 +326,42 @@ public class CamelConfiguration extends RouteBuilder {
                 .wireTap("direct:auditing")
             .endChoice();
     ;
-    from("servlet://alergyintollerance")
-            .routeId("FHIRAllergyIntollerance")
+    from("servlet://allergyintolerance")
+            .routeId("FHIRAllergyIntolerance")
             .convertBodyTo(String.class)
             // set Auditing Properties
             .setProperty("processingtype").constant("data")
             .setProperty("appname").constant("iDAAS-Connect-FHIR")
-            .setProperty("messagetrigger").constant("AllergyIntollerance")
+            .setProperty("messagetrigger").constant("AllergyIntolerance")
             .setProperty("component").simple("${routeId}")
             .setProperty("camelID").simple("${camelId}")
             .setProperty("exchangeID").simple("${exchangeId}")
             .setProperty("internalMsgID").simple("${id}")
             .setProperty("bodyData").simple("${body}")
             .setProperty("processname").constant("Input")
-            .setProperty("auditdetails").constant("Allergy Intollerance message received")
+            .setProperty("auditdetails").constant("Allergy Intolerance message received")
             // iDAAS KIC - Auditing Processing
             .wireTap("direct:auditing")
             // Send To Topic
-            .convertBodyTo(String.class).to(getKafkaTopicUri("fhirsvr_allergyintellorance"))
+            .convertBodyTo(String.class).to(getKafkaTopicUri("fhirsvr_allergyintolerance"))
             .choice().when(simple("{{idaas.processToFHIR}}"))
                 //Send to FHIR Server
                 .setHeader(Exchange.CONTENT_TYPE,constant("application/json"))
-                .to(getFHIRServerUri("AllergyIntollerance"))
+                .to(getFHIRServerUri("AllergyIntolerance"))
                 //Process Response
                 .convertBodyTo(String.class)
                 // set Auditing Properties
                 .setProperty("processingtype").constant("data")
                 .setProperty("appname").constant("iDAAS-Connect-FHIR")
                 .setProperty("industrystd").constant("FHIR")
-                .setProperty("messagetrigger").constant("allergyintollerance")
+                .setProperty("messagetrigger").constant("allergyintolerance")
                 .setProperty("component").simple("${routeId}")
                 .setProperty("processname").constant("Response")
                 .setProperty("camelID").simple("${camelId}")
                 .setProperty("exchangeID").simple("${exchangeId}")
                 .setProperty("internalMsgID").simple("${id}")
                 .setProperty("bodyData").simple("${body}")
-                .setProperty("auditdetails").constant("allergyintollerance FHIR response message received")
+                .setProperty("auditdetails").constant("allergyintolerance FHIR response message received")
                 // iDAAS KIC - Auditing Processing
                 .wireTap("direct:auditing")
             .endChoice();
