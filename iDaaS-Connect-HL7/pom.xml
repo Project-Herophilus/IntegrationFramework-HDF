@@ -155,6 +155,11 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-management</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.connectedhealth_idaas</groupId>
+            <artifactId>eventbuilder</artifactId>
+            <version>1.8-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <profiles>
@@ -182,4 +187,3 @@
         </plugins>
     </build>
 </project>
-
