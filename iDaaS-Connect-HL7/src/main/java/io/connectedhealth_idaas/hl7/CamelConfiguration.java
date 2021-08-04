@@ -42,20 +42,6 @@ public class CamelConfiguration extends RouteBuilder {
     @Autowired
     private ConfigProperties config;
 
-    /*@Bean
-    private HL7MLLPNettyEncoderFactory hl7Encoder() {
-        HL7MLLPNettyEncoderFactory encoder = new HL7MLLPNettyEncoderFactory();
-        encoder.setCharset("iso-8859-1");
-        //encoder.setConvertLFtoCR(true);
-        return encoder;
-    }
-
-    @Bean
-    private HL7MLLPNettyDecoderFactory hl7Decoder() {
-        HL7MLLPNettyDecoderFactory decoder = new HL7MLLPNettyDecoderFactory();
-        decoder.setCharset("iso-8859-1");
-        return decoder;
-    }*/
     @Bean 
     private CCDATransformer ccdaTransformer(String cdaDocument){
         CCDATransformer ccdaTransformer = new CCDATransformer();
