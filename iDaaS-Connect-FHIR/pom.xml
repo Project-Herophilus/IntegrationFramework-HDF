@@ -96,6 +96,11 @@
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.12</version>
         </dependency>
+        <!-- Parsing to/from JSON -->
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-jackson-starter</artifactId>
+        </dependency>
         <!--https://stackoverflow.com/questions/48722138/how-to-monitor-apache-camel-routes-in-a-java-project-using-hawtio-->
         <!-- UI -->
         <dependency>

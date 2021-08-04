@@ -100,6 +100,12 @@ public class CamelConfiguration extends RouteBuilder {
    */
   @Override
   public void configure() throws Exception {
+    // https://tomd.xyz/camel-rest/
+    // Rest Configuration
+    // Define the implementing component - and accept the default host and port
+    restConfiguration().component("servlet")
+        .host("0.0.0.0").port(String.valueOf(simple("{{server.port}}")));
+
     /*
      *   HIDN
      *   HIDN - Health information Data Network
@@ -168,6 +174,34 @@ public class CamelConfiguration extends RouteBuilder {
     /*
     *   General iDaaS Platform
     */
+    rest("/api/hidn")
+        .post()
+        .route()
+        .routeId("API-HIDN")
+         // Data Parsing and Conversions
+        // Normal Processing
+        .convertBodyTo(String.class)
+        .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
+        .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
+        .setHeader("eventdate").simple("eventdate")
+        .setHeader("eventtime").simple("eventtime")
+        .setHeader("processingtype").exchangeProperty("processingtype")
+        .setHeader("industrystd").exchangeProperty("industrystd")
+        .setHeader("component").exchangeProperty("componentname")
+        .setHeader("processname").exchangeProperty("processname")
+        .setHeader("organization").exchangeProperty("organization")
+        .setHeader("careentity").exchangeProperty("careentity")
+        .setHeader("customattribute1").exchangeProperty("customattribute1")
+        .setHeader("customattribute2").exchangeProperty("customattribute2")
+        .setHeader("customattribute3").exchangeProperty("customattribute3")
+        .setHeader("camelID").exchangeProperty("camelID")
+        .setHeader("exchangeID").exchangeProperty("exchangeID")
+        .setHeader("internalMsgID").exchangeProperty("internalMsgID")
+        .setHeader("bodyData").exchangeProperty("bodyData")
+        .setHeader("bodySize").exchangeProperty("bodySize")
+        .wireTap("direct:hidn")
+    ;
+
     from("servlet://hidn")
         .routeId("HIDN")
          // Data Parsing and Conversions
