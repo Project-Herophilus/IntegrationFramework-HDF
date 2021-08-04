@@ -30,8 +30,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
+//iDaaS Event Builder
 import io.connectedhealth_idaas.eventbuilder.converters.ccda;
 import io.connectedhealth_idaas.eventbuilder.converters.ccda.validators;
+import io.connectedhealth_idaas.eventbuilder.events.platform.DeIdentificationEvent;
 
 @Component
 public class CamelConfiguration extends RouteBuilder {
@@ -89,6 +91,12 @@ public class CamelConfiguration extends RouteBuilder {
         mapping.addUrlMappings("/iDaaS/*");
         return mapping;
     }
+
+    @Bean
+    public DeIdentificationEventParser deidentificationEventParser() {
+        return new DeIdentificationEventParser();
+    }
+
 
     private String getKafkaTopicUri(String topic) {
         return "kafka:" + topic +
