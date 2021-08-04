@@ -253,10 +253,8 @@ public class CamelConfiguration extends RouteBuilder {
         // Send to FHIR Server
         .choice().when(simple("{{idaas.processToFHIR}}"))
             .setHeader(Exchange.CONTENT_TYPE,constant("application/json"))
-            .to(getFHIRServerUri("Bundles"))
-            //Process Response and Implement core to this should leverage event Builder
+            // This needs to deserialize the event and build individual resources
             // as a Bean
-
             .convertBodyTo(String.class)
             // set Auditing Properties – will be inside a loop one per defined resource
             .setProperty("processingtype").constant("data")
@@ -276,7 +274,7 @@ public class CamelConfiguration extends RouteBuilder {
         ;
     /*
      *  Genomics - Molecular Research
-     */
+
     from("servlet://molecularresearch").noAutoStartup()
             .routeId("FHIRMolecularResearch")
             .convertBodyTo(String.class)
@@ -315,7 +313,7 @@ public class CamelConfiguration extends RouteBuilder {
                 .wireTap("direct:auditing")// Invoke External FHIR Server
             .endChoice();
     ;
-
+*/
     /*
      *  Clinical FHIR
      */
@@ -341,21 +339,21 @@ public class CamelConfiguration extends RouteBuilder {
             // Send to FHIR Server
             .choice().when(simple("{{idaas.processToFHIR}}"))
                 .setHeader(Exchange.CONTENT_TYPE,constant("application/json"))
-                .to(getFHIRServerUri("AdverseEvents"))
+                .to(getFHIRServerUri("AdverseEvent"))
                 // Process Response
                 .convertBodyTo(String.class)
                 // set Auditing Properties
                 .setProperty("processingtype").constant("data")
                 .setProperty("appname").constant("iDAAS-Connect-FHIR")
                 .setProperty("industrystd").constant("FHIR")
-                .setProperty("messagetrigger").constant("adverseevents")
+                .setProperty("messagetrigger").constant("adverseevent")
                 .setProperty("component").simple("${routeId}")
                 .setProperty("processname").constant("Response")
                 .setProperty("camelID").simple("${camelId}")
                 .setProperty("exchangeID").simple("${exchangeId}")
                 .setProperty("internalMsgID").simple("${id}")
                 .setProperty("bodyData").simple("${body}")
-                .setProperty("auditdetails").constant("adverseevents FHIR response message received")
+                .setProperty("auditdetails").constant("adverseevent FHIR response message received")
                 // iDAAS KIC - Auditing Processing
                 .wireTap("direct:auditing")
             .endChoice();
