@@ -180,7 +180,7 @@ public class CamelConfiguration extends RouteBuilder {
          *
          */
         from("direct:auditing")
-            .routeId("iDaaS-KIC")
+            .routeId("iDaaS-Transactions-KIC")
             .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
             .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
             .setHeader("processingtype").exchangeProperty("processingtype")
@@ -208,7 +208,7 @@ public class CamelConfiguration extends RouteBuilder {
          *
          */
         from("direct:transactionauditing")
-            .routeId("iDaaS-KIC")
+            .routeId("iDaaS-App-KIC")
             .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
             .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
             .setHeader("processingtype").exchangeProperty("processingtype")
