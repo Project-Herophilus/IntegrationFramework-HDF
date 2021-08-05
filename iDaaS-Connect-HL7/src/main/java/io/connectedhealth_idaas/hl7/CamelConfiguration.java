@@ -445,7 +445,7 @@ public class CamelConfiguration extends RouteBuilder {
         ;
 
         // CCDA
-        from(getHL7CCDADirectory(config.getHl7CCDA_Directory()))
+        from(getHL7CCDAUriDirectory(config.getHl7CCDA_Directory()))
             .routeId("ccdaProcessor")
             .convertBodyTo(String.class)
             // set Auditing Properties
