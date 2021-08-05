@@ -31,8 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 //iDaaS Event Builder
-import io.connectedhealth_idaas.eventbuilder.converters.ccda;
-import io.connectedhealth_idaas.eventbuilder.converters.ccda.validators;
+import io.connectedhealth_idaas.eventbuilder.converters.ccda.CdaConversionService;
 import io.connectedhealth_idaas.eventbuilder.events.platform.DeIdentificationEvent;
 
 @Component
@@ -42,7 +41,7 @@ public class CamelConfiguration extends RouteBuilder {
     @Autowired
     private ConfigProperties config;
 
-    @Bean 
+   /* @Bean
     private CCDATransformer ccdaTransformer(String cdaDocument){
         CCDATransformer ccdaTransformer = new CCDATransformer();
         return ccdaTransformer;
@@ -52,8 +51,11 @@ public class CamelConfiguration extends RouteBuilder {
     private CCDAValidator ccdaValidator(String cdaDocument){
         CCDATransformer ccdaValidator = new CCDAValidator();
         return ccdaTransformer;
-    }
+    }*/
 
+    /*
+     *   Established KafkaEndpoint for usage
+     */
     @Bean
     private KafkaEndpoint kafkaEndpoint() {
         KafkaEndpoint kafkaEndpoint = new KafkaEndpoint();
@@ -66,6 +68,9 @@ public class CamelConfiguration extends RouteBuilder {
         return kafka;
     }
 
+    /*
+     *   Setups the configuration for a servlet to be used. This can be used to call a Web Service and/or REST API
+     */
     @Bean
     ServletRegistrationBean camelServlet() {
         // use a @Bean to register the Camel servlet which we need to do
@@ -79,41 +84,66 @@ public class CamelConfiguration extends RouteBuilder {
     }
 
     @Bean
-    public DeIdentificationEventParser deidentificationEventParser() {
-        return new DeIdentificationEventParser();
+    public DeIdentificationEvent deidentificationEventParser() {
+        return new DeIdentificationEvent();
     }
 
-
+    /*
+     *   Called to return a specific Kafka URI string based connection string for usage
+     *   Accepts a topic value retrieved from the properties of the asset
+     */
     private String getKafkaTopicUri(String topic) {
         return "kafka:" + topic +
                 "?brokers=" +
                 config.getKafkaBrokers();
     }
 
+    /*
+     *   Called to return a specific MLLP server based connection string for usage
+     *   Accepts a port value retrieved from the properties of the asset
+     */
     private String getHL7Uri2(int port) {
         String s = "mllp:0.0.0.0:" + port;
         //camel.dataformat.hl7.validate=false
         return s;
     }
 
+    /*
+     *   Called to return a specific Directory based connection string for usage
+     *   Accepts a directory value retrieved from the properties of the asset
+     */
     private String getHL7UriDirectory(String dirName) {
+        return "file:src/" + dirName + "?delete=true";
+    }
+    /*
+     *   Called to return a specific Directory based connection string for usage
+     *   Accepts a directory value retrieved from the properties of the asset
+     */
+    private String getHL7CCDAUriDirectory(String dirName) {
         return "file:src/" + dirName + "?delete=true";
     }
 
     /*
-     * Kafka implementation based upon https://camel.apache.org/components/latest/kafka-component.html
+     * Code to execute when the application starts and runs
      *
      */
     @Override
     public void configure() throws Exception {
 
-/*
+    /*
+     *  Direct component within platform to ensure we can centralize logic
+     *  There are some values we will need to set within every route
+     *  We are doing this to ensure we dont need to build a series of beans
+     *  and we keep the processing as lightweight as possible
+     *
+     *   Simple language reference
+     *   https://camel.apache.org/components/latest/languages/simple-language.html
      *   HIDN
      *   HIDN - Health information Data Network
      *   Intended to enable simple movement of data aside from specific standards
      *   Common Use Cases are areas to support remote (iOT/Edge) and any other need for small footprints to larger
      *   footprints
-     * : Unstructured data, st
+     *
      */
     from("direct:hidn")
          .routeId("HIDN-Endpoint")
@@ -416,27 +446,27 @@ public class CamelConfiguration extends RouteBuilder {
 
         // CCDA
         from(getHL7CCDADirectory(config.getHl7CCDA_Directory()))
-                .routeId("ccdaProcessor")
-                .convertBodyTo(String.class)
-                // set Auditing Properties
-                .setProperty("processingtype").constant("data")
-                .setProperty("appname").constant("iDAAS-Connect-HL7")
-                .setProperty("industrystd").constant("HL7-CCDA")
-                .setProperty("messagetrigger").constant("CCDA")
-                .setProperty("componentname").simple("${routeId}")
-                .setProperty("processname").constant("Input")
-                .setProperty("camelID").simple("${camelId}")
-                .setProperty("exchangeID").simple("${exchangeId}")
-                .setProperty("internalMsgID").simple("${id}")
-                .setProperty("bodyData").simple("${body}")
-                .setProperty("auditdetails").constant("CCDA document received")
-                // iDAAS KIC Processing
-                .wireTap("direct:auditing")
-                // Unmarshall from XML Doc against XSD - or Bean to encapsulate features
-
-                // Send to Topic
-                .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.vxuTopicName}}"))
+            .routeId("ccdaProcessor")
+            .convertBodyTo(String.class)
+            // set Auditing Properties
+            .setProperty("processingtype").constant("data")
+            .setProperty("appname").constant("iDAAS-Connect-HL7")
+            .setProperty("industrystd").constant("HL7-CCDA")
+            .setProperty("messagetrigger").constant("CCDA")
+            .setProperty("componentname").simple("${routeId}")
+            .setProperty("processname").constant("Input")
+            .setProperty("camelID").simple("${camelId}")
+            .setProperty("exchangeID").simple("${exchangeId}")
+            .setProperty("internalMsgID").simple("${id}")
+            .setProperty("bodyData").simple("${body}")
+            .setProperty("auditdetails").constant("CCDA document received")
+            // iDAAS KIC Processing
+            .wireTap("direct:auditing")
+            // Unmarshall from XML Doc against XSD - or Bean to encapsulate features
+            // Send to Topic
+           .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.vxuTopicName}}"))
         ;
+
         /*
          * https://camel.apache.org/components/3.7.x/mllp-component.html
          * HL7 v2x Server Implementations
