@@ -32,7 +32,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 import io.connectedhealth_idaas.eventbuilder.converters.ccda.CdaConversionService;
-import io.connectedhealth_idaas.eventbuilder.converters.ccda.validation.ValidatorImpl;
+// import io.connectedhealth_idaas.eventbuilder.converters.ccda.validation.ValidatorImpl;
 import java.io.OutputStream;
 
 @Component
