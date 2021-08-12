@@ -132,7 +132,7 @@ This capability to enable would require a few additional properties to be set.
 
 Below is a generic visual of how this looks (the visual below is specific to iDaaS Connect HL7): <br/>
 
-![iDaaS Platform - Visuals - iDaaS Data Flow - Detailed.png](https://github.com/RedHat-Healthcare/iDAAS/blob/master/images/iDAAS-Platform/iDaaS-Mgmt-UI.png)
+![iDaaS Platform - Visuals - iDaaS Data Flow - Detailed.png](https://github.com/RedHat-Healthcare/iDAAS/blob/master/Platform/Images/iDAAS-Platform/iDaaS-Mgmt-UI.png)
 
 Every asset has its own defined specific port, we have done this to ensure multiple solutions can be run simultaneously.
 
