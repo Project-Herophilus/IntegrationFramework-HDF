@@ -125,6 +125,11 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-management</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.connectedhealth-idaas</groupId>
+            <artifactId>idaas-eventbuilder</artifactId>
+            <version>2.2.0</version>
+        </dependency>
     </dependencies>
 
     <profiles>
