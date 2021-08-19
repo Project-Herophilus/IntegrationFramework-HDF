@@ -437,7 +437,7 @@ public class CamelConfiguration extends RouteBuilder {
                 .setProperty("exchangeID").simple("${exchangeId}")
                 .setProperty("internalMsgID").simple("${id}")
                 .setProperty("bodyData").simple("${body}")
-                .bean(FHIRRoutingEvent.class, "fhirRoutingEvent('AllergyIntolerance', ${body})")
+                .bean(FHIRRoutingEvent.class, "fhirRoutingEvent('AllergyIntolerence', ${body})")
                 .setProperty("auditdetails").constant("allergyintolerance terminology event called")
                 // iDAAS KIC - Auditing Processing
                 .wireTap("direct:auditing")
