@@ -1,4 +1,4 @@
-/*
+  /*
  * Copyright 2019 Red Hat, Inc.
  * <p>
  * Red Hat licenses this file to you under the Apache License, version
@@ -32,6 +32,7 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
+import io.connectedhealth_idaas.eventbuilder.events.platform.FHIRRoutingEvent;
 
 //import org.springframework.jms.connection.JmsTransactionManager;
 //import javax.jms.ConnectionFactory;
@@ -67,6 +68,12 @@ public class CamelConfiguration extends RouteBuilder {
     mapping.setServlet(new CamelHttpTransportServlet());
     mapping.addUrlMappings("/projherophilus/*");
     return mapping;
+  }
+
+  @Bean
+  private FHIRRoutingEvent serviceBuilder(){
+    FHIRRoutingEvent serviceBuilder = new FHIRRoutingEvent();
+    return serviceBuilder;
   }
 
   private String getKafkaTopicUri(String topic) {
@@ -154,6 +161,23 @@ public class CamelConfiguration extends RouteBuilder {
         .setHeader("internalMsgID").exchangeProperty("internalMsgID")
         .setHeader("bodyData").exchangeProperty("bodyData")
         .convertBodyTo(String.class).to(getKafkaTopicUri("opsmgmt_platformtransactions"))
+    ;
+
+    from("direct:terminologies")
+            .routeId("iDaaS-Terminologies")
+            .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
+            .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
+            .setHeader("processingtype").exchangeProperty("processingtype")
+            .setHeader("industrystd").exchangeProperty("industrystd")
+            .setHeader("component").exchangeProperty("componentname")
+            .setHeader("messagetrigger").exchangeProperty("messagetrigger")
+            .setHeader("processname").exchangeProperty("processname")
+            .setHeader("auditdetails").exchangeProperty("auditdetails")
+            .setHeader("camelID").exchangeProperty("camelID")
+            .setHeader("exchangeID").exchangeProperty("exchangeID")
+            .setHeader("internalMsgID").exchangeProperty("internalMsgID")
+            .setHeader("bodyData").exchangeProperty("bodyData")
+            .convertBodyTo(String.class).to(getKafkaTopicUri("terminologies"))
     ;
     /*
     *  Logging
@@ -344,10 +368,10 @@ public class CamelConfiguration extends RouteBuilder {
             .wireTap("direct:auditing")
             // Send To Topic
             .convertBodyTo(String.class).to(getKafkaTopicUri("fhirsvr_allergyintolerance"))
-            .choice().when(simple("{{idaas.processToFHIR}}"))
+            .choice()
+              .when(simple("{{idaas.processToFHIR}}"))
                 //Send to FHIR Server
                 .setHeader(Exchange.CONTENT_TYPE,constant("application/json"))
-                .to(getFHIRServerUri("AllergyIntolerance"))
                 //Process Response
                 .convertBodyTo(String.class)
                 // set Auditing Properties
@@ -363,8 +387,32 @@ public class CamelConfiguration extends RouteBuilder {
                 .setProperty("bodyData").simple("${body}")
                 .setProperty("auditdetails").constant("allergyintolerance FHIR response message received")
                 // iDAAS KIC - Auditing Processing
+                .to("direct:auditing")
+                .when(simple("{{idaas.processTerminologies}}"))
+                //Send to FHIR Server
+                .setHeader(Exchange.CONTENT_TYPE,constant("application/json"))
+
+                //Process Response
+                .convertBodyTo(String.class)
+                // set Auditing Properties
+                .setProperty("processingtype").constant("data")
+                .setProperty("appname").constant("iDAAS-Connect-FHIR")
+                .setProperty("industrystd").constant("FHIR")
+                .setProperty("messagetrigger").constant("allergyintolerance")
+                .setProperty("component").simple("${routeId}")
+                .setProperty("processname").constant("Response")
+                .setProperty("camelID").simple("${camelId}")
+                .setProperty("exchangeID").simple("${exchangeId}")
+                .setProperty("internalMsgID").simple("${id}")
+                .setProperty("bodyData").simple("${body}")
+                .bean(FHIRRoutingEvent.class, "fhirRoutingEvent('AllergyIntolerance', ${body})")
+                .setProperty("auditdetails").constant("allergyintolerance terminology event called")
+                // iDAAS KIC - Auditing Processing
                 .wireTap("direct:auditing")
+                .wireTap("direct:terminologies")
             .endChoice();
+
+
 
     from("servlet://appointment")
             .routeId("FHIRAppointment")
