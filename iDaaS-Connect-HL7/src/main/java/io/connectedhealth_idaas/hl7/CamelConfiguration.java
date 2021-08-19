@@ -29,16 +29,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-<<<<<<< HEAD
-import io.connectedhealth_idaas.eventbuilder.converters.ccda;
-import io.connectedhealth_idaas.eventbuilder.converters.ccda.validators;
-=======
+//iDaaS Event Builder
 import io.connectedhealth_idaas.eventbuilder.converters.ccda.CdaConversionService;
-import io.connectedhealth_idaas.eventbuilder.converters.ccda.validation.ValidatorImpl;
-import java.io.OutputStream;
->>>>>>> 21abb389e8934facfcc97fef6bb36d45592a53e0
+import io.connectedhealth_idaas.eventbuilder.events.platform.DeIdentificationEvent;
 
 @Component
 public class CamelConfiguration extends RouteBuilder {
@@ -47,22 +41,7 @@ public class CamelConfiguration extends RouteBuilder {
     @Autowired
     private ConfigProperties config;
 
-    /*@Bean
-    private HL7MLLPNettyEncoderFactory hl7Encoder() {
-        HL7MLLPNettyEncoderFactory encoder = new HL7MLLPNettyEncoderFactory();
-        encoder.setCharset("iso-8q859-1");
-        //encoder.setConvertLFtoCR(true);
-        return encoder;
-    }
-
-    @Bean
-    private HL7MLLPNettyDecoderFactory hl7Decoder() {
-        HL7MLLPNettyDecoderFactory decoder = new HL7MLLPNettyDecoderFactory();
-        decoder.setCharset("iso-8859-1");
-        return decoder;
-    }*/
-<<<<<<< HEAD
-    @Bean 
+   /* @Bean
     private CCDATransformer ccdaTransformer(String cdaDocument){
         CCDATransformer ccdaTransformer = new CCDATransformer();
         return ccdaTransformer;
@@ -72,22 +51,11 @@ public class CamelConfiguration extends RouteBuilder {
     private CCDAValidator ccdaValidator(String cdaDocument){
         CCDATransformer ccdaValidator = new CCDAValidator();
         return ccdaTransformer;
-    }
-=======
-    //Call getFhirJsonFromCdaXMLString method and pass in cda document
-    @Bean 
-    private CdaConversionService ccdaTransformer(){
-        CdaConversionService ccdaTransformer = new CdaConversionService();
-        return ccdaTransformer;
-    }
+    }*/
 
-    // @Bean 
-    // private OutputStream ccdaValidator(String bundle){
-    //     ValidatorImpl ccdaValidator = new ValidatorImpl();
-    //     return ccdaValidator.validateBundle(bundle);
-    // }
->>>>>>> 21abb389e8934facfcc97fef6bb36d45592a53e0
-
+    /*
+     *   Established KafkaEndpoint for usage
+     */
     @Bean
     private KafkaEndpoint kafkaEndpoint() {
         KafkaEndpoint kafkaEndpoint = new KafkaEndpoint();
@@ -100,6 +68,9 @@ public class CamelConfiguration extends RouteBuilder {
         return kafka;
     }
 
+    /*
+     *   Setups the configuration for a servlet to be used. This can be used to call a Web Service and/or REST API
+     */
     @Bean
     ServletRegistrationBean camelServlet() {
         // use a @Bean to register the Camel servlet which we need to do
@@ -112,39 +83,67 @@ public class CamelConfiguration extends RouteBuilder {
         return mapping;
     }
 
+    @Bean
+    public DeIdentificationEvent deidentificationEventParser() {
+        return new DeIdentificationEvent();
+    }
+
+    /*
+     *   Called to return a specific Kafka URI string based connection string for usage
+     *   Accepts a topic value retrieved from the properties of the asset
+     */
     private String getKafkaTopicUri(String topic) {
         return "kafka:" + topic +
                 "?brokers=" +
                 config.getKafkaBrokers();
     }
 
+    /*
+     *   Called to return a specific MLLP server based connection string for usage
+     *   Accepts a port value retrieved from the properties of the asset
+     */
     private String getHL7Uri2(int port) {
         String s = "mllp:0.0.0.0:" + port;
         //camel.dataformat.hl7.validate=false
         return s;
     }
 
+    /*
+     *   Called to return a specific Directory based connection string for usage
+     *   Accepts a directory value retrieved from the properties of the asset
+     */
     private String getHL7UriDirectory(String dirName) {
         return "file:src/" + dirName + "?delete=true";
     }
-
-    private String getHL7CCDADirectory(String dirName){
+    /*
+     *   Called to return a specific Directory based connection string for usage
+     *   Accepts a directory value retrieved from the properties of the asset
+     */
+    private String getHL7CCDAUriDirectory(String dirName) {
         return "file:src/" + dirName + "?delete=true";
     }
+
     /*
-     * Kafka implementation based upon https://camel.apache.org/components/latest/kafka-component.html
+     * Code to execute when the application starts and runs
      *
      */
     @Override
     public void configure() throws Exception {
 
-/*
+    /*
+     *  Direct component within platform to ensure we can centralize logic
+     *  There are some values we will need to set within every route
+     *  We are doing this to ensure we dont need to build a series of beans
+     *  and we keep the processing as lightweight as possible
+     *
+     *   Simple language reference
+     *   https://camel.apache.org/components/latest/languages/simple-language.html
      *   HIDN
      *   HIDN - Health information Data Network
      *   Intended to enable simple movement of data aside from specific standards
      *   Common Use Cases are areas to support remote (iOT/Edge) and any other need for small footprints to larger
      *   footprints
-     * : Unstructured data, st
+     *
      */
     from("direct:hidn")
          .routeId("HIDN-Endpoint")
@@ -176,43 +175,12 @@ public class CamelConfiguration extends RouteBuilder {
          * We are doing this to ensure we dont need to build a series of beans
          * and we keep the processing as lightweight as possible
          *
-<<<<<<< HEAD
-=======
          *   Simple language reference
          *   https://camel.apache.org/components/latest/languages/simple-language.html
          *
          */
-        // from("direct:auditing")
-        //     .routeId("iDaaS-KIC")
-        //     .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
-        //     .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
-        //     .setHeader("processingtype").exchangeProperty("processingtype")
-        //     .setHeader("industrystd").exchangeProperty("industrystd")
-        //     .setHeader("component").exchangeProperty("componentname")
-        //     .setHeader("messagetrigger").exchangeProperty("messagetrigger")
-        //     .setHeader("processname").exchangeProperty("processname")
-        //     .setHeader("auditdetails").exchangeProperty("auditdetails")
-        //     .setHeader("camelID").exchangeProperty("camelID")
-        //     .setHeader("exchangeID").exchangeProperty("exchangeID")
-        //     .setHeader("internalMsgID").exchangeProperty("internalMsgID")
-        //     .setHeader("bodyData").exchangeProperty("bodyData")
-        //     .convertBodyTo(String.class).to(getKafkaTopicUri("opsmgmt_platformtransactions"));
-
-        /*
-         * Transactional Audit
-         *
-         * Direct component within platform to ensure we can centralize logic
-         * There are some values we will need to set within every route
-         * We are doing this to ensure we dont need to build a series of beans
-         * and we keep the processing as lightweight as possible
-         *
->>>>>>> 21abb389e8934facfcc97fef6bb36d45592a53e0
-         *   Simple language reference
-         *   https://camel.apache.org/components/latest/languages/simple-language.html
-         *
-         */
-        from("direct:transactionauditing")
-            .routeId("iDaaS-KIC")
+        from("direct:auditing")
+            .routeId("iDaaS-Transactions-KIC")
             .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
             .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
             .setHeader("processingtype").exchangeProperty("processingtype")
@@ -225,7 +193,6 @@ public class CamelConfiguration extends RouteBuilder {
             .setHeader("exchangeID").exchangeProperty("exchangeID")
             .setHeader("internalMsgID").exchangeProperty("internalMsgID")
             .setHeader("bodyData").exchangeProperty("bodyData")
-<<<<<<< HEAD
             .convertBodyTo(String.class).to(getKafkaTopicUri("opsmgmt_platformtransactions"));
 
         /*
@@ -241,7 +208,7 @@ public class CamelConfiguration extends RouteBuilder {
          *
          */
         from("direct:transactionauditing")
-            .routeId("iDaaS-KIC")
+            .routeId("iDaaS-App-KIC")
             .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
             .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
             .setHeader("processingtype").exchangeProperty("processingtype")
@@ -254,8 +221,6 @@ public class CamelConfiguration extends RouteBuilder {
             .setHeader("exchangeID").exchangeProperty("exchangeID")
             .setHeader("internalMsgID").exchangeProperty("internalMsgID")
             .setHeader("bodyData").exchangeProperty("bodyData")
-=======
->>>>>>> 21abb389e8934facfcc97fef6bb36d45592a53e0
             .setHeader("errorID").exchangeProperty("internalMsgID")
             .setHeader("errorData").exchangeProperty("bodyData")
             .setHeader("transactionCount").exchangeProperty("transactionCount")
@@ -480,37 +445,28 @@ public class CamelConfiguration extends RouteBuilder {
         ;
 
         // CCDA
-<<<<<<< HEAD
-        from(getHL7CCDADirectory(config.getHl7CCDA_Directory()))
-                .routeId("ccdaProcessor")
-=======
-        from("servlet://ccda-processor")
-                .routeId("ccda-processor")
->>>>>>> 21abb389e8934facfcc97fef6bb36d45592a53e0
-                .convertBodyTo(String.class)
-                // set Auditing Properties
-                .setProperty("processingtype").constant("data")
-                .setProperty("appname").constant("iDAAS-Connect-HL7")
-                .setProperty("industrystd").constant("HL7-CCDA")
-                .setProperty("messagetrigger").constant("CCDA")
-                .setProperty("componentname").simple("${routeId}")
-                .setProperty("processname").constant("Input")
-                .setProperty("camelID").simple("${camelId}")
-                .setProperty("exchangeID").simple("${exchangeId}")
-                .setProperty("internalMsgID").simple("${id}")
-                .setProperty("bodyData").simple("${body}")
-                .setProperty("auditdetails").constant("CCDA document received")
-                // iDAAS KIC Processing
-                .wireTap("direct:auditing")
-                // Unmarshall from XML Doc against XSD - or Bean to encapsulate features
-<<<<<<< HEAD
-
-=======
-                .bean(CdaConversionService.class, "getFhirJsonFromCdaXMLString(${body})")
->>>>>>> 21abb389e8934facfcc97fef6bb36d45592a53e0
-                // Send to Topic
-                .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.vxuTopicName}}"))
+        from(getHL7CCDAUriDirectory(config.getHl7CCDA_Directory()))
+            .routeId("ccdaProcessor")
+            .convertBodyTo(String.class)
+            // set Auditing Properties
+            .setProperty("processingtype").constant("data")
+            .setProperty("appname").constant("iDAAS-Connect-HL7")
+            .setProperty("industrystd").constant("HL7-CCDA")
+            .setProperty("messagetrigger").constant("CCDA")
+            .setProperty("componentname").simple("${routeId}")
+            .setProperty("processname").constant("Input")
+            .setProperty("camelID").simple("${camelId}")
+            .setProperty("exchangeID").simple("${exchangeId}")
+            .setProperty("internalMsgID").simple("${id}")
+            .setProperty("bodyData").simple("${body}")
+            .setProperty("auditdetails").constant("CCDA document received")
+            // iDAAS KIC Processing
+            .wireTap("direct:auditing")
+            // Unmarshall from XML Doc against XSD - or Bean to encapsulate features
+            // Send to Topic
+           .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.vxuTopicName}}"))
         ;
+
         /*
          * https://camel.apache.org/components/3.7.x/mllp-component.html
          * HL7 v2x Server Implementations

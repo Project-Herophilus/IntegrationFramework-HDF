@@ -41,7 +41,6 @@ public class ConfigProperties {
     public String getIbmURI() {
         return ibmURI;
     }
-
     public String getHapiURI() {
         return hapiURI;
     }
