@@ -32,8 +32,7 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
-import io.connectedhealth_idaas.eventbuilder.events.platform.FHIRRoutingEvent;
-
+import io.connectedhealth_idaas.eventbuilder.events.platform.FHIRTerminologyProcessorEvent;
 //import org.springframework.jms.connection.JmsTransactionManager;
 //import javax.jms.ConnectionFactory;
 import org.springframework.stereotype.Component;
@@ -68,12 +67,6 @@ public class CamelConfiguration extends RouteBuilder {
     mapping.setServlet(new CamelHttpTransportServlet());
     mapping.addUrlMappings("/projherophilus/*");
     return mapping;
-  }
-
-  @Bean
-  private FHIRRoutingEvent serviceBuilder(){
-    FHIRRoutingEvent serviceBuilder = new FHIRRoutingEvent();
-    return serviceBuilder;
   }
 
   private String getKafkaTopicUri(String topic) {
@@ -437,8 +430,8 @@ public class CamelConfiguration extends RouteBuilder {
                 .setProperty("exchangeID").simple("${exchangeId}")
                 .setProperty("internalMsgID").simple("${id}")
                 .setProperty("bodyData").simple("${body}")
-                .bean(FHIRRoutingEvent.class, "fhirRoutingEvent('AllergyIntolerence', ${body})")
-                .setProperty("auditdetails").constant("allergyintolerance terminology event called")
+                .bean(FHIRTerminologyProcessorEvent.class, "fhirBuildTermsForProcessing2('AllergyIntolerence', ${body})")
+            .setProperty("auditdetails").constant("allergyintolerance terminology event called")
                 // iDAAS KIC - Auditing Processing
                 .wireTap("direct:auditing")
                 .wireTap("direct:terminologies")
