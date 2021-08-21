@@ -25,17 +25,13 @@ and beyond.
 Below please find a visual that does visualize the entire iDaaS capabilities set. The key thing to note is while each specific iDaaS capability is purpose built and designed
 for any type of customer public or hybrid cloud our focus is on meeting data where it is securely and at scale.
 
-![iDaaS Platform - Visuals - iDaaS Data Flow - Detailed.png](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/Platform/Images/iDAAS-Platform/iDAAS%20Platform%20-%20Visuals%20-%20iDaaS%20Data%20Flow%20-%20Detailed.png)
+![iDaaS Data Flow - Detailed.png](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/Platform/Images/iDAAS-Platform/iDAAS-DataFlow.png)
 
 # Pre-Requisites
 For all iDaaS design patterns it should be assumed that you will either install as part of this effort, or have the following:
 
 1. Java JDK
-   Java is what everything is developed in. While we list JDK 8 SDK you can run a Java SDKs from
-   version 8, 11, 13,14 and 15. We have leveraged all these JDKs and been able to build, compile and run the
-   code within the community leveraging iDaaS. We always recommend to consult upstream technologies to ensure these products
-   are certified and will run beyond a developer machine. We have also seen some tweaks needed in POM files for
-   specific Java versions.
+   Java is what everything is developed in. The current supported JDK release(s) are 1.8 and 11.
    <a href="https://developers.redhat.com/products/openjdk/download" target=_blank>OpenJDK Download Site</a>
 2. An existing Kafka (or some flavor of it) up and running. Red Hat currently implements AMQ-Streams based on Apache Kafka; however, we
    have implemented iDaaS with numerous Kafka implementations. Please see the following files we have included to try and help: <br/>
@@ -51,7 +47,9 @@ For all iDaaS design patterns it should be assumed that you will either install 
    run and any libraries need to be pulled down they can.<br/>
 
 # Additional Configuration Detials
-For IP addressing we have seen well documented issues with IPV6. For all iDaaS design patterns it should be assumed that you will either install as part of this effort, or have the following:
+For IP addressing we have seen well documented issues with using IPV6. For all iDaaS design patterns it should be assumed that you will either install as part of this effort, or have the following:
+
+## Specific RHEL Instructions
 1. Specific to iDaaS Connect HL7 design patterns/reference architecture IPv4 must be enabled at the OS level, IPv6 will cause connectivity issues and in many cases outright failure of the components to function.<br/>
    https://access.redhat.com/solutions/8709
    But here's the current specifics: <br/>
@@ -86,7 +84,10 @@ Please see the following files we have included to try and help: <br/>
 [Kafka](https://github.com/RedHat-Healthcare/iDaaS-Demos/blob/master/Kafka.md)<br/>
 [KafkaWindows](https://github.com/RedHat-Healthcare/iDaaS-Demos/blob/master/KafkaWindows.md)<br/>
 
-## Step 2: Running the App: Maven Commands or Code Editor
+## (When Applicatble) Step 2: Make Sure ANY Technologies Needed is Up and Running
+Depending upon which iDaaS Connect components are being used there is a need to ensure that any third party software or services are up and running. 
+
+## Step 3: Running the App: Maven Commands or Code Editor
 This section covers how to get the application started.
 + Maven: The following steps are needed to run the code. Either through your favorite IDE or command line
 ```
