@@ -32,7 +32,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 //iDaaS Event Builder
 import io.connectedhealth_idaas.eventbuilder.converters.ccda.CdaConversionService;
-import io.connectedhealth_idaas.eventbuilder.events.platform.DeIdentificationEvent;
+//import io.connectedhealth_idaas.eventbuilder.events.platform.DeIdentificationEvent;
+import io.connectedhealth_idaas.eventbuilder.events.platform.HL7TerminologyProcessorEvent;
 
 @Component
 public class CamelConfiguration extends RouteBuilder {
@@ -83,10 +84,10 @@ public class CamelConfiguration extends RouteBuilder {
         return mapping;
     }
 
-    @Bean
-    public DeIdentificationEvent deidentificationEventParser() {
-        return new DeIdentificationEvent();
-    }
+//    @Bean
+//    public DeIdentificationEvent deidentificationEventParser() {
+//        return new DeIdentificationEvent();
+//    }
 
     /*
      *   Called to return a specific Kafka URI string based connection string for usage
@@ -234,6 +235,21 @@ public class CamelConfiguration extends RouteBuilder {
             .routeId("logging")
             .log(LoggingLevel.INFO, log, "HL7 Message: [${body}]")
         ;
+        from("direct:terminologies")
+                .routeId("iDaaS-Terminologies")
+                .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
+                .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
+                .setHeader("processingtype").exchangeProperty("processingtype")
+                .setHeader("industrystd").exchangeProperty("industrystd")
+                .setHeader("component").exchangeProperty("componentname")
+                .setHeader("messagetrigger").exchangeProperty("messagetrigger")
+                .setHeader("processname").exchangeProperty("processname")
+                .setHeader("auditdetails").exchangeProperty("auditdetails")
+                .setHeader("camelID").exchangeProperty("camelID")
+                .setHeader("exchangeID").exchangeProperty("exchangeID")
+                .setHeader("internalMsgID").exchangeProperty("internalMsgID")
+                .setHeader("bodyData").exchangeProperty("bodyData")
+                .convertBodyTo(String.class).to(getKafkaTopicUri("terminologies-hl7"));
 
     /*
     *   General iDaaS Platform
@@ -499,23 +515,43 @@ public class CamelConfiguration extends RouteBuilder {
                 // Send to Topic
              .convertBodyTo(String.class).to(getKafkaTopicUri(config.getadtTopicName()))
              //Response to HL7 Message Sent Built by platform
-             .choice().when(simple("{{idaas.adtACKResponse}}"))
-                 .transform(HL7.ack())
-                 // This would enable persistence of the ACK
-                 .convertBodyTo(String.class)
-                 .setProperty("bodyData").simple("${body}")
-                 .setProperty("processingtype").constant("data")
-                 .setProperty("appname").constant("iDAAS-Connect-HL7")
-                 .setProperty("industrystd").constant("HL7")
-                 .setProperty("messagetrigger").constant("ADT")
-                 .setProperty("componentname").simple("${routeId}")
-                 .setProperty("camelID").simple("${camelId}")
-                 .setProperty("exchangeID").simple("${exchangeId}")
-                 .setProperty("internalMsgID").simple("${id}")
-                 .setProperty("processname").constant("Input")
-                 .setProperty("auditdetails").constant("ACK Processed")
-                 // iDaaS KIC Processing
-                 .wireTap("direct:auditing")
+             .choice()
+//                 .when(simple("{{idaas.adtACKResponse}}"))
+//                 .transform(HL7.ack())
+//                 // This would enable persistence of the ACK
+//                 .convertBodyTo(String.class)
+//                 .setProperty("bodyData").simple("${body}")
+//                 .setProperty("processingtype").constant("data")
+//                 .setProperty("appname").constant("iDAAS-Connect-HL7")
+//                 .setProperty("industrystd").constant("HL7")
+//                 .setProperty("messagetrigger").constant("ADT")
+//                 .setProperty("componentname").simple("${routeId}")
+//                 .setProperty("camelID").simple("${camelId}")
+//                 .setProperty("exchangeID").simple("${exchangeId}")
+//                 .setProperty("internalMsgID").simple("${id}")
+//                 .setProperty("processname").constant("Input")
+//                 .setProperty("auditdetails").constant("ACK Processed")
+//                 // iDaaS KIC Processing
+//                 .to("direct:auditing")
+                .when(simple("{{idaas.processTerminologies}}"))
+                // set Auditing Properties
+                .setProperty("processingtype").constant("data")
+                .setProperty("appname").constant("iDAAS-Connect-HL7")
+                .setProperty("industrystd").constant("HL7")
+                .setProperty("messagetrigger").constant("ADT")
+                .setProperty("component").simple("${routeId}")
+                .setProperty("processname").constant("terminologies")
+                .setProperty("camelID").simple("${camelId}")
+                .setProperty("exchangeID").simple("${exchangeId}")
+                .setProperty("internalMsgID").simple("${id}")
+                .setProperty("bodyData").simple("${body}")
+                //Invocation of FHIR Terminology Parsing
+                .bean(HL7TerminologyProcessorEvent.class, "hl7BuildTermsForProcessingToJSON('AllergyIntolerence', ${body})")
+                .setProperty("auditdetails").constant("allergyintolerance terminology event called")
+                // iDAAS KIC - Auditing Processing
+                .to("direct:auditing")
+                // Write Parsed FHIR Terminology Transactions to Topic
+                .to("direct:terminologies")
             .endChoice();
 
         // ORM
