@@ -2,17 +2,26 @@
 This is the upstream for RedHat Healthcare's <a href="https://github.com/RedHat-Healthcare/iDaaS-Connect/tree/master/iDaaS-Connect-HL7" target="_blank">iDaaS Connect HL7</a>. iDaaS Connect HL7 is designed to simplify HL7 integration platform development and delivery.
 iDAAS has several key components that provide many capabilities. iDAAS Connect is intended ONLY
 to enable iDAAS connectivity. iDAAS-Connect-HL7 specifically ONLY deals with enabling
-iDAAS to process the healthcare industry standard HL7 based transactions ONLY.
-It will process the following HL7 messages (ADT, ORM, ORU, MFN, MDM, PHA, SCH and VXU)
-from any vendor and any version of HL7 v2.
+iDAAS to process the healthcare industry standard HL7 and CCDA based transactions ONLY.
+The following transactions are supported:
+- HL7 messages (ADT, ORM, ORU, MFN, MDM, PHA, SCH and VXU) from any vendor and any version of HL7 v2.
+- CCDA Events 
+
+For ease of use and implementation this design pattern has built in support for the following protocols to support data processing:
+- MLLP (Minimal Lower Layer Protocol - the HL7 Protocol)
+- Files
+- HTTP(s) endpoint for CCDA
 
 ## Add-Ons
-This solution contains three supporting directories. The intent of these artifacts to enable
-resources to work locally: <br/>
-1. platform-scripts: support running amq, amq-streams (kafka) and doing very specific things with 
-Kafka such as: creating/listing and deleting topics needed for this solution
-and also building and packaging the solution as well. All the scripts are named to describe their capabilities <br/>
-2. platform-testdata: sample transactions to leverage for using the platform. 
+To support this design pattern/reference architecture there are a subset of assets avaiable to assist in the implementation : <br/>
+
+|Add-On | Description |
+| ------------ | ----------- |
+| [Diagrams](https://github.com/Project-Herophilus/Project-Herophilus-Assets/tree/main/Platform/Draw.IO)| Various Draw.IO diagrams that cover iDaaS  |
+| [Test Data](https://github.com/Project-Herophilus/Project-Herophilus-Assets/tree/main/Platform/Testdata)| Test data for all healthcare industry standards work  |
+| [Synthetic Data](https://github.com/Project-Herophilus/DataSynthesis)| Synthetic Data Tools and Data  |
+| [Data Simulators](https://github.com/Project-Herophilus/iDaaS-AddOns)| Simulators to help in implementation and testing  |
+
 
 ## Pre-Requisites
 For all iDaaS design patterns it should be assumed that you will either install as part of this effort, or have the following:
@@ -27,9 +36,6 @@ auto.offset.reset=earliest <br/>
 3. An internet connection with active internet connectivity, this is to ensure that if any Maven commands are
 run and any libraries need to be pulled down they can.<br/>
 
-We also leverage [Kafka Tools](https://kafkatool.com/) to help us show Kafka details and transactions; however, you can leverage
-code or various other Kafka technologies ot view the topics.
-
 # Scenario(s)
 This section is intended to cover any scenarios covered within this demo.
 
@@ -41,7 +47,9 @@ another system via the HL7/MLLP message standard.
 | ------------ | ----------- |
 | Healthcare Facility| MCTN |
 | Sending EMR/EHR | MMS |
-| HL7 Message Events | ADT (Admissions, Discharge and Transfers),ORM (Orders),ORU (Results) |
+| HL7 Message Events | ADT (Admissions, Discharge and Transfers),ORM (Orders),ORU (Results), MDM (Master Document Management), MFN (Master Files Notification), RDE (Pharmacy), SCH (Schedules), VXU (Vaccinations) |
+| CCDA Events | CCDA v3 compliant transactions |
+
 <br/>
 It is important to know that for every HL7 Message Type/Event there is a specifically defined, and dedicated, HL7 socket server endpoint.
 
