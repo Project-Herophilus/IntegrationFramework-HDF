@@ -42,18 +42,6 @@ public class CamelConfiguration extends RouteBuilder {
     @Autowired
     private ConfigProperties config;
 
-   /* @Bean
-    private CCDATransformer ccdaTransformer(String cdaDocument){
-        CCDATransformer ccdaTransformer = new CCDATransformer();
-        return ccdaTransformer;
-    }
-
-    @Bean 
-    private CCDAValidator ccdaValidator(String cdaDocument){
-        CCDATransformer ccdaValidator = new CCDAValidator();
-        return ccdaTransformer;
-    }*/
-
     /*
      *   Established KafkaEndpoint for usage
      */
@@ -84,10 +72,27 @@ public class CamelConfiguration extends RouteBuilder {
         return mapping;
     }
 
-//    @Bean
-//    public DeIdentificationEvent deidentificationEventParser() {
-//        return new DeIdentificationEvent();
-//    }
+   /*
+    *  Beans to be used for any stream related processes
+    */
+
+ /*    @Bean
+   public DeIdentificationEvent deidentificationEventParser() {
+       return new DeIdentificationEvent();
+   }
+
+      @Bean
+    private CCDATransformer ccdaTransformer(String cdaDocument){
+        CCDATransformer ccdaTransformer = new CCDATransformer();
+        return ccdaTransformer;
+    }
+
+    @Bean
+    private CCDAValidator ccdaValidator(String cdaDocument){
+        CCDATransformer ccdaValidator = new CCDAValidator();
+        return ccdaTransformer;
+    }*/
+
 
     /*
      *   Called to return a specific Kafka URI string based connection string for usage
