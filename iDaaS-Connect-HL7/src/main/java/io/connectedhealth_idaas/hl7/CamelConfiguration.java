@@ -249,7 +249,7 @@ public class CamelConfiguration extends RouteBuilder {
                 .setHeader("exchangeID").exchangeProperty("exchangeID")
                 .setHeader("internalMsgID").exchangeProperty("internalMsgID")
                 .setHeader("bodyData").exchangeProperty("bodyData")
-                .convertBodyTo(String.class).to(getKafkaTopicUri("terminologies-hl7"));
+                .convertBodyTo(String.class).to(getKafkaTopicUri("terminologies"));
 
     /*
     *   General iDaaS Platform
