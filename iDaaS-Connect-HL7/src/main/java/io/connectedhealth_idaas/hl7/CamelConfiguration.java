@@ -42,18 +42,6 @@ public class CamelConfiguration extends RouteBuilder {
     @Autowired
     private ConfigProperties config;
 
-   /* @Bean
-    private CCDATransformer ccdaTransformer(String cdaDocument){
-        CCDATransformer ccdaTransformer = new CCDATransformer();
-        return ccdaTransformer;
-    }
-
-    @Bean 
-    private CCDAValidator ccdaValidator(String cdaDocument){
-        CCDATransformer ccdaValidator = new CCDAValidator();
-        return ccdaTransformer;
-    }*/
-
     /*
      *   Established KafkaEndpoint for usage
      */
@@ -80,14 +68,31 @@ public class CamelConfiguration extends RouteBuilder {
         mapping.setName("CamelServlet");
         mapping.setLoadOnStartup(1);
         mapping.setServlet(new CamelHttpTransportServlet());
-        mapping.addUrlMappings("/iDaaS/*");
+        mapping.addUrlMappings("/projherophilus/*");
         return mapping;
     }
 
-//    @Bean
-//    public DeIdentificationEvent deidentificationEventParser() {
-//        return new DeIdentificationEvent();
-//    }
+   /*
+    *  Beans to be used for any stream related processes
+    */
+
+ /*    @Bean
+   public DeIdentificationEvent deidentificationEventParser() {
+       return new DeIdentificationEvent();
+   }
+
+      @Bean
+    private CCDATransformer ccdaTransformer(String cdaDocument){
+        CCDATransformer ccdaTransformer = new CCDATransformer();
+        return ccdaTransformer;
+    }
+
+    @Bean
+    private CCDAValidator ccdaValidator(String cdaDocument){
+        CCDATransformer ccdaValidator = new CCDAValidator();
+        return ccdaTransformer;
+    }*/
+
 
     /*
      *   Called to return a specific Kafka URI string based connection string for usage
@@ -235,6 +240,10 @@ public class CamelConfiguration extends RouteBuilder {
             .routeId("logging")
             .log(LoggingLevel.INFO, log, "HL7 Message: [${body}]")
         ;
+
+        /*
+         *   Terminologies component for processing terminology events
+         */
         from("direct:terminologies")
                 .routeId("iDaaS-Terminologies")
                 .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
@@ -484,6 +493,30 @@ public class CamelConfiguration extends RouteBuilder {
         ;
 
         /*
+         *   Servlet endpoint for CCDA
+         */
+        from("servlet://ccda")
+            .routeId("ccda-post")
+            .convertBodyTo(String.class)
+            // set Auditing Properties
+            .setProperty("processingtype").constant("data")
+            .setProperty("appname").constant("iDAAS-Connect-HL7")
+            .setProperty("industrystd").constant("HL7-CCDA")
+            .setProperty("messagetrigger").constant("CCDA")
+            .setProperty("componentname").simple("${routeId}")
+            .setProperty("processname").constant("Input")
+            .setProperty("camelID").simple("${camelId}")
+            .setProperty("exchangeID").simple("${exchangeId}")
+            .setProperty("internalMsgID").simple("${id}")
+            .setProperty("bodyData").simple("${body}")
+            .setProperty("auditdetails").constant("CCDA document received")
+            // iDAAS KIC Processing
+            .wireTap("direct:auditing")
+            // Send to Topic
+            .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.ccdaTopicName}}"))
+        ;
+
+        /*
          * https://camel.apache.org/components/3.7.x/mllp-component.html
          * HL7 v2x Server Implementations
          *  ------------------------------
@@ -516,23 +549,6 @@ public class CamelConfiguration extends RouteBuilder {
              .convertBodyTo(String.class).to(getKafkaTopicUri(config.getadtTopicName()))
              //Response to HL7 Message Sent Built by platform
              .choice()
-//                 .when(simple("{{idaas.adtACKResponse}}"))
-//                 .transform(HL7.ack())
-//                 // This would enable persistence of the ACK
-//                 .convertBodyTo(String.class)
-//                 .setProperty("bodyData").simple("${body}")
-//                 .setProperty("processingtype").constant("data")
-//                 .setProperty("appname").constant("iDAAS-Connect-HL7")
-//                 .setProperty("industrystd").constant("HL7")
-//                 .setProperty("messagetrigger").constant("ADT")
-//                 .setProperty("componentname").simple("${routeId}")
-//                 .setProperty("camelID").simple("${camelId}")
-//                 .setProperty("exchangeID").simple("${exchangeId}")
-//                 .setProperty("internalMsgID").simple("${id}")
-//                 .setProperty("processname").constant("Input")
-//                 .setProperty("auditdetails").constant("ACK Processed")
-//                 // iDaaS KIC Processing
-//                 .to("direct:auditing")
                 .when(simple("{{idaas.processTerminologies}}"))
                 // set Auditing Properties
                 .setProperty("processingtype").constant("data")
@@ -545,7 +561,7 @@ public class CamelConfiguration extends RouteBuilder {
                 .setProperty("exchangeID").simple("${exchangeId}")
                 .setProperty("internalMsgID").simple("${id}")
                 .setProperty("bodyData").simple("${body}")
-                //Invocation of FHIR Terminology Parsing
+                //Invocation of HL7 Terminology Parsing
                 .bean(HL7TerminologyProcessorEvent.class, "hl7BuildTermsForProcessingToJSON('AllergyIntolerence', ${body})")
                 .setProperty("auditdetails").constant("allergyintolerance terminology event called")
                 // iDAAS KIC - Auditing Processing
@@ -834,6 +850,7 @@ public class CamelConfiguration extends RouteBuilder {
                 // iDaaS KIC Processing
                 .wireTap("direct:auditing")
             .endChoice();
+
     }
 
 }
