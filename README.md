@@ -35,16 +35,17 @@ For all iDaaS design patterns it should be assumed that you will either install 
    <a href="https://developers.redhat.com/products/openjdk/download" target=_blank>OpenJDK Download Site</a>
 2. An existing Kafka (or some flavor of it) up and running. Red Hat currently implements AMQ-Streams based on Apache Kafka; however, we
    have implemented iDaaS with numerous Kafka implementations. Please see the following files we have included to try and help: <br/>
-   [Kafka](https://github.com/RedHat-Healthcare/iDaaS-Demos/blob/master/Kafka.md)<br/>
-   [KafkaWindows](https://github.com/RedHat-Healthcare/iDaaS-Demos/blob/master/KafkaWindows.md)<br/>
+   [Kafka](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/Kafka.md) <br/>
+   [KafkaWindows](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/KafkaWindows.md) <br/>
    No matter the platform chosen it is important to know that the Kafka out of the box implementation might require some changes depending
    upon your implementation needs. Here are a few we have made to ensure: <br/>
    In <kafka>/config/consumer.properties file we will be enhancing the property of auto.offset.reset to earliest. This is intended to enable any new
    system entering the group to read ALL the messages from the start. <br/>
    auto.offset.reset=earliest <br/>
-2. Some understanding of building, deploying Java artifacts and the commands associated. If using Maven commands then Maven would need to be intalled and runing for the environment you are using. More details about Maven can be found [here](https://maven.apache.org/install.html). This can all be done from an editor or command line, whatever the implementer is most comfortable with.
-3. An internet connection with active internet connectivity, this is to ensure that if any Maven commands are
+3. Some understanding of building, deploying Java artifacts and the commands associated. If using Maven commands then Maven would need to be intalled and runing for the environment you are using. More details about Maven can be found [here](https://maven.apache.org/install.html). This can all be done from an editor or command line, whatever the implementer is most comfortable with.
+4. An internet connection with active internet connectivity, this is to ensure that if any Maven commands are
    run and any libraries need to be pulled down they can.<br/>
+5. Something to view Kafka topics with as you are developing, validating and implementing any solution.
 
 # Additional Configuration Detials
 For IP addressing we have seen well documented issues with using IPV6. For all iDaaS design patterns it should be assumed that you will either install as part of this effort, or have the following:
@@ -81,11 +82,13 @@ This section covers the running any of the design patterns/accelerators. There a
 ## Step 1: Kafka Server To Connect To
 In order for ANY processing to occur you must have a Kafka server running that this accelerator is configured to connect to.
 Please see the following files we have included to try and help: <br/>
-[Kafka](https://github.com/RedHat-Healthcare/iDaaS-Demos/blob/master/Kafka.md)<br/>
-[KafkaWindows](https://github.com/RedHat-Healthcare/iDaaS-Demos/blob/master/KafkaWindows.md)<br/>
+[Kafka](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/Kafka.md) <br/>
+[KafkaWindows](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/KafkaWindows.md) <br/>
 
 ## (When Applicatble) Step 2: Make Sure ANY Technologies Needed is Up and Running
-Depending upon which iDaaS Connect components are being used there is a need to ensure that any third party software or services are up and running. 
+Depending upon which iDaaS Connect components are being used there is a need to ensure that any third party software or 
+services are up and running. This could be anything from external systems hosting files that you
+may be asked to pickup or external servers you will be connecting to, like FHIR servers.
 
 ## Step 3: Running the App: Maven Commands or Code Editor
 This section covers how to get the application started.
@@ -160,10 +163,6 @@ several defined and specific government initiatives. We have implemented a reusa
 design pattern to help meet this critical mandated set of requirements.
 <br>
 [Blue Button Readme](iDaaS-Connect-BlueButton/README.md)
-## iDaaS-Connect-Compliance
-This is intended to be an enabler for processing data from various IT systems and devices for the purpose of supporting activities
-related to Automation and Compliance.
-
 ## iDaaS-Connect-EDI
 EDI has been a standard around for decades, this repository does not introduce capabilities that compete
 with capabilities vailable for claims processing or other EDI very specific needs. The intent

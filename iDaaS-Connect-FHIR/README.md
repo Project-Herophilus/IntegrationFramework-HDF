@@ -3,7 +3,7 @@ This is the upstream for RedHat Healthcare's <a href="https://github.com/RedHat-
 to enable iDAAS connectivity. iDAAS-Connect-FHIR specifically ONLY deals with enabling 
 iDAAS to process the healthcare industry standard FHIR based resources ONLY. Here is the 
 <a href="https://www.hl7.org/fhir/resourcelist.html" target="_blank">current FHIR Resource List</a> 
-It will process over 60+ of the currently available resources - around 40 clinical FHIR 
+It will process over 80+ of the currently available resources - around 40 clinical FHIR 
 resources, all the financial public health and research/evidence based medicine/and quality
 reporting and testing resources. You can also find a list of the 
 <a href="http://connectedhealth-idaas.io/home/SupportedTransactions" target="_blank">platforms supported transactions</a> 
@@ -24,17 +24,14 @@ While we have tested with all three of them there could be a need to reconfigure
 For all iDaaS design patterns it should be assumed that you will either install as part of this effort, or have the following:
 
 1. An existing Kafka (or some flavor of it) up and running. Please see the following files we have included to try and help: <br/>
-[Kafka](https://github.com/RedHat-Healthcare/iDaaS-Demos/blob/master/Kafka.md)<br/>
-[KafkaWindows](https://github.com/RedHat-Healthcare/iDaaS-Demos/blob/master/KafkaWindows.md)<br/>
+[Kafka](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/Kafka.md) <br/>
+[KafkaWindows](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/KafkaWindows.md) <br/>
 No matter the platform chosen it is important to know that the Kafka out of the box implementation might require some changes depending upon your implementation needs. Here are a few we have made to ensure: <br/>
 In /config/consumer.properties file we will be enhancing the property of auto.offset.reset to earliest. This is intended to enable any new system entering the group to read ALL the messages from the start. <br/>
 auto.offset.reset=earliest <br/>
 2. Some understanding of building, deploying Java artifacts and the commands associated. If using Maven commands then Maven would need to be intalled and runing for the environment you are using. More details about Maven can be found [here](https://maven.apache.org/install.html)<br/>
 3. An internet connection with active internet connectivity, this is to ensure that if any Maven commands are
 run and any libraries need to be pulled down they can.<br/>
-
-We also leverage [Kafka Tools](https://kafkatool.com/) to help us show Kafka details and transactions; however, you can leverage
-code or various other Kafka technologies ot view the topics.
 
 ## Scenario: Integration 
 This repository follows a very common general facility based implementation. The implementation
@@ -62,8 +59,8 @@ This section covers the running of the solution. There are several options to st
 ## Step 1: Kafka Server To Connect To
 In order for ANY processing to occur you must have a Kafka server running that this accelerator is configured to connect to.
 Please see the following files we have included to try and help: <br/>
-[Kafka](https://github.com/RedHat-Healthcare/iDaaS-Demos/blob/master/Kafka.md)<br/>
-[KafkaWindows](https://github.com/RedHat-Healthcare/iDaaS-Demos/blob/master/KafkaWindows.md)<br/>
+[Kafka](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/Kafka.md) <br/>
+[KafkaWindows](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/KafkaWindows.md) <br/>
 
 ## Step 2: Running the App: Maven or Code Editor
 This section covers how to get the application started.
@@ -107,17 +104,13 @@ We have made a recent change to leverage Insomnia Core for testing APIs.  Levera
 platforms-addons/Insomnia-APITesting directory of this repository.
 
 
-## Ongoing Enhancements
-We maintain all enhancements within the Git Hub portal under the 
-<a href="https://github.com/Open-iDaaS/Open-iDaaS-Connect-FHIR/projects" target="_blank">projects tab</a>
 
 ## Defects/Bugs
-All defects or bugs should be submitted through the Git Hub Portal under the 
-<a href="https://github.com/Open-iDaaS/Open-iDaaS-Connect-FHIR/issues" target="_blank">issues tab</a>
+All defects or bugs should be submitted through the GitHub Portal under the 
+<a href="https://github.com/Project-Herophilus/iDaaS-Connect/issues" target="_blank">issues tab</a>
 
 ## Chat and Collaboration
-You can always leverage <a href="https://redhathealthcare.zulipchat.com" target="_blank">Red Hat Healthcare's ZuilpChat area</a>
-and find all the specific areas for iDAAS-Connect-FHIR. We look forward to any feedback!!
+You can always leverage the discussion boards in Github to post any feedback and file issues.
 
 If you would like to contribute feel free to, contributions are always welcome!!!! 
 
