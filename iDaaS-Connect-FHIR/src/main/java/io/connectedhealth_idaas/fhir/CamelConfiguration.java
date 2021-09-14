@@ -251,7 +251,7 @@ public class CamelConfiguration extends RouteBuilder {
     /*
      *  Bundle Processing
     */
-        from("servlet://bundle").noAutoStartup()
+        from("servlet://bundle")
         .routeId("FHIRBundles")
         .convertBodyTo(String.class)
         // set Auditing Properties
@@ -265,6 +265,8 @@ public class CamelConfiguration extends RouteBuilder {
         .setProperty("bodyData").simple("${body}")
         .setProperty("processname").constant("Input")
         .setProperty("auditdetails").constant("Bundle resource/bundle received")
+        // Send To Topic
+        .convertBodyTo(String.class).to(getKafkaTopicUri("fhirsvr_bundle"))
         // iDAAS DataHub Processing
         .wireTap("direct:auditing")
         // Send to FHIR Server
@@ -411,6 +413,7 @@ public class CamelConfiguration extends RouteBuilder {
                   .setProperty("internalMsgID").simple("${id}")
                   .setProperty("bodyData").simple("${body}")
                   .setProperty("auditdetails").constant("allergyintolerance FHIR response message received")
+                  .to(getFHIRServerUri("AllergyIntolerance"))
                   // iDAAS KIC - Auditing Processing
                   .to("direct:auditing")
              .when(simple("{{idaas.processTerminologies}}"))
