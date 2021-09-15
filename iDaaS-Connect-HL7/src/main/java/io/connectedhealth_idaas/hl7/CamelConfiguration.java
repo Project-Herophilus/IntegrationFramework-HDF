@@ -34,7 +34,7 @@ import org.springframework.stereotype.Component;
 import io.connectedhealth_idaas.eventbuilder.converters.ccda.CdaConversionService;
 //import io.connectedhealth_idaas.eventbuilder.events.platform.DeIdentificationEvent;
 import io.connectedhealth_idaas.eventbuilder.events.platform.HL7TerminologyProcessorEvent;
-// import io.connectedhealth_idaas.eventbuilder.parsers.fhir.FHIRBundleParser;
+import io.connectedhealth_idaas.eventbuilder.parsers.fhir.FHIRBundleParser;
 import io.github.linuxforhealth.hl7.HL7ToFHIRConverter;
 
 @Component
@@ -564,7 +564,7 @@ public class CamelConfiguration extends RouteBuilder {
         //     .setProperty("auditdetails").constant("Converted CCDA to FHIR Bundle")
         //     .wireTap("direct:auditing")
         //     // Send to Topic
-        //     .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.terminologies}}"))
+        //     .convertBodyTo(String.class).to(getKafkaTopicUri("terminologies"))
         // ;
         /*
          * https://camel.apache.org/components/3.7.x/mllp-component.html
