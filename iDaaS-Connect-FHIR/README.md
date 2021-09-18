@@ -8,18 +8,22 @@ resources, all the financial public health and research/evidence based medicine/
 reporting and testing resources. You can also find a list of the 
 <a href="http://connectedhealth-idaas.io/home/SupportedTransactions" target="_blank">platforms supported transactions</a> 
 
-This solution contains three supporting directories. The intent of these artifacts to enable
-resources to work locally: <br/>
-+ platform-scripts: support running kafka, building and running the solution as well. All the scripts are named to describe their capabilities <br/>
-+ platform-testdata: sample transactions to leverage for using the platform. 
+# General Background
+When designing anb building this capability we wanted to ensure that this was an enablement. This means that we focused 
+on the ability to enable systems to process FHIR resource data and determine if they wanted to persist the specific FHIR 
+resources to a FHIR server. If they did then we made sure the design pattern included supporting multiple FHIR servers. 
+So, whatever your choice to process to a FHIR server or not, we enable all these behaviors with simple configuration so
+you don't have to do anything but make simple configuration changes in the application.properties.
 
+## FHIR Servers Supported
 For this particular repository it has been tested and works with multiple FHIR servers. <br/>
-<a href="https://github.com/hapifhir/hapi-fhir-jpaserver-starter" target="_blank">HAPI FHIR JPA Server</a><br/> 
+<a href="https://github.com/hapifhir/hapi-fhir-jpaserver-starter" target="_blank">HAPI FHIR JPA Server</a><br/>
 <a href="https://github.com/IBM/FHIR" target="_blank">IBM FHIR Server</a><br/>
 <a href="https://github.com/microsoft/fhir-server" target="_blank">Microsoft Azure FHIR Server</a><br/>
 
-Which ever FHIR server you implement you will need to follow the specific install instructions from each vendor. 
-While we have tested with all three of them there could be a need to reconfigure the connectivity details to it. 
+Which ever FHIR server you implement you will need to follow the specific install instructions from each vendor.
+While we have tested with all three of them there could be a need to reconfigure the connectivity details to it.
+
 ## Pre-Requisites
 For all iDaaS design patterns it should be assumed that you will either install as part of this effort, or have the following:
 
@@ -100,16 +104,25 @@ idaas.msoftURI=http://localhost:9999/microsoftapi/api/v4/
 ```
 
 # Testing
-We have made a recent change to leverage Insomnia Core for testing APIs.  Leverage the files included in the 
-platforms-addons/Insomnia-APITesting directory of this repository.
+In order to assist anyone implementing or testing we have in the
+[KafkaWindows](https://github.com/Project-Herophilus/Project-Herophilus-Assets/tree/main/Testing)
 
+## API - Tests
+[KafkaWindows](https://github.com/Project-Herophilus/Project-Herophilus-Assets/tree/main/Testing/APIs/DataSynthesis)
 
+## API - Published Postman Content
+Here is the general invite to the Postman collection: https://app.getpostman.com/join-team?invite_code=2ad1e1b6b06ad4f377a54466d8136417&ws=7d70ed7c-dd18-48d6-95ec-f325d13e67f3 <br>
+Here are the published Postman Collections: https://universal-capsule-967150.postman.co/users/3200250
 
-## Defects/Bugs
+## Test Data
+Test data for all <br>
+[KafkaWindows](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/KafkaWindows.md) <br/>
+
+# Defects/Bugs
 All defects or bugs should be submitted through the GitHub Portal under the 
 <a href="https://github.com/Project-Herophilus/iDaaS-Connect/issues" target="_blank">issues tab</a>
 
-## Chat and Collaboration
+# Chat and Collaboration
 You can always leverage the discussion boards in Github to post any feedback and file issues.
 
 If you would like to contribute feel free to, contributions are always welcome!!!! 

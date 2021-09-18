@@ -32,11 +32,13 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
+// Event Builder
 import io.connectedhealth_idaas.eventbuilder.events.platform.FHIRTerminologyProcessorEvent;
+// Commented Out Imports
 //import org.springframework.jms.connection.JmsTransactionManager;
 //import javax.jms.ConnectionFactory;
-import org.springframework.stereotype.Component;
 //import sun.util.calendar.BaseCalendar;
+// Unused
 import java.time.LocalDate;
 
 @Component
@@ -270,9 +272,9 @@ public class CamelConfiguration extends RouteBuilder {
         // Send to FHIR Server
         .choice().when(simple("{{idaas.processToFHIR}}"))
             .setHeader(Exchange.CONTENT_TYPE,constant("application/json"))
-            // This needs to deserialize the event and build individual resources
-            // as a Bean
             .convertBodyTo(String.class)
+            // This will deserialize the event and build individual resources into an Array
+            // each one will need to be persisted to the topic individually
             // set Auditing Properties – will be inside a loop one per defined resource
             .setProperty("processingtype").constant("data")
             .setProperty("appname").constant("iDAAS-Connect-FHIR")
@@ -289,48 +291,7 @@ public class CamelConfiguration extends RouteBuilder {
             .wireTap("direct:auditing")// Invoke External FHIR Server
         .endChoice();
         ;
-    /*
-     *  Genomics - Molecular Research
 
-    from("servlet://molecularresearch").noAutoStartup()
-            .routeId("FHIRMolecularResearch")
-            .convertBodyTo(String.class)
-            // set Auditing Properties
-            .setProperty("processingtype").constant("data")
-            .setProperty("appname").constant("iDAAS-Connect-FHIR")
-            .setProperty("messagetrigger").constant("MolecularResearch")
-            .setProperty("component").simple("${routeId}")
-            .setProperty("camelID").simple("${camelId}")
-            .setProperty("exchangeID").simple("${exchangeId}")
-            .setProperty("internalMsgID").simple("${id}")
-            .setProperty("bodyData").simple("${body}")
-            .setProperty("processname").constant("Input")
-            .setProperty("auditdetails").constant("MolecularResearch resource/bundle received")
-            // iDAAS DataHub Processing
-            .wireTap("direct:auditing")
-            // Send to FHIR Server
-            .choice().when(simple("{{idaas.processToFHIR}}"))
-                .setHeader(Exchange.CONTENT_TYPE,constant("application/json"))
-                .to(getFHIRServerUri("MolecularResearch"))
-                //Process Response
-                .convertBodyTo(String.class)
-                // set Auditing Properties
-                .setProperty("processingtype").constant("data")
-                .setProperty("appname").constant("iDAAS-Connect-FHIR")
-                .setProperty("industrystd").constant("FHIR")
-                .setProperty("messagetrigger").constant("MolecularResearch")
-                .setProperty("component").simple("${routeId}")
-                .setProperty("processname").constant("Response")
-                .setProperty("camelID").simple("${camelId}")
-                .setProperty("exchangeID").simple("${exchangeId}")
-                .setProperty("internalMsgID").simple("${id}")
-                .setProperty("bodyData").simple("${body}")
-                .setProperty("auditdetails").constant("MolecularResearch response resource/bundle received")
-                // iDAAS DataHub Processing
-                .wireTap("direct:auditing")// Invoke External FHIR Server
-            .endChoice();
-    ;
-*/
     /*
      *  Clinical FHIR
      */
@@ -437,8 +398,6 @@ public class CamelConfiguration extends RouteBuilder {
                   // Write Parsed FHIR Terminology Transactions to Topic
                   .wireTap("direct:terminologies")
             .endChoice();
-
-
 
     from("servlet://appointment")
             .routeId("FHIRAppointment")
