@@ -153,6 +153,22 @@ For all the URL links we have made them localhost based, simply change them to t
 |iDaaS Connect Compliance Automation | 9985| http://localhost:9985/actuator/hawtio/index.html / http://localhost:9985/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=*|  
 |iDaaS Connect ePrescribe | 9986| http://localhost:9986/actuator/hawtio/index.html / http://localhost:9986/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=*|  
 
+# Testing
+In order to assist anyone implementing or testing this specific reference architecture we have in the put a series of
+assets in place.
+
+## Test Data
+To ensure resources have a variety of data to leverage for complete testing into our main assets [area](https://github.com/Project-Herophilus/Project-Herophilus-Assets/tree/main/Testing/TestData).
+We have put testing data into specifically defined directories to ensure it is simply to find and leverage.
+
+## API - Testing
+When it comes to any solution that leverages APIs they can be tested by leveraging our published Postman collections.
+### API - Published Postman Content
+Here is the general invite to the [PostmanCollection](https://app.getpostman.com/join-team?invite_code=2ad1e1b6b06ad4f377a54466d8136417&ws=7d70ed7c-dd18-48d6-95ec-f325d13e67f3). Or,
+you can leverage the published [PostmanCollections](https://universal-capsule-967150.postman.co/users/3200250), they
+are named by community and specific reference architecture they support.
+
+
 # iDaaS Connect Design Patterns
 Below are the specific iDaaS Connect branded repositories designed to solve data connectivity
 issues.

@@ -57,7 +57,6 @@ specifically defined URL endpoint. It posts the transactions and gets a response
     d. The response is also sent to the auditing topic location.<br/>
     
 # Start The Engine!!!
-
 This section covers the running of the solution. There are several options to start the Engine Up!!!
 
 ## Step 1: Kafka Server To Connect To
@@ -104,19 +103,19 @@ idaas.msoftURI=http://localhost:9999/microsoftapi/api/v4/
 ```
 
 # Testing
-In order to assist anyone implementing or testing we have in the
-[KafkaWindows](https://github.com/Project-Herophilus/Project-Herophilus-Assets/tree/main/Testing)
-
-## API - Tests
-[KafkaWindows](https://github.com/Project-Herophilus/Project-Herophilus-Assets/tree/main/Testing/APIs/DataSynthesis)
-
-## API - Published Postman Content
-Here is the general invite to the Postman collection: https://app.getpostman.com/join-team?invite_code=2ad1e1b6b06ad4f377a54466d8136417&ws=7d70ed7c-dd18-48d6-95ec-f325d13e67f3 <br>
-Here are the published Postman Collections: https://universal-capsule-967150.postman.co/users/3200250
+In order to assist anyone implementing or testing this specific reference architecture we have in the put a series of 
+assets in place. 
 
 ## Test Data
-Test data for all <br>
-[KafkaWindows](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/KafkaWindows.md) <br/>
+To ensure resources have a variety of data to leverage for complete testing into our main assets [area](https://github.com/Project-Herophilus/Project-Herophilus-Assets/tree/main/Testing/TestData).
+We have put testing data into specifically defined directories to ensure it is simply to find and leverage.
+
+## API - Testing
+When it comes to any solution APIs can be tested by leveraging our published Postman collections.
+### API - Published Postman Content
+Here is the general invite to the [PostmanCollection](https://app.getpostman.com/join-team?invite_code=2ad1e1b6b06ad4f377a54466d8136417&ws=7d70ed7c-dd18-48d6-95ec-f325d13e67f3). Or,
+you can leverage the published [PostmanCollections](https://universal-capsule-967150.postman.co/users/3200250),
+it is important to use either ProjectHerophilus-FHIR or iDaaS-FHIR shared collections.
 
 # Defects/Bugs
 All defects or bugs should be submitted through the GitHub Portal under the 
