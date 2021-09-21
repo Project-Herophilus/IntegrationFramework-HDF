@@ -532,40 +532,40 @@ public class CamelConfiguration extends RouteBuilder {
             .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.fhirBundleTopicName}}"))
         ;
 
-        // from(getKafkaTopicUri("{{idaas.fhirBundleTopicName}}"))
-        //     .routeId("fhir-bundle-terminologies")
-        //     .convertBodyTo(String.class)
-        //     // set Auditing Properties
-        //     .setProperty("processingtype").constant("data")
-        //     .setProperty("appname").constant("iDAAS-Connect-HL7")
-        //     .setProperty("industrystd").constant("HL7-CCDA")
-        //     .setProperty("messagetrigger").constant("CCDA")
-        //     .setProperty("componentname").simple("${routeId}")
-        //     .setProperty("processname").constant("Input")
-        //     .setProperty("camelID").simple("${camelId}")
-        //     .setProperty("exchangeID").simple("${exchangeId}")
-        //     .setProperty("internalMsgID").simple("${id}")
-        //     .setProperty("bodyData").simple("${body}")
-        //     .setProperty("auditdetails").constant("CCDA document received")
-        //     // iDAAS KIC Processing
-        //     .wireTap("direct:auditing")
-        //     // Unmarshall from XML Doc against XSD - or Bean to encapsulate features
-        //     .bean(FHIRBundleParser.class, "parseFHIRBundleToMessageHeader(${body})")
-        //     .setProperty("processingtype").constant("data")
-        //     .setProperty("appname").constant("iDAAS-Connect-HL7")
-        //     .setProperty("industrystd").constant("HL7-CCDA")
-        //     .setProperty("messagetrigger").constant("CCDA")
-        //     .setProperty("componentname").simple("${routeId}")
-        //     .setProperty("processname").constant("Input")
-        //     .setProperty("camelID").simple("${camelId}")
-        //     .setProperty("exchangeID").simple("${exchangeId}")
-        //     .setProperty("internalMsgID").simple("${id}")
-        //     .setProperty("bodyData").simple("${body}")
-        //     .setProperty("auditdetails").constant("Converted CCDA to FHIR Bundle")
-        //     .wireTap("direct:auditing")
-        //     // Send to Topic
-        //     .convertBodyTo(String.class).to(getKafkaTopicUri("terminologies"))
-        // ;
+        from(getKafkaTopicUri("{{idaas.fhirBundleTopicName}}"))
+            .routeId("fhir-bundle-terminologies")
+            .convertBodyTo(String.class)
+            // set Auditing Properties
+            .setProperty("processingtype").constant("data")
+            .setProperty("appname").constant("iDAAS-Connect-HL7")
+            .setProperty("industrystd").constant("HL7-CCDA")
+            .setProperty("messagetrigger").constant("CCDA")
+            .setProperty("componentname").simple("${routeId}")
+            .setProperty("processname").constant("Input")
+            .setProperty("camelID").simple("${camelId}")
+            .setProperty("exchangeID").simple("${exchangeId}")
+            .setProperty("internalMsgID").simple("${id}")
+            .setProperty("bodyData").simple("${body}")
+            .setProperty("auditdetails").constant("CCDA document received")
+            // iDAAS KIC Processing
+            .wireTap("direct:auditing")
+            // Unmarshall from XML Doc against XSD - or Bean to encapsulate features
+            .bean(FHIRBundleParser.class, "parseFHIRBundleToMessageHeader(${body})")
+            .setProperty("processingtype").constant("data")
+            .setProperty("appname").constant("iDAAS-Connect-HL7")
+            .setProperty("industrystd").constant("HL7-CCDA")
+            .setProperty("messagetrigger").constant("CCDA")
+            .setProperty("componentname").simple("${routeId}")
+            .setProperty("processname").constant("Input")
+            .setProperty("camelID").simple("${camelId}")
+            .setProperty("exchangeID").simple("${exchangeId}")
+            .setProperty("internalMsgID").simple("${id}")
+            .setProperty("bodyData").simple("${body}")
+            .setProperty("auditdetails").constant("Converted CCDA to FHIR Bundle")
+            .wireTap("direct:auditing")
+            // Send to Topic
+            .convertBodyTo(String.class).to(getKafkaTopicUri("terminologies"))
+        ;
         /*
          * https://camel.apache.org/components/3.7.x/mllp-component.html
          * HL7 v2x Server Implementations
