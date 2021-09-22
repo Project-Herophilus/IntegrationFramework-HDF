@@ -4,7 +4,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.redhat.idaas.connect</groupId>
+    <groupId>io.connectedhealth-idaas</groupId>
     <artifactId>idaas-connect</artifactId>
     <version>5.0.1-SNAPSHOT</version>
     <name>iDAAS Connect</name>
@@ -13,7 +13,7 @@
     <scm>
       <connection>scm:git:https://github.com/Project-Herophilus/iDaaS-Connect.git</connection>
       <url>https://github.com/Project-Herophilus/iDaaS-Connect</url>
-      <developerConnection>scm:git:https://github.com/Project-Herophilus/iDaaS-Connect.git</developerConnection>
+      <developerConnection>scm:git:https://github.com/Project-Herophilus/iDaaS-Connect</developerConnection>
       <tag>v1.0.0</tag>
     </scm>
 
