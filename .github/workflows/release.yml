@@ -1,91 +1,38 @@
-<?xml version="1.0" encoding="UTF-8"?>
+name: Release
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "The branch to checkout when cutting the release."
+        required: true
+        default: "master"
+      increment-major:
+        description: "Should we increment the major version (true/false)"
+        required: true
+        default: "false"
+      increment-minor:
+        description: "Should we increment the minor version (true/false)"
+        required: true
+        default: "false"
 
-    <modelVersion>4.0.0</modelVersion>
-
-    <groupId>io.connectedhealth-idaas</groupId>
-    <artifactId>idaas-connect</artifactId>
-    <version>5.0.1-SNAPSHOT</version>
-    <name>iDAAS Connect</name>
-    <packaging>pom</packaging>
-
-    <scm>
-      <connection>scm:git:https://github.com/Project-Herophilus/iDaaS-Connect.git</connection>
-      <url>https://github.com/Project-Herophilus/iDaaS-Connect</url>
-      <developerConnection>scm:git:https://github.com/Project-Herophilus/iDaaS-Connect.git</developerConnection>
-      <tag>v1.0.0</tag>
-    </scm>
-
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
-    
-    <modules>
-        <!--<module>iDaaS-Connect-BlueButton</module>-->
-    	<module>iDaaS-Connect-ComplianceAutomation</module>
-    	<module>iDaaS-Connect-EDI</module>
-    	<module>iDaaS-Connect-FHIR</module>
-    	<module>iDaaS-Connect-HL7</module>
-    	<module>iDaaS-Connect-ThirdParty</module>
-    </modules>
-
-    <profiles>
-      <profile>
-        <id>releases</id>
-        <build>
-          <plugins>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-source-plugin</artifactId>
-              <version>2.2.1</version>
-              <executions>
-                <execution>
-                <id>attach-sources</id>
-                <goals>
-                  <goal>jar-no-fork</goal>
-                </goals>
-                </execution>
-              </executions>
-              </plugin>
-              <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-javadoc-plugin</artifactId>
-              <version>2.9.1</version>
-              <executions>
-                <execution>
-                <id>attach-javadocs</id>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-                </execution>
-              </executions>
-              </plugin>
-          </plugins>
-        </build>
-      </profile>
-    </profiles>
-  
-    <build>
-      <pluginManagement>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-release-plugin</artifactId>
-            <version>2.5.3</version>
-            <configuration>
-               <tagNameFormat>v@{project.version}</tagNameFormat>
-               <autoVersionSubmodules>true</autoVersionSubmodules>
-               <releaseProfiles>releases</releaseProfiles>
-               <scmCommentPrefix>[ci skip]</scmCommentPrefix>
-            </configuration>
-          </plugin>
-        </plugins>
-      </pluginManagement>
-    </build>
-
-</project>
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[ci skip]')"
+    steps:
+    - name: Checkout source
+      uses: actions/checkout@v2
+      with:
+        token: ${{ secrets.IDAAS_ACCESS_TOKEN }}
+    - name: Java Maven release
+      uses: qcastel/github-actions-maven-release@v1.12.16
+      env:
+        JAVA_HOME: /usr/lib/jvm/java-11-openjdk/
+      with:
+        access-token: ${{ secrets.IDAAS_ACCESS_TOKEN }}
+        release-branch-name: ${{ github.event.inputs.branch }}
+        version-major: ${{ github.event.inputs.increment-major }}
+        version-minor: ${{ github.event.inputs.increment-minor }}
+        maven-args: "-Dmaven.deploy.skip=true"
+        git-release-bot-name: "idaas-bot"
