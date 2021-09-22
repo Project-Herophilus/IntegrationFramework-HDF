@@ -4,7 +4,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.connectedhealth-idaas</groupId>
+    <groupId>io.connectedhealth_idaas</groupId>
     <artifactId>idaas-connect</artifactId>
     <version>5.0.1-SNAPSHOT</version>
     <name>iDAAS Connect</name>
