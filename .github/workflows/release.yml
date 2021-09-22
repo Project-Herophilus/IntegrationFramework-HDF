@@ -6,7 +6,7 @@ on:
       branch:
         description: "The branch to checkout when cutting the release."
         required: true
-        default: "master"
+        default: "main"
       increment-major:
         description: "Should we increment the major version (true/false)"
         required: true
