@@ -1,10 +1,5 @@
 # iDaaS-Connect
-Complete Repository for all iDaaS-Connect Assets. We are consolidating from multiple repositories and ask that you do 
-not view the number of commits as any indication of anything. This is an open community, if you would like to get the 
-the same capabilities that run in fully supported open source then feel free to check out our downstream community 
-at https://github.com/RedHat-Healthcare/iDaaS-Connect to see the amount of effort this project continues to drive. 
-We look forward in July to start driving that community from this work in an automated manner.
-
+Complete Repository for all iDaaS-Connect reference architecture/design pattern/accelerator(s). 
 
 # General Background
 Intelligent DaaS (Data as a Service) is intended to be a tier of reusable and extensible capabilities.
@@ -13,15 +8,16 @@ organizations innovate in a new and comprehensive manner. Our focus has been, an
 we simplify data access within healthcare and focus on ensuring <b>data is the asset</b>.
 
 Here are a few key things to know as you read this:
+* The basis of all the efforts for Intelligent DaaS is that <b>Data is the Asset</b> and this set of repositories are
+  intended to help anyone connect and build innovative platforms for usage with a variety of data: healthcare
+  and beyond.
 * Intelligent DaaS, or any of its components, ARE NOT PRODUCTS AND WILL NOT BECOME A PRODUCT. They are enabling
-capabilities in a consitent manner, as a design pattern/accelerator. The intent is to provide a 
-comprehensive connectivity and routing of data. Data is the asset and this set of repositories is 
-intended to help anyone connect and build innovative platforms for usage with a variety of data: healthcare 
-and beyond.
+capabilities in a consitent manner, as a design pattern/accelerator. This specific repository is focused around providing
+comprehensive healthcare connectivity and routing of data. 
 * iDaaS-Connect is all about enabling connectivity to data. For ease of use and scale we have isolated each
   specific type of connectivity into its own specific solution. This repository is all about showcasing
   capabilities through software and is a value add.
-* 
+
 Below please find a visual that does visualize the entire iDaaS capabilities set. The key thing to note is while each specific iDaaS capability is purpose built and designed
 for any type of customer public or hybrid cloud our focus is on meeting data where it is securely and at scale.
 
@@ -33,8 +29,9 @@ For all iDaaS design patterns it should be assumed that you will either install 
 1. Java JDK
    Java is what everything is developed in. The current supported JDK release(s) are 1.8 and 11.
    <a href="https://developers.redhat.com/products/openjdk/download" target=_blank>OpenJDK Download Site</a>
-2. An existing Kafka (or some flavor of it) up and running. Red Hat currently implements AMQ-Streams based on Apache Kafka; however, we
-   have implemented iDaaS with numerous Kafka implementations. Please see the following files we have included to try and help: <br/>
+2. An existing Kafka (or some flavor of it) up and running. Red Hat currently implements AMQ-Streams based on Apache Kafka; 
+   however, we have implemented iDaaS with numerous Kafka implementations. Please see the following files we have 
+   included to try and help: <br/>
    [Kafka](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/Kafka.md) <br/>
    [KafkaWindows](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/KafkaWindows.md) <br/>
    No matter the platform chosen it is important to know that the Kafka out of the box implementation might require some changes depending
@@ -42,13 +39,16 @@ For all iDaaS design patterns it should be assumed that you will either install 
    In <kafka>/config/consumer.properties file we will be enhancing the property of auto.offset.reset to earliest. This is intended to enable any new
    system entering the group to read ALL the messages from the start. <br/>
    auto.offset.reset=earliest <br/>
-3. Some understanding of building, deploying Java artifacts and the commands associated. If using Maven commands then Maven would need to be intalled and runing for the environment you are using. More details about Maven can be found [here](https://maven.apache.org/install.html). This can all be done from an editor or command line, whatever the implementer is most comfortable with.
+3. Some understanding of building, deploying Java artifacts and the commands associated. If using Maven commands then 
+Maven would need to be intalled and runing for the environment you are using. More details about Maven can be found
+[here](https://maven.apache.org/install.html). This can all be done from an editor or command line, whatever the implementer is most comfortable with.
 4. An internet connection with active internet connectivity, this is to ensure that if any Maven commands are
    run and any libraries need to be pulled down they can.<br/>
 5. Something to view Kafka topics with as you are developing, validating and implementing any solution.
 
 # Additional Configuration Detials
-For IP addressing we have seen well documented issues with using IPV6. For all iDaaS design patterns it should be assumed that you will either install as part of this effort, or have the following:
+In numerous cases we have seen some well documented issues with using IPV6. For all iDaaS design patterns/accelerators 
+it should be assumed that you will either install as part of this effort, or have the following:
 
 ## Specific RHEL Instructions
 1. Specific to iDaaS Connect HL7 design patterns/reference architecture IPv4 must be enabled at the OS level, IPv6 will cause connectivity issues and in many cases outright failure of the components to function.<br/>
