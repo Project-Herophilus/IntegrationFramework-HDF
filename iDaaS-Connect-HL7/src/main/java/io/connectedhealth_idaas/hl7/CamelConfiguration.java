@@ -34,6 +34,8 @@ import org.springframework.stereotype.Component;
 import io.connectedhealth_idaas.eventbuilder.converters.ccda.CdaConversionService;
 //import io.connectedhealth_idaas.eventbuilder.events.platform.DeIdentificationEvent;
 import io.connectedhealth_idaas.eventbuilder.events.platform.HL7TerminologyProcessorEvent;
+import io.connectedhealth_idaas.eventbuilder.parsers.fhir.FHIRBundleParser;
+import io.github.linuxforhealth.hl7.HL7ToFHIRConverter;
 
 @Component
 public class CamelConfiguration extends RouteBuilder {
@@ -527,9 +529,43 @@ public class CamelConfiguration extends RouteBuilder {
             .setProperty("auditdetails").constant("Converted CCDA to FHIR Bundle")
             .wireTap("direct:auditing")
             // Send to Topic
-            .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.ccdaTopicName}}"))
+            .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.fhirBundleTopicName}}"))
         ;
 
+        from(getKafkaTopicUri("{{idaas.fhirBundleTopicName}}"))
+            .routeId("fhir-bundle-terminologies")
+            .convertBodyTo(String.class)
+            // set Auditing Properties
+            .setProperty("processingtype").constant("data")
+            .setProperty("appname").constant("iDAAS-Connect-HL7")
+            .setProperty("industrystd").constant("HL7-CCDA")
+            .setProperty("messagetrigger").constant("CCDA")
+            .setProperty("componentname").simple("${routeId}")
+            .setProperty("processname").constant("Input")
+            .setProperty("camelID").simple("${camelId}")
+            .setProperty("exchangeID").simple("${exchangeId}")
+            .setProperty("internalMsgID").simple("${id}")
+            .setProperty("bodyData").simple("${body}")
+            .setProperty("auditdetails").constant("CCDA document received")
+            // iDAAS KIC Processing
+            .wireTap("direct:auditing")
+            // Unmarshall from XML Doc against XSD - or Bean to encapsulate features
+            .bean(FHIRBundleParser.class, "parseFHIRBundleToMessageHeader(${body})")
+            .setProperty("processingtype").constant("data")
+            .setProperty("appname").constant("iDAAS-Connect-HL7")
+            .setProperty("industrystd").constant("HL7-CCDA")
+            .setProperty("messagetrigger").constant("CCDA")
+            .setProperty("componentname").simple("${routeId}")
+            .setProperty("processname").constant("Input")
+            .setProperty("camelID").simple("${camelId}")
+            .setProperty("exchangeID").simple("${exchangeId}")
+            .setProperty("internalMsgID").simple("${id}")
+            .setProperty("bodyData").simple("${body}")
+            .setProperty("auditdetails").constant("Converted CCDA to FHIR Bundle")
+            .wireTap("direct:auditing")
+            // Send to Topic
+            .convertBodyTo(String.class).to(getKafkaTopicUri("terminologies"))
+        ;
         /*
          * https://camel.apache.org/components/3.7.x/mllp-component.html
          * HL7 v2x Server Implementations
@@ -555,8 +591,8 @@ public class CamelConfiguration extends RouteBuilder {
              .setProperty("camelID").simple("${camelId}")
              .setProperty("exchangeID").simple("${exchangeId}")
              .setProperty("internalMsgID").simple("${id}")
+             .setProperty("auditdetails").constant("ADT message receieved")
              .setProperty("bodyData").simple("${body}")
-             .setProperty("auditdetails").constant("ADT message received")
              // iDaaS KIC Processing
              .wireTap("direct:auditing")
                 // Send to Topic
@@ -578,12 +614,58 @@ public class CamelConfiguration extends RouteBuilder {
                 //Invocation of HL7 Terminology Parsing
                 .bean(HL7TerminologyProcessorEvent.class, "hl7BuildTermsForProcessingToJSON('AllergyIntolerence', ${body})")
                 .setProperty("auditdetails").constant("allergyintolerance terminology event called")
+                .setProperty("processingtype").constant("data")
+                .setProperty("appname").constant("iDAAS-Connect-HL7")
+                .setProperty("industrystd").constant("HL7")
+                .setProperty("messagetrigger").constant("ADT")
+                .setProperty("component").simple("${routeId}")
+                .setProperty("processname").constant("terminologies")
+                .setProperty("camelID").simple("${camelId}")
+                .setProperty("exchangeID").simple("${exchangeId}")
+                .setProperty("internalMsgID").simple("${id}")
+                .setProperty("bodyData").simple("${body}")
                 // iDAAS KIC - Auditing Processing
                 .to("direct:auditing")
                 // Write Parsed FHIR Terminology Transactions to Topic
                 .to("direct:terminologies")
             .endChoice();
-
+        // hl72fhir converter
+        from(getKafkaTopicUri(config.getadtTopicName()))
+        .routeId("hl7toFHIR")
+        .convertBodyTo(String.class)
+        // set Auditing Properties
+        .setProperty("processingtype").constant("data")
+        .setProperty("appname").constant("iDAAS-Connect-HL7")
+        .setProperty("industrystd").constant("HL7")
+        .setProperty("messagetrigger").constant("ADT")
+        .setProperty("componentname").simple("${routeId}")
+        .setProperty("processname").constant("Input")
+        .setProperty("camelID").simple("${camelId}")
+        .setProperty("exchangeID").simple("${exchangeId}")
+        .setProperty("internalMsgID").simple("${id}")
+        .setProperty("auditdetails").constant("ADT message receieved")
+        .setProperty("bodyData").simple("${body}")
+        // iDaaS KIC Processing
+        .wireTap("direct:auditing")
+        //Response to HL7 Message Sent Built by platform
+        .choice()
+           .when(simple("{{idaas.convert2FHIR}}"))
+           // set Auditing Properties
+           .setProperty("processingtype").constant("data")
+           .setProperty("appname").constant("iDAAS-Connect-HL7")
+           .setProperty("industrystd").constant("HL7")
+           .setProperty("messagetrigger").constant("ADT")
+           .setProperty("component").simple("${routeId}")
+           .setProperty("camelID").simple("${camelId}")
+           .setProperty("exchangeID").simple("${exchangeId}")
+           .setProperty("internalMsgID").simple("${id}")
+           .bean(HL7ToFHIRConverter.class, "convert(${body})")
+           .setProperty("bodyData").simple("${body}")
+           .setProperty("auditdetails").constant("converted HL7 resource ${body}")
+           .convertBodyTo(String.class).to(getKafkaTopicUri(config.getFHIRBundleTopicName()))
+           // iDAAS KIC - Auditing Processing
+           .to("direct:auditing")
+       .endChoice();
         // ORM
         from(getHL7Uri2(config.getOrmPort()))
              .routeId("hl7Orders")

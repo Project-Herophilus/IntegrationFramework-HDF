@@ -54,7 +54,7 @@ public class ConfigProperties {
     private String schTopicName;
     private String vxuTopicName;
     private String ccdaTopicName;
-
+    private String fhirBundleTopicName;
 
     // Getters
 
@@ -265,5 +265,13 @@ public class ConfigProperties {
 
     public void setCcdaTopicName(String ccdaTopicName) {
         this.ccdaTopicName = ccdaTopicName;
+    }
+
+    public String getFHIRBundleTopicName() {
+        return fhirBundleTopicName;
+    }
+
+    public void setFHIRBundleTopicName(String fhirBundleTopicName) {
+        this.fhirBundleTopicName = fhirBundleTopicName;
     }
 }
