@@ -265,7 +265,7 @@ public class CamelConfiguration extends RouteBuilder {
         .setProperty("exchangeID").simple("${exchangeId}")
         .setProperty("internalMsgID").simple("${id}")
         .setProperty("bodyData").simple("${body}")
-        .bean(FHIRBundleParser.class, "parseFHIRBundleToMessageHeader(${body})")
+        //.bean(FHIRBundleParser.class, "parseFHIRBundleToMessageHeader(${body})")
         .setProperty("auditdetails").constant("fhir bundle terminologies")
         // iDAAS KIC - Auditing Processing
         .wireTap("direct:auditing")
