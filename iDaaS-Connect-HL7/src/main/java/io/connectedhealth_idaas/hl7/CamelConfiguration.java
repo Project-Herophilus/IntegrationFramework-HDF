@@ -101,9 +101,7 @@ public class CamelConfiguration extends RouteBuilder {
      *   Accepts a topic value retrieved from the properties of the asset
      */
     private String getKafkaTopicUri(String topic) {
-        return "kafka:" + topic +
-                "?brokers=" +
-                config.getKafkaBrokers();
+        return "kafka:" + topic + "?brokers=" + config.getKafkaBrokers();
     }
 
     /*
@@ -472,6 +470,7 @@ public class CamelConfiguration extends RouteBuilder {
         ;
 
         // CCDA
+        // CCDA File Based
         from(getHL7CCDAUriDirectory(config.getHl7CCDA_Directory()))
             .routeId("ccdaProcessor")
             .convertBodyTo(String.class)
@@ -491,7 +490,27 @@ public class CamelConfiguration extends RouteBuilder {
             .wireTap("direct:auditing")
             // Unmarshall from XML Doc against XSD - or Bean to encapsulate features
             // Send to Topic
-           .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.vxuTopicName}}"))
+           .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.ccdaTopicName}}"))
+           // Choice
+                .choice()
+                .when(simple("{{idaas.ccdaConvert}}"))
+                // Unmarshall from XML Doc against XSD - or Bean to encapsulate features
+                .bean(CdaConversionService.class, "getFhirJsonFromCdaXMLString(${body})")
+                .setProperty("processingtype").constant("data")
+                .setProperty("appname").constant("iDAAS-Connect-HL7")
+                .setProperty("industrystd").constant("HL7-CCDA")
+                .setProperty("messagetrigger").constant("CCDA")
+                .setProperty("componentname").simple("${routeId}")
+                .setProperty("processname").constant("Input")
+                .setProperty("camelID").simple("${camelId}")
+                .setProperty("exchangeID").simple("${exchangeId}")
+                .setProperty("internalMsgID").simple("${id}")
+                .setProperty("bodyData").simple("${body}")
+                .setProperty("auditdetails").constant("Converted CCDA to FHIR Bundle")
+                .wireTap("direct:auditing")
+                // Send to Topic
+                .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.fhirBundleTopicName}}"))
+                .endChoice();
         ;
 
         /*
@@ -532,7 +551,7 @@ public class CamelConfiguration extends RouteBuilder {
             .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.fhirBundleTopicName}}"))
         ;
 
-        from(getKafkaTopicUri("{{idaas.fhirBundleTopicName}}"))
+     /*   from(getKafkaTopicUri("{{idaas.fhirBundleTopicName}}"))
             .routeId("fhir-bundle-terminologies")
             .convertBodyTo(String.class)
             // set Auditing Properties
@@ -549,7 +568,6 @@ public class CamelConfiguration extends RouteBuilder {
             .setProperty("auditdetails").constant("CCDA document received")
             // iDAAS KIC Processing
             .wireTap("direct:auditing")
-            // Unmarshall from XML Doc against XSD - or Bean to encapsulate features
             .bean(FHIRBundleParser.class, "parseFHIRBundleToMessageHeader(${body})")
             .setProperty("processingtype").constant("data")
             .setProperty("appname").constant("iDAAS-Connect-HL7")
@@ -565,17 +583,18 @@ public class CamelConfiguration extends RouteBuilder {
             .wireTap("direct:auditing")
             // Send to Topic
             .convertBodyTo(String.class).to(getKafkaTopicUri("terminologies"))
-        ;
+        ;*/
+
         /*
-         * https://camel.apache.org/components/3.7.x/mllp-component.html
          * HL7 v2x Server Implementations
-         *  ------------------------------
+         * https://camel.apache.org/components/3.7.x/mllp-component.html
+         * https://camel.apache.org/components/2.x/dataformats/hl7-dataformat.html
+         * ------------------------------
          *  HL7 implementation based upon https://camel.apache.org/components/latest/dataformats/hl7-dataformat.html
          *  Much like the upstream effort this code is based on:
          *  The fictitious medical org.: MCTN
          *  The fictitious app: MMS
          *
-         * https://camel.apache.org/components/2.x/dataformats/hl7-dataformat.html
          */
         // ADT
         from(getHL7Uri2(config.getAdtPort()))
@@ -629,6 +648,7 @@ public class CamelConfiguration extends RouteBuilder {
                 // Write Parsed FHIR Terminology Transactions to Topic
                 .to("direct:terminologies")
             .endChoice();
+
         // hl72fhir converter
         from(getKafkaTopicUri(config.getadtTopicName()))
         .routeId("hl7toFHIR")
@@ -666,6 +686,7 @@ public class CamelConfiguration extends RouteBuilder {
            // iDAAS KIC - Auditing Processing
            .to("direct:auditing")
        .endChoice();
+
         // ORM
         from(getHL7Uri2(config.getOrmPort()))
              .routeId("hl7Orders")
