@@ -11,7 +11,7 @@ Here are a few key things to know as you read this:
 * The basis of all the efforts for Intelligent DaaS is that <b>Data is the Asset</b> and this set of repositories are
   intended to help anyone connect and build innovative platforms for usage with a variety of data: healthcare
   and beyond.
-* Intelligent DaaS, or any of its components, ARE NOT PRODUCTS AND WILL NOT BECOME A PRODUCT. They are enabling
+* Intelligent DaaS (Data as a Service), or any of its components, ARE NOT PRODUCTS AND WILL NOT BECOME A PRODUCT. They are enabling
 capabilities in a consitent manner, as a design pattern/accelerator. This specific repository is focused around providing
 comprehensive healthcare connectivity and routing of data. 
 * iDaaS-Connect is all about enabling connectivity to data. For ease of use and scale we have isolated each
@@ -46,11 +46,56 @@ Maven would need to be intalled and runing for the environment you are using. Mo
    run and any libraries need to be pulled down they can.<br/>
 5. Something to view Kafka topics with as you are developing, validating and implementing any solution.
 
-# Additional Configuration Detials
-In numerous cases we have seen some well documented issues with using IPV6. For all iDaaS design patterns/accelerators 
-it should be assumed that you will either install as part of this effort, or have the following:
 
-## Specific RHEL Instructions
+# iDaaS Connect Design Patterns
+Below are the specific iDaaS Connect branded repositories designed to connect to certain specific types of data standards.
+The goal of the links below is to enable specific detailed instructions per iDaaS-Connect specific reference architecture. 
+
+## iDaaS-Connect-BlueButton
+BlueButton is intended to be a very specific implementation to support puling of data to support several defined and 
+specific government initiatives. We have implemented a reusable open source design pattern to help meet this critical 
+mandated set of requirements.
+<br>
+[Blue Button Readme](iDaaS-Connect-BlueButton/README.md)
+
+## iDaaS-Connect-EDI
+EDI has been a standard around for decades, this repository does not introduce capabilities that compete
+with capabilities vailable for claims processing or other EDI very specific needs. The intent
+of this repository it to enable the processing of EDI data such as cliams and
+Supply chain.<br>
+[EDI Readme](iDaaS-Connect-EDI/README.md)
+
+## iDaaS-Connect-FHIR
+FHIR is a modern based integration standard that has been adopted by the government to assist them in addressing new federal
+mandates such as the Interoperability and Patient Access Rule. The iDaaS-Connect-FHIR component fully supports integrating to multiple
+external vendor FHIR servers in a consistent design pattern manner.  
+[FHIR Readme](iDaaS-Connect-FHIR/README.md)
+
+## iDaaS-Connect-HL7 v2/CCDA
+HL7 v2 is a very legacy based client/server socket protocol that has been out for decades and has thousands of unique implementations
+across healthcare vendors. Additionally, CCDA was developed for web services based XML based document exchanges of clinical
+data.
+<br>
+[HL7 Readme](iDaaS-Connect-HL7/README.md)
+
+## iDaaS-Connect-ThirdParty
+This iDaaS Connect accelerator is specifically designed to receive data from several dozens connectors. The connectors 
+include JDBC (any jdbc compliant data source with a jar), Kafka, FTP/sFTP and sFTP, AS400, HTTP(s), REST and many more. 
+Since this accelerator is built atop the upstream of Apache Camel this accelerator can leverage any
+<a href="https://camel.apache.org/components/latest/index.html" target="_blank">supported components</a>. 
+This accelerator apart from handling the needed specific connectivity also does a minimal initial routing of data and has 
+complete auditing integrated.<br>
+[Third Party Readme](iDaaS-Connect-ThirdParty/README.md)
+
+# Specific Instructions
+The following are special instructions developed based on specific implementations. While some of these might be documented
+for specific OSes that the overall issue is key to understand and resolve.
+
+## General Issues: HL7
+1. IPV6 needs to be disabled and IPv4 needs to be enabled. 
+
+### Red Hat Enterprise Linux
+
 1. Specific to iDaaS Connect HL7 design patterns/reference architecture IPv4 must be enabled at the OS level, IPv6 will cause connectivity issues and in many cases outright failure of the components to function.<br/>
    https://access.redhat.com/solutions/8709
    But here's the current specifics: <br/>
@@ -85,7 +130,7 @@ Please see the following files we have included to try and help: <br/>
 [Kafka](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/Kafka.md) <br/>
 [KafkaWindows](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/KafkaWindows.md) <br/>
 
-## (When Applicatble) Step 2: Make Sure ANY Technologies Needed is Up and Running
+## (When Applicable) Step 2: Make Sure ANY Technologies Needed is Up and Running
 Depending upon which iDaaS Connect components are being used there is a need to ensure that any third party software or 
 services are up and running. This could be anything from external systems hosting files that you
 may be asked to pickup or external servers you will be connecting to, like FHIR servers.
@@ -119,6 +164,10 @@ commands above to build a jar file. Then, go to the /target directory and run th
 java -jar <jarfile>.jar 
  ```
 
+# Additional Configuration Detials
+In numerous cases we have seen some well documented issues with using IPV6. For all iDaaS design patterns/accelerators
+it should be assumed that you will either install as part of this effort, or have the following:
+
 ## Design Pattern/Accelerator Configuration
 Each design pattern/accelerator has a unique and specific application.properties for its usage and benefit. Please make
 sure to look at these as there is a lot of power in these and the goal is to minimize hard coded anything.
@@ -128,6 +177,7 @@ to the /target directory and run the following command: <br/>
 ```
 java -jar <jarfile>.jar --spring.config.location=file:./config/application.properties
  ```
+
 # Admin Interface - Management and Insight of Components
 Within each specific repository there is an administrative user interface that allows for monitoring and insight into the
 connectivity of any endpoint. Additionally, there is also the implementation to enable implementations to build there own
@@ -167,33 +217,3 @@ When it comes to any solution that leverages APIs they can be tested by leveragi
 Here is the general invite to the [PostmanCollection](https://app.getpostman.com/join-team?invite_code=2ad1e1b6b06ad4f377a54466d8136417&ws=7d70ed7c-dd18-48d6-95ec-f325d13e67f3). Or,
 you can leverage the published [PostmanCollections](https://universal-capsule-967150.postman.co/users/3200250), they
 are named by community and specific reference architecture they support.
-
-
-# iDaaS Connect Design Patterns
-Below are the specific iDaaS Connect branded repositories designed to solve data connectivity
-issues.
-
-## iDaaS-Connect-BlueButton
-BlueButton is intended to be a very specific implementation to support puling of data to support  
-several defined and specific government initiatives. We have implemented a reusable open source  
-design pattern to help meet this critical mandated set of requirements.
-<br>
-[Blue Button Readme](iDaaS-Connect-BlueButton/README.md)
-## iDaaS-Connect-EDI
-EDI has been a standard around for decades, this repository does not introduce capabilities that compete
-with capabilities vailable for claims processing or other EDI very specific needs. The intent
-of this repository it to enable the processing of EDI data such as cliams and
-Supply chain.<br>
-[EDI Readme](iDaaS-Connect-EDI/README.md)
-## iDaaS-Connect-FHIR
-FHIR is a modern based integration standard that has been adopted by the government to assist them in addressing new federal
-mandates such as the Interoperability and Patient Access Rule. The iDaaS-Connect-FHIR component fully supports integrating to multiple
-external vendor FHIR servers in a consistent design pattern manner.  
-[FHIR Readme](iDaaS-Connect-FHIR/README.md)
-## iDaaS-Connect-HL7
-HL7 is a very legacy based client server socket protocol.
-<br>
-[HL7 Readme](iDaaS-Connect-HL7/README.md)
-## iDaaS-Connect-ThirdParty
-[Third Party Readme](iDaaS-Connect-ThirdParty/README.md)
-
