@@ -23,6 +23,7 @@ public class ConfigProperties {
     //Variables
     // Kafka
     private String kafkaBrokers;
+
     //HL7 Ports
     private int adtPort;
     private int ormPort;

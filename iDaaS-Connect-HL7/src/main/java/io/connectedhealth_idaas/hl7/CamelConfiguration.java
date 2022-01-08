@@ -668,7 +668,8 @@ public class CamelConfiguration extends RouteBuilder {
         // iDaaS KIC Processing
         .wireTap("direct:auditing")
         //Response to HL7 Message Sent Built by platform
-        .choice()
+        /*
+         .choice()
            .when(simple("{{idaas.convert2FHIR}}"))
            // set Auditing Properties
            .setProperty("processingtype").constant("data")
@@ -685,7 +686,8 @@ public class CamelConfiguration extends RouteBuilder {
            .convertBodyTo(String.class).to(getKafkaTopicUri(config.getFHIRBundleTopicName()))
            // iDAAS KIC - Auditing Processing
            .to("direct:auditing")
-       .endChoice();
+       .endChoice();*/
+        ;
 
         // ORM
         from(getHL7Uri2(config.getOrmPort()))
