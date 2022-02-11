@@ -1,5 +1,6 @@
 # iDaaS-Connect
-Complete Repository for all iDaaS-Connect reference architecture/design pattern/accelerator(s). 
+Complete Repository for all iDaaS-Connect reference architecture/design pattern/accelerator(s). iDaaS Connect is based
+upon Apache Camel.
 
 # General Background
 Intelligent DaaS (Data as a Service) is intended to be a tier of reusable and extensible capabilities.
@@ -153,15 +154,16 @@ Every asset has its own defined specific port, we have done this to ensure multi
 ## Administrative Interface(s) Specifics
 For all the URL links we have made them localhost based, simply change them to the server the solution is running on.
 
-|<b> iDaaS Connect Asset | Port | Admin URL / JMX URL |
-| :---        | :----   | :--- | 
-|iDaaS Connect HL7 | 9980| http://localhost:9980/actuator/hawtio/index.html / http://localhost:9980/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* | 
-|iDaaS Connect FHIR | 9981| http://localhost:9981/actuator/hawtio/index.html / http://localhost:9981/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=*|  
-|iDaaS Connect BlueButton| 9982| http://localhost:9982/actuator/hawtio/index.html / http://localhost:9982/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=*|  
-|iDaaS Connect Third Party | 9983| http://localhost:9983/actuator/hawtio/index.html / http://localhost:9983/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=*|  
-|iDaaS Connect EDI | 9984| http://localhost:9984/actuator/hawtio/index.html / http://localhost:9984/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=*|  
-|iDaaS Connect Compliance Automation | 9985| http://localhost:9985/actuator/hawtio/index.html / http://localhost:9985/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=*|  
-|iDaaS Connect ePrescribe | 9986| http://localhost:9986/actuator/hawtio/index.html / http://localhost:9986/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=*|  
+
+| iDaaS Connect Asset               | Port | Admin URL   | JMX URL|                                                                                   
+|----------| ----   |--------------------------------------------------|------------------------------------------------------------------------------------------| 
+| iDaaS Connect HL7                 | 9980| http://localhost:9980/actuator/hawtio/index.html                                                                                           | http://localhost:9980/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* | 
+| iDaaS Connect FHIR                | 9981| http://localhost:9981/actuator/hawtio/index.html                                                                                           | http://localhost:9981/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
+| iDaaS Connect BlueButton          | 9982| http://localhost:9982/actuator/hawtio/index.html                                                                                           | http://localhost:9982/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
+| iDaaS Connect Third Party         | 9983| http://localhost:9983/actuator/hawtio/index.html                                                                                           | http://localhost:9983/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
+| iDaaS Connect EDI                 | 9984| http://localhost:9984/actuator/hawtio/index.html                                                                                           | http://localhost:9984/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
+| iDaaS Connect Compliance Automation| 9985| http://localhost:9985/actuator/hawtio/index.html                                                                                           | http://localhost:9985/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
+| iDaaS Connect ePrescribe          | 9986| http://localhost:9986/actuator/hawtio/index.html | http://localhost:9986/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
 
 # Testing
 In order to assist anyone implementing or testing this specific reference architecture we have in the put a series of

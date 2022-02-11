@@ -6,7 +6,7 @@
 
     <groupId>io.connectedhealth_idaas</groupId>
     <artifactId>idaas-connect</artifactId>
-    <version>5.0.2-SNAPSHOT</version>
+    <version>2022.02.07-SNAPSHOT</version>
     <name>iDAAS Connect</name>
     <packaging>pom</packaging>
 

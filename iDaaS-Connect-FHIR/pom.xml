@@ -4,10 +4,10 @@
     <!--Internal Project Details-->
     <groupId>io.connectedhealth_idaas.fhir</groupId>
     <artifactId>io.connectedhealth_idaas.fhir</artifactId>
-    <version>5.0.1</version>
+    <version>2022.02.07-SNAPSHOT</version>
 
     <properties>
-        <camel.version>3.9.0</camel.version>
+        <camel.version>3.14.0</camel.version>
         <springboot.version>2.4.4</springboot.version>
     </properties>
     <!-- https://camel.apache.org/releases/release-3.9.0/ -->
@@ -95,7 +95,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.7.12</version>
+            <version>1.7.35</version>
         </dependency>
         <!-- Parsing to/from JSON -->
         <dependency>
@@ -107,7 +107,7 @@
         <dependency>
             <groupId>io.hawt</groupId>
             <artifactId>hawtio-springboot</artifactId>
-            <version>2.13.4</version>
+            <version>2.14.4</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.jolokia/jolokia-jvm -->
         <dependency>
@@ -120,11 +120,7 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-management</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>io.connectedhealth-idaas</groupId>-->
-<!--            <artifactId>idaas-eventbuilder</artifactId>-->
-<!--            <version>2.2.1</version>-->
-<!--        </dependency>-->
+        <!-- iDaaS Event Builder -->
         <dependency>
             <groupId>io.connectedhealth-idaas</groupId>
             <artifactId>idaas-eventbuilder</artifactId>
