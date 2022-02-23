@@ -1,15 +1,6 @@
 ---
 version: "3.8"
 services:
-  hapifhir:
-    image: hapiproject/hapi:latest
-    hostname: hapifhir
-    container_name: hapifhir
-    ports:
-      - "8888:8080"
-    networks:
-      - my-network
-
   zookeeper:
     image: strimzi/kafka:0.11.4-kafka-2.1.0
     hostname: zookeeper

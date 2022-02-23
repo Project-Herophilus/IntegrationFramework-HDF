@@ -35,7 +35,7 @@ import io.connectedhealth_idaas.eventbuilder.converters.ccda.CdaConversionServic
 //import io.connectedhealth_idaas.eventbuilder.events.platform.DeIdentificationEvent;
 import io.connectedhealth_idaas.eventbuilder.events.platform.HL7TerminologyProcessorEvent;
 import io.connectedhealth_idaas.eventbuilder.parsers.fhir.FHIRBundleParser;
-import io.github.linuxforhealth.hl7.HL7ToFHIRConverter;
+//import io.github.linuxforhealth.hl7.HL7ToFHIRConverter;
 
 @Component
 public class CamelConfiguration extends RouteBuilder {

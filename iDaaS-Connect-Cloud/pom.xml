@@ -4,10 +4,10 @@
     <!--Internal Project Details-->
     <groupId>io.connectedhealth_idaas.cloud</groupId>
     <artifactId>io.connectedhealth_idaas.cloud</artifactId>
-    <version>5.0.1</version>
+    <version>2022.02.07-SNAPSHOT</version>
 
     <properties>
-        <camel.version>3.9.0</camel.version>
+        <camel.version>3.14.0</camel.version>
         <springboot.version>2.4.4</springboot.version>
     </properties>
     <!-- https://camel.apache.org/releases/release-3.9.0/ -->
@@ -63,12 +63,7 @@
         <!-- HTTP -->
         <dependency>
             <groupId>org.apache.camel</groupId>
-            <artifactId>camel-netty</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-netty4-starter</artifactId>
-            <version>2.25.3</version>
+            <artifactId>camel-http</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
@@ -88,7 +83,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.7.12</version>
+            <version>1.7.35</version>
         </dependency>
         <!-- XML Parsing -->
         <dependency>
@@ -102,19 +97,14 @@
         </dependency>
         <!-- Third Party JDBC Drivers -->
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.22</version>
-        </dependency>
-        <dependency>
-            <groupId>postgresql</groupId>
+            <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>9.1-901-1.jdbc4</version>
+            <version>42.3.2</version>
         </dependency>
         <dependency>
             <groupId>net.snowflake</groupId>
             <artifactId>snowflake-jdbc</artifactId>
-            <version>3.13.2</version>
+            <version>3.13.14</version>
         </dependency>
         <dependency>
             <groupId>org.mongodb</groupId>
@@ -204,6 +194,30 @@
             <groupId>org.apache.camel.springboot</groupId>
             <artifactId>camel-google-pubsub-starter</artifactId>
             <version>${camel.version}</version>
+        </dependency>
+        <!--https://stackoverflow.com/questions/48722138/how-to-monitor-apache-camel-routes-in-a-java-project-using-hawtio-->
+        <!-- UI -->
+        <dependency>
+            <groupId>io.hawt</groupId>
+            <artifactId>hawtio-springboot</artifactId>
+            <version>2.14.4</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.jolokia/jolokia-jvm -->
+        <dependency>
+            <groupId>org.jolokia</groupId>
+            <artifactId>jolokia-jvm</artifactId>
+            <version>1.6.2</version>
+        </dependency>
+        <!-- This dependency is mandatory for enabling Camel management via JMX / Hawtio. -->
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-management</artifactId>
+        </dependency>
+        <!-- iDaaS Event Builder -->
+        <dependency>
+            <groupId>io.connectedhealth-idaas</groupId>
+            <artifactId>idaas-eventbuilder</artifactId>
+            <version>2.3.0</version>
         </dependency>
     </dependencies>
 
