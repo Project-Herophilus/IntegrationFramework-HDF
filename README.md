@@ -95,11 +95,17 @@ For all the URL links we have made them localhost based, simply change them to t
 | iDaaS Connect Compliance Automation| 9985| http://localhost:9985/actuator/hawtio/index.html                                                                                           | http://localhost:9985/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
 | iDaaS Connect ePrescribe          | 9986| http://localhost:9986/actuator/hawtio/index.html | http://localhost:9986/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
 
+# Add-Ons
+To support any iDaaS branded artifact there are a subset of assets avaiable to assist in the implementation : <br/>
 
-# Platform
-In this section we will cover various aspects of this module.
+|Add-On | Description |
+| ------------ | ----------- |
+| [Diagrams](https://github.com/Project-Herophilus/Project-Herophilus-Assets/tree/main/Platform/Draw.IO)| Various Draw.IO diagrams that cover iDaaS  |
+| [Test Data](https://github.com/Project-Herophilus/Project-Herophilus-Assets/tree/main/Platform/Testdata)| Test data for all healthcare industry standards work  |
+| [Synthetic Data](https://github.com/Project-Herophilus/DataSynthesis)| Synthetic Data Tools and Data  |
+| [Data Simulators](https://github.com/Project-Herophilus/iDaaS-AddOns)| Simulators to help in implementation and testing  |
 
-## Pre-Requisites
+# Platform General Pre-Requisites
 For all iDaaS design patterns it should be assumed that you will either install as part of this effort, or have the following:
 
 1. Java JDK
@@ -122,75 +128,17 @@ Maven would need to be intalled and runing for the environment you are using. Mo
    run and any libraries need to be pulled down they can.<br/>
 5. Something to view Kafka topics with as you are developing, validating and implementing any solution.
 
-
-# Start The Engine!!!
-This section covers the running any of the design patterns/accelerators. There are several options to start the Engine Up!!!
-
-## Step 1: Kafka Server To Connect To
-In order for ANY processing to occur you must have a Kafka server running that this accelerator is configured to connect to.
-Please see the following files we have included to try and help: <br/>
-[Kafka](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/Kafka.md) <br/>
-[KafkaWindows](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/KafkaWindows.md) <br/>
-
-## (When Applicable) Step 2: Make Sure ANY Technologies Needed is Up and Running
-Depending upon which iDaaS Connect components are being used there is a need to ensure that any third party software or 
-services are up and running. This could be anything from external systems hosting files that you
-may be asked to pickup or external servers you will be connecting to, like FHIR servers.
-
-## Step 3: Running the App: Maven Commands or Code Editor
-This section covers how to get the application started.
-+ Maven: The following steps are needed to run the code. Either through your favorite IDE or command line
-```
-git clone <repo name>
-For example:
-git clone https://github.com/Project-Herophilus/iDaaS-Connect.git
- ```
-You can either compile at the base directory or go to the specific iDaaS-Connect acceelerator. Specifically, you want to
-be at the same level as the POM.xml file and execute the following command: <br/>
-```
-mvn clean install
-```
-You can run the individual efforts with a specific command, it is always recommended you run the mvn clean install first.
-Here is the command to run the design pattern from the command line: <br/>
-```
-mvn spring-boot:run
- ```
-Depending upon if you have every run this code before and what libraries you have already in your local Maven instance
-it could take a few minutes.
-+ Code Editor: You can right click on the Application.java in the /src/<application namespace> and select Run
-
-# Running the Java JAR
-If you don't run the code from an editor or from the maven commands above. You can compile the code through the maven
-commands above to build a jar file. Then, go to the /target directory and run the following command: <br/>
-```
-java -jar <jarfile>.jar 
- ```
-
-# Additional Configuration Detials
-In numerous cases we have seen some well documented issues with using IPV6. For all iDaaS design patterns/accelerators
-it should be assumed that you will either install as part of this effort, or have the following:
-
-## Design Pattern/Accelerator Configuration
-Each design pattern/accelerator has a unique and specific application.properties for its usage and benefit. Please make
-sure to look at these as there is a lot of power in these and the goal is to minimize hard coded anything.
-Leverage the respective application.properties file in the correct location to ensure the properties are properly set
-and use a custom location. You can compile the code through the maven commands above to build a jar file. Then, go
-to the /target directory and run the following command: <br/>
-```
-java -jar <jarfile>.jar --spring.config.location=file:./config/application.properties
- ```
-
-# Testing
+## Testing
 In order to assist anyone implementing or testing this specific reference architecture we have in the put a series of
 assets in place.
 
-## Test Data
+### Test Data
 To ensure resources have a variety of data to leverage for complete testing into our main assets [area](https://github.com/Project-Herophilus/Project-Herophilus-Assets/tree/main/Testing/TestData).
 We have put testing data into specifically defined directories to ensure it is simply to find and leverage.
 
-## API - Testing
+#### API - Testing
 When it comes to any solution that leverages APIs they can be tested by leveraging our published Postman collections.
-### API - Published Postman Content
+#### API - Published Postman Content
 Here is the general invite to the [PostmanCollection](https://app.getpostman.com/join-team?invite_code=2ad1e1b6b06ad4f377a54466d8136417&ws=7d70ed7c-dd18-48d6-95ec-f325d13e67f3). Or,
 you can leverage the published [PostmanCollections](https://universal-capsule-967150.postman.co/users/3200250), they
 are named by community and specific reference architecture they support.

@@ -12,16 +12,6 @@ For ease of use and implementation this design pattern has built in support for 
 - Files
 - HTTP(s) endpoint for CCDA
 
-## Add-Ons
-To support this design pattern/reference architecture there are a subset of assets avaiable to assist in the implementation : <br/>
-
-|Add-On | Description |
-| ------------ | ----------- |
-| [Diagrams](https://github.com/Project-Herophilus/Project-Herophilus-Assets/tree/main/Platform/Draw.IO)| Various Draw.IO diagrams that cover iDaaS  |
-| [Test Data](https://github.com/Project-Herophilus/Project-Herophilus-Assets/tree/main/Platform/Testdata)| Test data for all healthcare industry standards work  |
-| [Synthetic Data](https://github.com/Project-Herophilus/DataSynthesis)| Synthetic Data Tools and Data  |
-| [Data Simulators](https://github.com/Project-Herophilus/iDaaS-AddOns)| Simulators to help in implementation and testing  |
-
 # Specific Instructions
 The following are special instructions developed based on specific implementations. While some of these might be documented
 for specific OSes that the overall issue is key to understand and resolve.
