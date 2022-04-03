@@ -22,6 +22,39 @@ To support this design pattern/reference architecture there are a subset of asse
 | [Synthetic Data](https://github.com/Project-Herophilus/DataSynthesis)| Synthetic Data Tools and Data  |
 | [Data Simulators](https://github.com/Project-Herophilus/iDaaS-AddOns)| Simulators to help in implementation and testing  |
 
+# Specific Instructions
+The following are special instructions developed based on specific implementations. While some of these might be documented
+for specific OSes that the overall issue is key to understand and resolve.
+
+## General Issues: HL7
+1. IPV6 needs to be disabled and IPv4 needs to be enabled.
+
+### Red Hat Enterprise Linux
+
+1. Specific to iDaaS Connect HL7 design patterns/reference architecture IPv4 must be enabled at the OS level, IPv6 will cause connectivity issues and in many cases outright failure of the components to function.<br/>
+   https://access.redhat.com/solutions/8709
+   But here's the current specifics: <br/>
+   Disabling IPv6 in NetworkManager
+   For all systems that run NetworkManager, IPv6 must be disabled on each interface with the option ipv6.method set to ignore (RHEL7) or disabled (RHEL8+). This step must be done in addition to IPv6 being disabled using the methods below.
+   For RHEL 8 and later: <br/>
+```
+nmcli connection modify <Connection Name> ipv6.method "disabled" <br/>
+(Replace <Connection Name> with interface)
+```
+AND <br/>
+```
+Create a new file named /etc/sysctl.d/ipv6.conf and add the following options:
+
+# First, disable for all interfaces
+net.ipv6.conf.all.disable_ipv6 = 1
+net.ipv6.conf.default.disable_ipv6 = 1
+net.ipv6.conf.lo.disable_ipv6 = 1
+# If using the sysctl method, the protocol must be disabled all specific interfaces as well.
+net.ipv6.conf.<interface>.disable_ipv6 = 1
+The new settings would then need to be reloaded with the following command line command:
+
+# sysctl -p /etc/sysctl.d/ipv6.conf
+```
 
 ## Pre-Requisites
 For all iDaaS design patterns it should be assumed that you will either install as part of this effort, or have the following:
