@@ -2,7 +2,6 @@
 Complete Repository for all iDaaS-Connect reference architecture/design pattern/accelerator(s). iDaaS Connect is based
 upon Apache Camel.
 
-# General Background
 Intelligent DaaS (Data as a Service) is intended to be a tier of reusable and extensible capabilities.
 As such, it is all about enabling a consistent design pattern/accelerator based mindset to help healthcare
 organizations innovate in a new and comprehensive manner. Our focus has been, and will continue to be, how
@@ -20,12 +19,87 @@ comprehensive healthcare connectivity and routing of data.
   specific type of connectivity into its own specific solution. This repository is all about showcasing
   capabilities through software and is a value add.
 
+# iDaaS-Connect Modules
+Like most of the repositories provided for usage, The iDaaS Connect repository consists of numerous modules within it.
+The reason for this approach is because iDaaS Connect focus is about providing a wide variety of connectivity options based
+on specific needs. Here are the modules that are in iDaaS-Connect.
+
+## iDaaS-Connect-BlueButton
+BlueButton is intended to be a very specific implementation to support puling of data to support several defined and
+specific government initiatives. We have implemented a reusable open source design pattern to help meet this critical
+mandated set of requirements.
+<br>
+[Blue Button Readme](iDaaS-Connect-BlueButton/README.md)
+
+## iDaaS-Connect-Cloud
+Cloud is intended to be a very specific set of connectivity for the three major public cloud vendors - AWS, Azure and GCP. 
+<br>
+[Cloud Readme](iDaaS-Connect-Cloud/README.md)
+
+## iDaaS-Connect-EDI
+EDI has been a standard around for decades, this repository does not introduce capabilities that compete
+with capabilities vailable for claims processing or other EDI very specific needs. The intent
+of this repository it to enable the processing of EDI data such as cliams and
+Supply chain.<br>
+[EDI Readme](iDaaS-Connect-EDI/README.md)
+
+## iDaaS-Connect-FHIR
+FHIR is a modern based integration standard that has been adopted by the government to assist them in addressing new federal
+mandates such as the Interoperability and Patient Access Rule. The iDaaS-Connect-FHIR component fully supports integrating to multiple
+external vendor FHIR servers in a consistent design pattern manner.  
+[FHIR Readme](iDaaS-Connect-FHIR/README.md)
+
+## iDaaS-Connect-HL7 v2/CCDA
+HL7 v2 is a very legacy based client/server socket protocol that has been out for decades and has thousands of unique implementations
+across healthcare vendors. Additionally, CCDA was developed for web services based XML based document exchanges of clinical
+data.
+<br>
+[HL7 Readme](iDaaS-Connect-HL7/README.md)
+
+## iDaaS-Connect-ThirdParty
+This iDaaS Connect accelerator is specifically designed to receive data from several dozens connectors. The connectors
+include JDBC (any jdbc compliant data source with a jar), Kafka, FTP/sFTP and sFTP, AS400, HTTP(s), REST and many more.
+Since this accelerator is built atop the upstream of Apache Camel this accelerator can leverage any
+<a href="https://camel.apache.org/components/latest/index.html" target="_blank">supported components</a>.
+This accelerator apart from handling the needed specific connectivity also does a minimal initial routing of data and has
+complete auditing integrated.<br>
+[Third Party Readme](iDaaS-Connect-ThirdParty/README.md)
+
 Below please find a visual that does visualize the entire iDaaS capabilities set. The key thing to note is while each specific iDaaS capability is purpose built and designed
 for any type of customer public or hybrid cloud our focus is on meeting data where it is securely and at scale.
 
 ![iDaaS Data Flow - Detailed.png](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/Platform/Images/iDAAS-Platform/iDAAS-DataFlow.png)
 
-# Pre-Requisites
+# Admin Interface - Management and Insight of Components
+Within each specific repository there is an administrative user interface that allows for monitoring and insight into the
+connectivity of any endpoint. Additionally, there is also the implementation to enable implementations to build there own
+by exposing the metadata. The data is exposed and can be used in numerous very common tools like Data Dog, Prometheus and so forth.
+This capability to enable would require a few additional properties to be set.
+
+Below is a generic visual of how this looks (the visual below is specific to iDaaS Connect HL7): <br/>
+
+![iDaaS Platform - Visuals - iDaaS Data Flow - Detailed.png](https://github.com/RedHat-Healthcare/iDAAS/blob/master/Platform/Images/iDAAS-Platform/iDaaS-Mgmt-UI.png)
+
+Every asset has its own defined specific port, we have done this to ensure multiple solutions can be run simultaneously.
+
+## Administrative Interface(s) Specifics
+For all the URL links we have made them localhost based, simply change them to the server the solution is running on.
+
+| iDaaS Connect Asset               | Port | Admin URL   | JMX URL|                                                                                   
+|----------| ----   |--------------------------------------------------|------------------------------------------------------------------------------------------| 
+| iDaaS Connect HL7                 | 9980| http://localhost:9980/actuator/hawtio/index.html                                                                                           | http://localhost:9980/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* | 
+| iDaaS Connect FHIR                | 9981| http://localhost:9981/actuator/hawtio/index.html                                                                                           | http://localhost:9981/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
+| iDaaS Connect BlueButton          | 9982| http://localhost:9982/actuator/hawtio/index.html                                                                                           | http://localhost:9982/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
+| iDaaS Connect Third Party         | 9983| http://localhost:9983/actuator/hawtio/index.html                                                                                           | http://localhost:9983/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
+| iDaaS Connect EDI                 | 9984| http://localhost:9984/actuator/hawtio/index.html                                                                                           | http://localhost:9984/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
+| iDaaS Connect Compliance Automation| 9985| http://localhost:9985/actuator/hawtio/index.html                                                                                           | http://localhost:9985/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
+| iDaaS Connect ePrescribe          | 9986| http://localhost:9986/actuator/hawtio/index.html | http://localhost:9986/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
+
+
+# Platform
+In this section we will cover various aspects of this module.
+
+## Pre-Requisites
 For all iDaaS design patterns it should be assumed that you will either install as part of this effort, or have the following:
 
 1. Java JDK
@@ -139,32 +213,6 @@ to the /target directory and run the following command: <br/>
 java -jar <jarfile>.jar --spring.config.location=file:./config/application.properties
  ```
 
-# Admin Interface - Management and Insight of Components
-Within each specific repository there is an administrative user interface that allows for monitoring and insight into the
-connectivity of any endpoint. Additionally, there is also the implementation to enable implementations to build there own
-by exposing the metadata. The data is exposed and can be used in numerous very common tools like Data Dog, Prometheus and so forth.
-This capability to enable would require a few additional properties to be set.
-
-Below is a generic visual of how this looks (the visual below is specific to iDaaS Connect HL7): <br/>
-
-![iDaaS Platform - Visuals - iDaaS Data Flow - Detailed.png](https://github.com/RedHat-Healthcare/iDAAS/blob/master/Platform/Images/iDAAS-Platform/iDaaS-Mgmt-UI.png)
-
-Every asset has its own defined specific port, we have done this to ensure multiple solutions can be run simultaneously.
-
-## Administrative Interface(s) Specifics
-For all the URL links we have made them localhost based, simply change them to the server the solution is running on.
-
-
-| iDaaS Connect Asset               | Port | Admin URL   | JMX URL|                                                                                   
-|----------| ----   |--------------------------------------------------|------------------------------------------------------------------------------------------| 
-| iDaaS Connect HL7                 | 9980| http://localhost:9980/actuator/hawtio/index.html                                                                                           | http://localhost:9980/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* | 
-| iDaaS Connect FHIR                | 9981| http://localhost:9981/actuator/hawtio/index.html                                                                                           | http://localhost:9981/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
-| iDaaS Connect BlueButton          | 9982| http://localhost:9982/actuator/hawtio/index.html                                                                                           | http://localhost:9982/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
-| iDaaS Connect Third Party         | 9983| http://localhost:9983/actuator/hawtio/index.html                                                                                           | http://localhost:9983/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
-| iDaaS Connect EDI                 | 9984| http://localhost:9984/actuator/hawtio/index.html                                                                                           | http://localhost:9984/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
-| iDaaS Connect Compliance Automation| 9985| http://localhost:9985/actuator/hawtio/index.html                                                                                           | http://localhost:9985/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
-| iDaaS Connect ePrescribe          | 9986| http://localhost:9986/actuator/hawtio/index.html | http://localhost:9986/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
-
 # Testing
 In order to assist anyone implementing or testing this specific reference architecture we have in the put a series of
 assets in place.
@@ -179,44 +227,3 @@ When it comes to any solution that leverages APIs they can be tested by leveragi
 Here is the general invite to the [PostmanCollection](https://app.getpostman.com/join-team?invite_code=2ad1e1b6b06ad4f377a54466d8136417&ws=7d70ed7c-dd18-48d6-95ec-f325d13e67f3). Or,
 you can leverage the published [PostmanCollections](https://universal-capsule-967150.postman.co/users/3200250), they
 are named by community and specific reference architecture they support.
-
-# iDaaS Connect Design Patterns
-Below are the specific iDaaS Connect branded repositories designed to connect to certain specific types of data standards.
-Within each one of these should be the specific steps for each solution to implement them. 
-
-## iDaaS-Connect-BlueButton
-BlueButton is intended to be a very specific implementation to support puling of data to support several defined and
-specific government initiatives. We have implemented a reusable open source design pattern to help meet this critical
-mandated set of requirements.
-<br>
-[Blue Button Readme](iDaaS-Connect-BlueButton/README.md)
-
-## iDaaS-Connect-EDI
-EDI has been a standard around for decades, this repository does not introduce capabilities that compete
-with capabilities vailable for claims processing or other EDI very specific needs. The intent
-of this repository it to enable the processing of EDI data such as cliams and
-Supply chain.<br>
-[EDI Readme](iDaaS-Connect-EDI/README.md)
-
-## iDaaS-Connect-FHIR
-FHIR is a modern based integration standard that has been adopted by the government to assist them in addressing new federal
-mandates such as the Interoperability and Patient Access Rule. The iDaaS-Connect-FHIR component fully supports integrating to multiple
-external vendor FHIR servers in a consistent design pattern manner.  
-[FHIR Readme](iDaaS-Connect-FHIR/README.md)
-
-## iDaaS-Connect-HL7 v2/CCDA
-HL7 v2 is a very legacy based client/server socket protocol that has been out for decades and has thousands of unique implementations
-across healthcare vendors. Additionally, CCDA was developed for web services based XML based document exchanges of clinical
-data.
-<br>
-[HL7 Readme](iDaaS-Connect-HL7/README.md)
-
-## iDaaS-Connect-ThirdParty
-This iDaaS Connect accelerator is specifically designed to receive data from several dozens connectors. The connectors
-include JDBC (any jdbc compliant data source with a jar), Kafka, FTP/sFTP and sFTP, AS400, HTTP(s), REST and many more.
-Since this accelerator is built atop the upstream of Apache Camel this accelerator can leverage any
-<a href="https://camel.apache.org/components/latest/index.html" target="_blank">supported components</a>.
-This accelerator apart from handling the needed specific connectivity also does a minimal initial routing of data and has
-complete auditing integrated.<br>
-[Third Party Readme](iDaaS-Connect-ThirdParty/README.md)
-
