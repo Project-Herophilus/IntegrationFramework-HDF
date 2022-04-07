@@ -27,9 +27,10 @@
     
     <modules>
         <!--<module>iDaaS-Connect-BlueButton</module>-->
+        <module>iDaaS-Connect-Cloud</module>
     	<module>iDaaS-Connect-EDI</module>
     	<module>iDaaS-Connect-FHIR</module>
-    	<!--<module>iDaaS-Connect-HL7</module>-->
+    	<module>iDaaS-Connect-HL7</module>
     	<module>iDaaS-Connect-ThirdParty</module>
     </modules>
 
