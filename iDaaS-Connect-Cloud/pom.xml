@@ -4,7 +4,7 @@
     <!--Internal Project Details-->
     <groupId>io.connectedhealth_idaas.cloud</groupId>
     <artifactId>io.connectedhealth_idaas.cloud</artifactId>
-    <version>2022.04.09-SNAPSHOT</version>
+    <version>2022.04.09</version>
 
     <properties>
         <camel.version>3.14.0</camel.version>
