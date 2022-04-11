@@ -75,26 +75,23 @@ This accelerator apart from handling the needed specific connectivity also does 
 complete auditing integrated.<br>
 [Third Party Readme](iDaaS-Connect-ThirdParty/README.md)
 
-## Testing
-In order to assist anyone implementing or testing this specific reference architecture we have in the put a series of
-assets in place.
+# Add-Ons
+To support any iDaaS branded artifact there are a subset of assets avaiable to assist in the implementation : <br/>
 
-### Testing of Platform
-To ensure resources have a variety of ways to test we first wanted to make sure we had data that could be leveraged for industry level testing into our main assets [area](https://github.com/Project-Herophilus/Project-Herophilus-Assets/tree/main/Testing/TestData).
+|Add-On | Description |
+| ------------ | ----------- |
+| [Diagrams](https://github.com/Project-Herophilus/Project-Herophilus-Assets/tree/main/Platform/Draw.IO)| Various Draw.IO diagrams that cover iDaaS  |
+| [Test Data](https://github.com/Project-Herophilus/Project-Herophilus-Assets/tree/main/Platform/Testdata)| Test data for all healthcare industry standards work  |
+| [Synthetic Data](https://github.com/Project-Herophilus/DataSynthesis)| When it comes to building or testing assets having lots of data to resemble you production data is critical, it also helps drive innovation. We have open sourced a synthetic data platform and continue to enahnce it based on feedback. It currently contains over 18 billion specific data attributes that can be used |
+| [Data Simulators](https://github.com/Project-Herophilus/iDaaS-DataSimulators)| Having data is one aspect, the other is having tooling that can quickly be configured and used to test components. We have developed a data-simulators for our core components, Simulators to help in implementation and testing  |
 
-We have put testing data into specifically defined directories to ensure it is simply to find and leverage.
+# Additional Add-Ons
+To support any iDaaS branded artifact there are a subset of assets avaiable to assist in the implementation : <br/>
 
-### Synthetic Data
-When it comes to building or testing assets having lots of data to resemble you production data is critical, it also helps drive innovation. We have open sourced a synthetic data platform and continue to enahnce it based on feedback. It currently contains over 18 billion specific data attributes that can be used, you can find more details [here](https://github.com/Project-Herophilus/DataSynthesis).
-
-### Data Simulators
-Having data is one aspect, the other is having tooling that can quickly be configured and used to test components. We have developed a data-simulators for our core components, this repository can be found [here](https://github.com/Project-Herophilus/iDaaS-DataSimulators).
-
-### API - Testing
-When it comes to any solution that leverages APIs they can be tested by leveraging our published Postman collections.
-#### API - Published Postman Content
-Here is the general invite to the [PostmanCollection](https://app.getpostman.com/join-team?invite_code=2ad1e1b6b06ad4f377a54466d8136417&ws=7d70ed7c-dd18-48d6-95ec-f325d13e67f3). Or, you can leverage the published [PostmanCollections](https://universal-capsule-967150.postman.co/users/3200250), they
-are named by community and specific reference architecture they support.
+|Add-On | Description |
+| ------------ | ----------- |
+| API - Testing|Leverage the published [PostmanCollections](https://universal-capsule-967150.postman.co/users/3200250), they
+are named by community and specific reference architecture they support.|
 
 # Administering the Platform - Management and Insight of Components
 Administering and seeing what the plaform is doing is also critical. Within each specific repository there is an administrative user interface that allows for monitoring and insight into the connectivity of any endpoint. Additionally, there is also the implementation to enable implementations to build there own by exposing the metadata. The data is exposed and can be used in numerous very common tools like Data Dog, Prometheus and so forth.
@@ -118,16 +115,6 @@ For all the URL links we have made them localhost based, simply change them to t
 | iDaaS Connect EDI                 | 9984| http://localhost:9984/actuator/hawtio/index.html                                                                                           | http://localhost:9984/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
 | iDaaS Connect Compliance Automation| 9985| http://localhost:9985/actuator/hawtio/index.html                                                                                           | http://localhost:9985/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
 | iDaaS Connect ePrescribe          | 9986| http://localhost:9986/actuator/hawtio/index.html | http://localhost:9986/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
-
-# Add-Ons
-To support any iDaaS branded artifact there are a subset of assets avaiable to assist in the implementation : <br/>
-
-|Add-On | Description |
-| ------------ | ----------- |
-| [Diagrams](https://github.com/Project-Herophilus/Project-Herophilus-Assets/tree/main/Platform/Draw.IO)| Various Draw.IO diagrams that cover iDaaS  |
-| [Test Data](https://github.com/Project-Herophilus/Project-Herophilus-Assets/tree/main/Platform/Testdata)| Test data for all healthcare industry standards work  |
-| [Synthetic Data](https://github.com/Project-Herophilus/DataSynthesis)| Synthetic Data Tools and Data  |
-| [Data Simulators](https://github.com/Project-Herophilus/iDaaS-AddOns)| Simulators to help in implementation and testing  |
 
 # Platform General Pre-Requisites
 For all iDaaS design patterns it should be assumed that you will either install as part of this effort, or have the following:
