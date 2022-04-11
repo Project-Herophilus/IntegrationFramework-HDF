@@ -90,8 +90,7 @@ To support any iDaaS branded artifact there are a subset of assets avaiable to a
 
 |Add-On | Description |
 | ------------ | ----------- |
-| API - Testing|Leverage the published [PostmanCollections](https://universal-capsule-967150.postman.co/users/3200250), they
-are named by community and specific reference architecture they support.|
+| API - Testing|Leverage the published [PostmanCollections](https://universal-capsule-967150.postman.co/users/3200250), they are named by community and specific reference architecture they support.|
 
 # Administering the Platform - Management and Insight of Components
 Administering and seeing what the plaform is doing is also critical. Within each specific repository there is an administrative user interface that allows for monitoring and insight into the connectivity of any endpoint. Additionally, there is also the implementation to enable implementations to build there own by exposing the metadata. The data is exposed and can be used in numerous very common tools like Data Dog, Prometheus and so forth.
