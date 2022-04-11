@@ -65,10 +65,17 @@ This accelerator apart from handling the needed specific connectivity also does 
 complete auditing integrated.<br>
 [Third Party Readme](iDaaS-Connect-ThirdParty/README.md)
 
-Below please find a visual that does visualize the entire iDaaS capabilities set. The key thing to note is while each specific iDaaS capability is purpose built and designed
-for any type of customer public or hybrid cloud our focus is on meeting data where it is securely and at scale.
 
+# Reference Architecture/Design Pattern Based Platform 
+Just to provide a few visuals to how to visualize it as we talk about each submodule within each part of the platform.
+Below please find a visual that does visualize the entire iDaaS capabilities set. The key thing to note is while each specific iDaaS capability is purpose built and designed for any type of customer public or hybrid cloud our focus is on meeting data where it is securely and at scale.
+
+Here is a high level visual:<br/>
 ![iDaaS Data Flow - Detailed.png](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/Platform/Images/iDAAS-Platform/iDAAS-DataFlow.png)
+
+Here is a detailed and Cloud Agnostic visual:<br/>
+![iDaaS Cloud Agnostic Data Flow.png](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/Platform/Images/iDAAS-Platform/Implementations-Gen-CloudAgnostic.png)
+
 
 # Admin Interface - Management and Insight of Components
 Within each specific repository there is an administrative user interface that allows for monitoring and insight into the
