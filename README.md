@@ -75,10 +75,29 @@ This accelerator apart from handling the needed specific connectivity also does 
 complete auditing integrated.<br>
 [Third Party Readme](iDaaS-Connect-ThirdParty/README.md)
 
-# Admin Interface - Management and Insight of Components
-Within each specific repository there is an administrative user interface that allows for monitoring and insight into the
-connectivity of any endpoint. Additionally, there is also the implementation to enable implementations to build there own
-by exposing the metadata. The data is exposed and can be used in numerous very common tools like Data Dog, Prometheus and so forth.
+## Testing
+In order to assist anyone implementing or testing this specific reference architecture we have in the put a series of
+assets in place.
+
+### Testing of Platform
+To ensure resources have a variety of ways to test we first wanted to make sure we had data that could be leveraged for industry level testing into our main assets [area](https://github.com/Project-Herophilus/Project-Herophilus-Assets/tree/main/Testing/TestData).
+
+We have put testing data into specifically defined directories to ensure it is simply to find and leverage.
+
+### Synthetic Data
+When it comes to building or testing assets having lots of data to resemble you production data is critical, it also helps drive innovation. We have open sourced a synthetic data platform and continue to enahnce it based on feedback. It currently contains over 18 billion specific data attributes that can be used, you can find more details [here](https://github.com/Project-Herophilus/DataSynthesis).
+
+### Data Simulators
+Having data is one aspect, the other is having tooling that can quickly be configured and used to test components. We have developed a data-simulators for our core components, this repository can be found [here](https://github.com/Project-Herophilus/iDaaS-DataSimulators).
+
+### API - Testing
+When it comes to any solution that leverages APIs they can be tested by leveraging our published Postman collections.
+#### API - Published Postman Content
+Here is the general invite to the [PostmanCollection](https://app.getpostman.com/join-team?invite_code=2ad1e1b6b06ad4f377a54466d8136417&ws=7d70ed7c-dd18-48d6-95ec-f325d13e67f3). Or, you can leverage the published [PostmanCollections](https://universal-capsule-967150.postman.co/users/3200250), they
+are named by community and specific reference architecture they support.
+
+# Administering the Platform - Management and Insight of Components
+Administering and seeing what the plaform is doing is also critical. Within each specific repository there is an administrative user interface that allows for monitoring and insight into the connectivity of any endpoint. Additionally, there is also the implementation to enable implementations to build there own by exposing the metadata. The data is exposed and can be used in numerous very common tools like Data Dog, Prometheus and so forth.
 This capability to enable would require a few additional properties to be set.
 
 Below is a generic visual of how this looks (the visual below is specific to iDaaS Connect HL7): <br/>
@@ -133,17 +152,3 @@ Maven would need to be intalled and runing for the environment you are using. Mo
    run and any libraries need to be pulled down they can.<br/>
 5. Something to view Kafka topics with as you are developing, validating and implementing any solution.
 
-## Testing
-In order to assist anyone implementing or testing this specific reference architecture we have in the put a series of
-assets in place.
-
-### Test Data
-To ensure resources have a variety of data to leverage for complete testing into our main assets [area](https://github.com/Project-Herophilus/Project-Herophilus-Assets/tree/main/Testing/TestData).
-We have put testing data into specifically defined directories to ensure it is simply to find and leverage.
-
-#### API - Testing
-When it comes to any solution that leverages APIs they can be tested by leveraging our published Postman collections.
-#### API - Published Postman Content
-Here is the general invite to the [PostmanCollection](https://app.getpostman.com/join-team?invite_code=2ad1e1b6b06ad4f377a54466d8136417&ws=7d70ed7c-dd18-48d6-95ec-f325d13e67f3). Or,
-you can leverage the published [PostmanCollections](https://universal-capsule-967150.postman.co/users/3200250), they
-are named by community and specific reference architecture they support.
