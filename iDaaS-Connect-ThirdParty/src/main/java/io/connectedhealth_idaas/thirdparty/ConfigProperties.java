@@ -23,13 +23,21 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class ConfigProperties {
 
     private String kafkaBrokers;
+    private String integrationTopic;
+    private String appintegrationTopic;
+    private String iotTopic;
 
     public String getKafkaBrokers() {
         return kafkaBrokers;
     }
-
     public void setKafkaBrokers(String kafkaBrokers) {
         this.kafkaBrokers = kafkaBrokers;
     }
+    public String getIntegrationTopic() {return integrationTopic;}
+    public void setIntegrationTopic(String integrationTopic) { this.integrationTopic = integrationTopic;}
+    public String getAppintegrationTopic() {return appintegrationTopic;}
+    public void setAppintegrationTopic(String appintegrationTopic) { this.appintegrationTopic = appintegrationTopic;}
 
+    public String getIotTopic() {return iotTopic;}
+    public void setIotTopic(String iotTopic) { this.iotTopic = iotTopic;}
 }

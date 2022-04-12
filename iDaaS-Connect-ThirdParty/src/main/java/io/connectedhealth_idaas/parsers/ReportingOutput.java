@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  *
  */
-package io.connectedhealth_idaas.thirdparty;
+package com.redhat.idaas.connect.parsers;
 
 import java.util.Date;
 
@@ -22,6 +22,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 @CsvRecord(separator = "\\|")
 public class ReportingOutput {
@@ -32,24 +33,27 @@ public class ReportingOutput {
     private String patientAccount;
 
     @DataField(pos = 3)
-    private String patientName;
+    private String patientLastName;
 
     @DataField(pos = 4)
-    private String zipCode;
+    private String patientFirstName;
 
     @DataField(pos = 5)
-    private String roomBed;
+    private String zipCode;
 
     @DataField(pos = 6)
-    private int age;
+    private String roomBed;
 
     @DataField(pos = 7)
+    private int age;
+
+    @DataField(pos = 8)
     private String gender;
 
     //@DataField(pos = 8, pattern="yyyy-MM-dd")
     //@JsonFormat(pattern = "yyyy-MM-dd")
     //private Date admissionDate;
-    @DataField(pos = 8)
+    @DataField(pos = 9)
     private String admissionDate;
 
     public String getOrganizationId() {
@@ -68,18 +72,25 @@ public class ReportingOutput {
         this.patientAccount = patientAccount;
     }
 
-    public String getPatientName() {
-        return patientName;
+    public String getPatientLastName() {
+        return patientLastName;
     }
 
-    public void setPatientName(String patientName) {
-        this.patientName = patientName;
+    public void setPatientLastName(String patientLastName) {
+        this.patientLastName = patientLastName;
+    }
+
+    public String getPatientFirstName() {
+        return patientFirstName;
+    }
+
+    public void setPatientFirstName(String patientFirstName) {
+        this.patientFirstName = patientFirstName;
     }
 
     public String getZipCode() {
         return zipCode;
     }
-
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
     }
@@ -87,7 +98,6 @@ public class ReportingOutput {
     public String getRoomBed() {
         return roomBed;
     }
-
     public void setRoomBed(String roomBed) {
         this.roomBed = roomBed;
     }
@@ -95,7 +105,6 @@ public class ReportingOutput {
     public int getAge() {
         return age;
     }
-
     public void setAge(int age) {
         this.age = age;
     }
@@ -103,7 +112,6 @@ public class ReportingOutput {
     public String getGender() {
         return gender;
     }
-
     public void setGender(String gender) {
         this.gender = gender;
     }
@@ -119,8 +127,11 @@ public class ReportingOutput {
     public String getAdmissionDate() {
         return admissionDate;
     }
-
     public void setAdmissionDate(String admissionDate) {
         this.admissionDate = admissionDate;
+    }
+
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this);
     }
 }
