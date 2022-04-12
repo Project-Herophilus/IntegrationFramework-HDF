@@ -8,18 +8,99 @@ The following transactions are supported:
 - CCDA Events 
 
 For ease of use and implementation this design pattern has built in support for the following protocols to support data processing:
-- MLLP (Minimal Lower Layer Protocol - the HL7 Protocol)
+- MLLP (Minimal Lower Layer Protocol - HL7 v2 Protocol)
 - Files
 - HTTP(s) endpoint for CCDA
 
-# Specific Instructions
-The following are special instructions developed based on specific implementations. While some of these might be documented
-for specific OSes that the overall issue is key to understand and resolve.
+# Focus on Improving
+We are focusing on continuing to improve. With the numerous implementation and partner implementations we
+have focused on success overall and as we progress forward the intent is to focus on success while being consistent.
+Please find details on how to help us [here](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/OngoingEnhancements.md).
 
-## General Issues: HL7
+# Pre-Requisites
+For any repository to be implemented there are two types of requirements, overall general requirements
+and then there are specific submodule requirements.
+
+## General Pre-Requisites
+For all iDaaS Connect branded solutions there are some general content which can be looked at
+here in [detail](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/CloningBuildingRunningSolution.md)
+
+## Specific Implementation Pre-Requisites
+There are several key details you must make decisions on and also configure. For all of these you will
+need to update the application.properties in accordance with these decisions.
+- For every HL7 based connection you can specify a specific directory, port and whether or not 
+you want to process the ACK/NAK responses.
+- CCDA. Key setting is whether you want to automatically convert the data with the setting
+  idaas.ccdaConvert=true
+- processTerminologies - if you want to process terminologies based on the data dlowing through the
+  HL7 and CCDA transactions. If idaas.processTerminologies=true then all transactions will go to a specifically
+  defined component for another set of assets to process.
+- convertToFHIR - is about specifically converting only HL7 messages to FHIR automatically with the
+setting idaas.convert2FHIR=true
+- Coming soon are the ability to automatically anonymize or deidentify data. with the settings 
+  idaas.deidentify=false and idaas.anonymize=false
+```
+# Basics on properties
+idaas.hl7ADT_Directory=data/adt
+idaas.adtPort=10001
+idaas.adtACKResponse=true
+idaas.adtTopicName=mctn_mms_adt2
+idaas.hl7ORM_Directory=data/orm
+idaas.ormPort=10002
+idaas.ormACKResponse=true
+idaas.ormTopicName=mctn_mms_orm
+idaas.hl7ORU_Directory=data/oru
+idaas.oruPort=10003
+idaas.oruACKResponse=true
+idaas.oruTopicName=mctn_mms_oru
+idaas.hl7RDE_Directory=data/rde
+idaas.rdePort=10004
+idaas.rdeACKResponse=true
+idaas.rdeTopicName=mctn_mms_rde
+idaas.hl7MFN_Directory=data/mfn
+idaas.mfnPort=10005
+idaas.mfnACKResponse=true
+idaas.mfnTopicName=mctn_mms_mfn
+idaas.hl7MDM_Directory=data/mdm
+idaas.mdmPort=10006
+idaas.mdmACKResponse=true
+idaas.mdmTopicName=mctn_mms_mdm
+idaas.hl7SCH_Directory=data/sch
+idaas.schPort=10007
+idaas.schACKResponse=true
+idaas.schTopicName=mctn_mms_sch
+idaas.hl7VXU_Directory=data/vxu
+idaas.vxuPort=10008
+idaas.vxuACKResponse=true
+idaas.vxuTopicName=mctn_mms_vxu
+# CCDA
+idaas.hl7ccda_Directory=data/ccda
+idaas.ccdaTopicName=mctn_mms_ccda
+idaas.ccdaConvert=true
+# FHIR bundle
+idaas.fhirBundleTopicName=mctn_mms_ccda
+# Other Settings
+idaas.processTerminologies=false
+idaas.convert2FHIR=false
+idaas.deidentify=false
+idaas.anonymize=false
+
+```
+
+# Specific Implementation Details: HL7 Message Integration
+This repository follows a very common general facility based implementation. The implementation
+is of a facility, we have named MCTN for an application we have named MMS. This implementation
+specifically defines one FHIR endpoint per FHIR resource.
+
+## Known Issues
+As of the time of this content publication there are some specifically known issues with 
+iDaaS Connect HL7 and how OS'es can allocate and leverage ports with hostnames. This is most
+often seen because IPV6 is enabled.
+
+### General Issues: HL7
 1. IPV6 needs to be disabled and IPv4 needs to be enabled.
 
-### Red Hat Enterprise Linux
+#### Red Hat Enterprise Linux
 
 1. Specific to iDaaS Connect HL7 design patterns/reference architecture IPv4 must be enabled at the OS level, IPv6 will cause connectivity issues and in many cases outright failure of the components to function.<br/>
    https://access.redhat.com/solutions/8709
@@ -45,14 +126,7 @@ The new settings would then need to be reloaded with the following command line 
 
 # sysctl -p /etc/sysctl.d/ipv6.conf
 ```
-
-## Pre-Requisites
-For all iDaaS design patterns it should be assumed that you will either install as part of this effort, or have the following:
-
-# Scenario(s)
-This section is intended to cover any scenarios covered within this demo.
-
-## Basic HL7 Message Integration 
+### Implementation Data Flow Specifics 
 This repository follows a very common general clinical care implementation pattern. The implementation pattern involves one system sending data to 
 another system via the HL7/MLLP message standard. 
 
@@ -66,9 +140,9 @@ another system via the HL7/MLLP message standard.
 <br/>
 It is important to know that for every HL7 Message Type/Event there is a specifically defined, and dedicated, HL7 socket server endpoint.
 
-### Integration Data Flow Steps
+### Implementation Data Flow Steps: HL7
 Here is a general visual intended to show the general data flow and how the accelerator design pattern is intended to work. <br/>
- <img src="https://github.com/RedHat-Healthcare/iDAAS/blob/master/content/images/iDAAS-Platform/DataFlow-HL7.png" width="800" height="600">
+ <img src="https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/Platform/Images/iDAAS-Platform/DataFlow-HL7.png" width="800" height="600">
 
 1. Any external connecting system will use an HL7 client (external to this application) will connect to the specifically defined HL7
 Server socket (one socket per datatype) and typically stay connected.
@@ -82,83 +156,6 @@ Server socket (one socket per datatype) and typically stay connected.
     if the client does not get this in a timely manner it will resend the same message again until he receives an ACK).<br/>
     d. The acknowledgement is also sent to the auditing topic location.<br/>
 
-
-## Step 2: Running the App: Maven Commands or Code Editor
-This section covers how to get the application started.
-+ Maven: go to the directory of where you have this code. Specifically, you want to be at the same level as the POM.xml file and execute the
-following command: <br/>
-```
-mvn clean install
- ```
-You can run the individual efforts with a specific command, it is always recommended you run the mvn clean install first.
-Here is the command to run the design pattern from the command line: <br/>
-```
-mvn spring-boot:run
- ```
-Depending upon if you have every run this code before and what libraries you have already in your local Maven instance it could take a few minutes.
-+ Code Editor: You can right click on the Application.java in the /src/<application namespace> and select Run
-
-# Running the Java JAR
-If you don't run the code from an editor or from the maven commands above. You can compile the code through the maven
-commands above to build a jar file. Then, go to the /target directory and run the following command: <br/>
-```
-java -jar <jarfile>.jar 
- ```
-
-### Design Pattern/Accelerator Configuration
-All iDaaS Design Pattern/Accelelrators have application.properties files to enable some level of reusability of code and simplfying configurational enhancements.<br/>
-In order to run multiple iDaaS integration applications we had to ensure the internal http ports that
-the application uses. In order to do this we MUST set the server.port property otherwise it defaults to port 8080 and ANY additional
-components will fail to start. iDaaS Connect HL7 uses 9980. You can change this, but you will have to ensure other applications are not
-using the port you specify.
-
-```properties
-server.port=9980
-```
-Once built you can run the solution by executing `./platform-scripts/start-solution.sh`.
-The script will startup Kafka and iDAAS server.
-
-Alternatively, if you have a running instance of Kafka, you can start a solution with:
-`./platform-scripts/start-solution-with-kafka-brokers.sh --idaas.kafkaBrokers=host1:port1,host2:port2`.
-The script will startup iDAAS server.
-
-It is possible to overwrite configuration by:
-1. Providing parameters via command line e.g.
-`./start-solution.sh --idaas.adtPort=10009`
-2. Creating an application.properties next to the idaas-connect-hl7.jar in the target directory
-3. Creating a properties file in a custom location `./start-solution.sh --spring.config.location=file:./config/application.properties`
-
-Supported properties include (for this accelerator there is a block per message type that follows the same pattern):
-```properties
-server.port=9980
-# Kafka Configuration - use comma if multiple kafka servers are needed
-idaas.kafkaBrokers=localhost:9092
-# Basics on properties
-idaas.hl7ADT_Directory=data/adt
-idaas.adtPort=10001
-idaas.adtACKResponse=true
-idaas.adtTopicName=mctn_mms_adt
-idaas.hl7ORM_Directory=data/orm
-```
-# Admin Interface - Management and Insight of Components
-Within each specific repository there is an administrative user interface that allows for monitoring and insight into the
-connectivity of any endpoint. Additionally, there is also the implementation to enable implementations to build there own
-by exposing the metadata. The data is exposed and can be used in numerous very common tools like Data Dog, Prometheus and so forth.
-This capability to enable would require a few additional properties to be set.
-
-Below is a generic visual of how this looks (the visual below is specific to iDaaS Connect HL7): <br/>
-![iDaaS Platform - Visuals - iDaaS Data Flow - Detailed.png](https://github.com/RedHat-Healthcare/iDAAS/blob/master/images/iDAAS-Platform/iDaaS-Mgmt-UI.png)
-
-Every asset has its own defined specific port, we have done this to ensure multiple solutions can be run simultaneously.
-
-## Administrative Interface(s) Specifics
-For all the URL links we have made them localhost based, simply change them to the server the solution is running on.
-
-|<b> iDaaS Connect Asset | Port | Admin URL / JMX URL |
-| :---        | :----   | :--- | 
-|iDaaS Connect HL7 | 9980| http://localhost:9980/actuator/hawtio/index.html / http://localhost:9980/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* | 
-
-If you would like to contribute feel free to, contributions are always welcome!!!! 
 
 Happy using and coding....
 
