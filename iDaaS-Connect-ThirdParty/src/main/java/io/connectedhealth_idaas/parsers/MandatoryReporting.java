@@ -1,8 +1,9 @@
-package io.connectedhealth_idaas.thirdparty;
+package com.redhat.idaas.connect.parsers;
 // Imports
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;
 import org.apache.camel.dataformat.bindy.annotation.DataField;
+import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 @CsvRecord(separator = "\\|")
 public class MandatoryReporting {
@@ -13,24 +14,27 @@ public class MandatoryReporting {
     private String patientAccount;
 
     @DataField(pos = 3)
-    private String patientName;
+    private String patientLastName;
 
     @DataField(pos = 4)
-    private String zipCode;
+    private String patientFirstName;
 
     @DataField(pos = 5)
-    private String roomBed;
+    private String zipCode;
 
     @DataField(pos = 6)
-    private int age;
+    private String roomBed;
 
     @DataField(pos = 7)
+    private int age;
+
+    @DataField(pos = 8)
     private String gender;
 
     //@DataField(pos = 8, pattern="yyyy-MM-dd")
     //@JsonFormat(pattern = "yyyy-MM-dd")
     //private Date admissionDate;
-    @DataField(pos = 8)
+    @DataField(pos = 9)
     private String admissionDate;
 
     public String getOrganizationId() {
@@ -49,12 +53,20 @@ public class MandatoryReporting {
         this.patientAccount = patientAccount;
     }
 
-    public String getPatientName() {
-        return patientName;
+    public String getPatientLastName() {
+        return patientLastName;
     }
 
-    public void setPatientName(String patientName) {
-        this.patientName = patientName;
+    public void setPatientLastName(String patientLastName) {
+        this.patientLastName = patientLastName;
+    }
+
+    public String getPatientFirstName() {
+        return patientFirstName;
+    }
+
+    public void setPatientFirstName(String patientFirstName) {
+        this.patientFirstName = patientFirstName;
     }
 
     public String getZipCode() {
@@ -104,4 +116,9 @@ public class MandatoryReporting {
     public void setAdmissionDate(String admissionDate) {
         this.admissionDate = admissionDate;
     }
+
+    public String toString() {
+        return ReflectionToStringBuilder.toString(this);
+    }
+
 }
