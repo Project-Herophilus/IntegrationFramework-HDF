@@ -68,6 +68,13 @@ data.
 <br>
 [HL7 Readme](iDaaS-Connect-HL7/README.md)
 
+## iDaaS-Connect-SAP
+This iDaaS Connect accelerator is specifically designed to receive data from the various SAP supported connectors.
+This accelerator apart from handling the needed specific connectivity also does a minimal initial routing of data and has
+complete auditing integrated.<br>
+[SAP Readme](iDaaS-Connect-SAP/README.md)
+
+
 ## iDaaS-Connect-ThirdParty
 This iDaaS Connect accelerator is specifically designed to receive data from several dozens connectors. The connectors
 include JDBC (any jdbc compliant data source with a jar), Kafka, FTP/sFTP and sFTP, AS400, HTTP(s), REST and many more.
@@ -107,15 +114,15 @@ Every asset has its own defined specific port, we have done this to ensure multi
 ## Administrative Interface(s) Specifics
 For all the URL links we have made them localhost based, simply change them to the server the solution is running on.
 
-| iDaaS Connect Asset               | Port | Admin URL   | JMX URL|                                                                                   
-|----------| ----   |--------------------------------------------------|------------------------------------------------------------------------------------------| 
-| iDaaS Connect HL7                 | 9980| http://localhost:9980/actuator/hawtio/index.html                                                                                           | http://localhost:9980/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* | 
-| iDaaS Connect FHIR                | 9981| http://localhost:9981/actuator/hawtio/index.html                                                                                           | http://localhost:9981/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
-| iDaaS Connect BlueButton          | 9982| http://localhost:9982/actuator/hawtio/index.html                                                                                           | http://localhost:9982/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
-| iDaaS Connect Third Party         | 9983| http://localhost:9983/actuator/hawtio/index.html                                                                                           | http://localhost:9983/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
-| iDaaS Connect EDI                 | 9984| http://localhost:9984/actuator/hawtio/index.html                                                                                           | http://localhost:9984/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
-| iDaaS Connect Compliance Automation| 9985| http://localhost:9985/actuator/hawtio/index.html                                                                                           | http://localhost:9985/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
-| iDaaS Connect ePrescribe          | 9986| http://localhost:9986/actuator/hawtio/index.html | http://localhost:9986/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
+| iDaaS Connect Asset       | Port | Admin URL   | JMX URL|                                                                                   
+|---------------------------| ----   |--------------------------------------------------|------------------------------------------------------------------------------------------| 
+| iDaaS Connect HL7         | 9980| http://localhost:9980/actuator/hawtio/index.html                                                                                           | http://localhost:9980/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* | 
+| iDaaS Connect FHIR        | 9981| http://localhost:9981/actuator/hawtio/index.html                                                                                           | http://localhost:9981/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
+| iDaaS Connect BlueButton  | 9982| http://localhost:9982/actuator/hawtio/index.html                                                                                           | http://localhost:9982/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
+| iDaaS Connect Third Party | 9983| http://localhost:9983/actuator/hawtio/index.html                                                                                           | http://localhost:9983/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
+| iDaaS Connect EDI         | 9984| http://localhost:9984/actuator/hawtio/index.html                                                                                           | http://localhost:9984/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
+| iDaaS Connect Cloud       | 9985| http://localhost:9985/actuator/hawtio/index.html                                                                                           | http://localhost:9985/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
+| iDaaS Connect SAP         | 9986| http://localhost:9986/actuator/hawtio/index.html | http://localhost:9986/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
 
 # Platform General Pre-Requisites
 For all iDaaS design patterns it should be assumed that you will either install as part of this effort, or have the following:

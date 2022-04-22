@@ -1,7 +1,5 @@
-# iDAAS-Connect-ThirdParty
-iDAAS-Connect-ThirdParty is ONLY intended to deal with enabling connectivity to all sorts of different types of 
-data systems. For example: RDBMS, Kafka, Mainframe, Files, SFTP, etc. plus over one hundred other types of connectivity  
-are supported.
+# iDAAS-Connect-SAP
+iDAAS-Connect-SAP is ONLY intended to help with enabling connecting to/from all SAP data.
 
 # Focus on Improving
 We are focusing on continuing to improve. With the numerous implementation and partner implementations we
@@ -17,10 +15,8 @@ For all iDaaS Connect branded solutions there are some general content which can
 here in [detail](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/CloningBuildingRunningSolution.md)
 
 ## Specific Implementation Pre-Requisites
-This solution contains three supporting directories. The intent of these artifacts to enable
-resources to work locally: <br/>
-+ platform-ddl: DDL usecd within this accelerator.
-+ platform-testdata: sample transactions to leverage for using the platform. 
+As of this content release there are no specific prerequisites, all of them will be downloaded as
+part of the build process (covered above in the General Pre-Requisites section).
 
 # Administrative Console
 Within each implementation there is a management console, the management console provides the same
@@ -31,37 +27,12 @@ Admin/Mgmt interface can be found
 # Specific Implementation Details
 The following section is intended to cover specific implementation known issues, challenges and potential implementation
 details.
-- Make sure you specify the specific directories correctly
-- Make sure you specify the database you are connecting to correctly
-```
-# Server - Internal
-server.host=9983
-# Kafka
-kafkaBrokers=localhost:9092
-# Reporting Directory and File Name
-#mandatory.reporting.directory=/MandatoryReporting
-mandatory.reporting.directory=src/data/MandatoryReporting
-mandatory.reporting.file=ReportingExample.csv
-# Covid Directory and File Ext
-covid.reporting.directory=src/data/CovidData
-covid.reporting.extension=*.csv
-# Reseach Data Directory and File Ext
-research.data.directory=src/data/ResearchData
-covid.reporting.extension=*.csv
-# JDBC Database
-spring.datasource.url=jdbc:mysql://localhost/idaas
-                     #jdbc:postgresql://localhost:5432/idaas
-spring.datasource.username=idaas
-spring.datasource.password=@idaas123
-#spring.database.driver-class-name=com.mysql.cj.jdbc.Driver
-#org.postgresql.Driver
-```
 
 ## Known Issues
 As of the time of this content publication there are no known specific issues. The ONLY consistent
 common issue is setting the application.properties before running the application.
 
-# Implementation Scenario(s): Kafka Integration 
+## Implementation Example(s): Kafka Integration 
 This repository follows a very common general implementation. The only connector currently in this code
 base is a Kafka topic. The key sceanrio this can demonstrate is data being processed from a data science 
 kafka topic.
@@ -71,4 +42,20 @@ kafka topic.
 2. If there is data it will audit the transaction processing 
 3. The transaction will be routed for processing within iDAAS KIC
     
+Supported properties include:
+```properties
+# Server - Internal
+server.host=9983
+# Kafka
+kafkaBrokers=localhost:9092
+# JDBC Database
+spring.datasource.url=jdbc:mysql://localhost/idaas
+                     #jdbc:postgresql://localhost:5432/idaas
+spring.datasource.username=idaas
+spring.datasource.password=@idaas123
+#spring.database.driver-class-name=com.mysql.cj.jdbc.Driver
+#org.postgresql.Driver
+```
+
 Happy using and coding....
+

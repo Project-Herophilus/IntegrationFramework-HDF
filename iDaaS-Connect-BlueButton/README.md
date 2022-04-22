@@ -1,5 +1,5 @@
 # iDAAS Connect BlueButton
-This project fetches Medicare data of an authenticated beneficiary through the 
+iDaaS-Connect-BlueButton enables the connecting to and processing of Medicare data of an authenticated beneficiary through the 
 [Blue Button API](https://bluebutton.cms.gov/) and sends it to a Kafka topic. This application
 serves as a webserver. User opens the served URL using a web browser and log into the Medicare database. 
 The application will automatically fetch part A, B, C, and D data and sends it to a Kafka topic. Then other 

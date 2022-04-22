@@ -1,8 +1,6 @@
 # iDaaS Connect HL7
-This is the upstream for RedHat Healthcare's <a href="https://github.com/RedHat-Healthcare/iDaaS-Connect/tree/master/iDaaS-Connect-HL7" target="_blank">iDaaS Connect HL7</a>. iDaaS Connect HL7 is designed to simplify HL7 integration platform development and delivery.
-iDAAS has several key components that provide many capabilities. iDAAS Connect is intended ONLY
-to enable iDAAS connectivity. iDAAS-Connect-HL7 specifically ONLY deals with enabling
-iDAAS to process the healthcare industry standard HL7 and CCDA based transactions ONLY.
+iDAAS-Connect-HL7 ONLY deals with enabling
+connecting to/from healthcare industry standard HL7. It also can process data for CCDA based transactions ONLY.
 The following transactions are supported:
 - HL7 messages (ADT, ORM, ORU, MFN, MDM, PHA, SCH and VXU) from any vendor and any version of HL7 v2.
 - CCDA Events 
