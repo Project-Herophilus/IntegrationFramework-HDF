@@ -12,9 +12,14 @@
     </properties>
     <!-- You cam always find the latest release details by going to
     https://camel.apache.org/releases/release-3.xx.0/ -->
-  <dependencyManagement>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.4.4</version>
+    </parent>
+    <dependencyManagement>
         <dependencies>
-           <!-- Spring Boot BOM -->
+            <!-- Spring Boot BOM -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -32,20 +37,8 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-   <!-- <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.apache.camel.springboot</groupId>
-                <artifactId>camel-spring-boot-dependencies</artifactId>
-                <version>3.15.0</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>-->
-
-
     <dependencies>
+        <!-- Camel -->
         <!-- Camel -->
         <dependency>
             <groupId>org.apache.camel</groupId>

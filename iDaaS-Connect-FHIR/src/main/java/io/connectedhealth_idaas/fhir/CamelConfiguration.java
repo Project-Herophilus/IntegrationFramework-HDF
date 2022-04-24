@@ -1,5 +1,5 @@
   /*
- * Copyright 2019 Red Hat, Inc.
+ * Copyright 2019 Project-Herophilus
  * <p>
  * Red Hat licenses this file to you under the Apache License, version
  * 2.0 (the "License"); you may not use this file except in compliance
@@ -53,11 +53,6 @@ public class CamelConfiguration extends RouteBuilder {
     KafkaEndpoint kafkaEndpoint = new KafkaEndpoint();
     return kafkaEndpoint;
   }
-  @Bean
-  private KafkaComponent kafkaComponent(KafkaEndpoint kafkaEndpoint){
-    KafkaComponent kafka = new KafkaComponent();
-    return kafka;
-  }
 
   @Bean
   ServletRegistrationBean camelServlet() {
@@ -108,36 +103,7 @@ public class CamelConfiguration extends RouteBuilder {
     restConfiguration().component("servlet")
         .host("0.0.0.0").port(String.valueOf(simple("{{server.port}}")));
 
-    /*
-     *   HIDN
-     *   HIDN - Health information Data Network
-     *   Intended to enable simple movement of data aside from specific standards
-     *   Common Use Cases are areas to support remote (iOT/Edge) and any other need for small footprints to larger
-     *   footprints
-     * : Unstructured data, st
-     */
-    from("direct:hidn")
-         .routeId("HIDN-Endpoint")
-         .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
-         .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
-         .setHeader("eventdate").simple("eventdate")
-         .setHeader("eventtime").simple("eventtime")
-         .setHeader("processingtype").exchangeProperty("processingtype")
-         .setHeader("industrystd").exchangeProperty("industrystd")
-         .setHeader("component").exchangeProperty("componentname")
-         .setHeader("processname").exchangeProperty("processname")
-         .setHeader("organization").exchangeProperty("organization")
-         .setHeader("careentity").exchangeProperty("careentity")
-         .setHeader("customattribute1").exchangeProperty("customattribute1")
-         .setHeader("customattribute2").exchangeProperty("customattribute2")
-         .setHeader("customattribute3").exchangeProperty("customattribute3")
-         .setHeader("camelID").exchangeProperty("camelID")
-         .setHeader("exchangeID").exchangeProperty("exchangeID")
-         .setHeader("internalMsgID").exchangeProperty("internalMsgID")
-         .setHeader("bodyData").exchangeProperty("bodyData")
-         .setHeader("bodySize").exchangeProperty("bodySize")
-         .convertBodyTo(String.class).to(getKafkaTopicUri("hidn"))
-    ;
+
     /*
      * Audit
      *
@@ -199,32 +165,6 @@ public class CamelConfiguration extends RouteBuilder {
         .routeId("API-HIDN")
          // Data Parsing and Conversions
         // Normal Processing
-        .convertBodyTo(String.class)
-        .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
-        .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
-        .setHeader("eventdate").simple("eventdate")
-        .setHeader("eventtime").simple("eventtime")
-        .setHeader("processingtype").exchangeProperty("processingtype")
-        .setHeader("industrystd").exchangeProperty("industrystd")
-        .setHeader("component").exchangeProperty("componentname")
-        .setHeader("processname").exchangeProperty("processname")
-        .setHeader("organization").exchangeProperty("organization")
-        .setHeader("careentity").exchangeProperty("careentity")
-        .setHeader("customattribute1").exchangeProperty("customattribute1")
-        .setHeader("customattribute2").exchangeProperty("customattribute2")
-        .setHeader("customattribute3").exchangeProperty("customattribute3")
-        .setHeader("camelID").exchangeProperty("camelID")
-        .setHeader("exchangeID").exchangeProperty("exchangeID")
-        .setHeader("internalMsgID").exchangeProperty("internalMsgID")
-        .setHeader("bodyData").exchangeProperty("bodyData")
-        .setHeader("bodySize").exchangeProperty("bodySize")
-        .wireTap("direct:hidn")
-    ;
-
-    from("servlet://hidn")
-        .routeId("HIDN")
-         // Data Parsing and Conversions
-         // Normal Processing
         .convertBodyTo(String.class)
         .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
         .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Red Hat, Inc.
+ * Copyright 2019 Project-Herophilus
  * <p>
  * Red Hat licenses this file to you under the Apache License, version
  * 2.0 (the "License"); you may not use this file except in compliance
@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  *
  */
-package com.redhat.idaas.connect.parsers;
+package io.connectedhealth_idaas.parsers;
 
 import java.util.Date;
 

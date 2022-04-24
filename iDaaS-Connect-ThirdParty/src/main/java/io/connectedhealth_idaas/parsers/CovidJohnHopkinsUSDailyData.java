@@ -1,4 +1,4 @@
-package com.redhat.idaas.connect.parsers;
+package io.connectedhealth_idaas.parsers;
 
 import java.util.Date;
 

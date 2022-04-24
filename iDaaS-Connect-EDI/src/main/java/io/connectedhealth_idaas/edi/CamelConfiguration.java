@@ -1,5 +1,5 @@
 /*
- * Copyright 2019
+ * Copyright 2019 Project-Herophilus
 
  */
 package io.connectedhealth_idaas.edi;
@@ -7,8 +7,8 @@ package io.connectedhealth_idaas.edi;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jms.ConnectionFactory;
-
+//import javax.jms.ConnectionFactory;
+//import org.springframework.jms.connection.JmsTransactionManager;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.LoggingLevel;
@@ -24,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.jms.connection.JmsTransactionManager;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -98,36 +97,6 @@ public class CamelConfiguration extends RouteBuilder {
   public void configure() throws Exception {
 
     /*
-     *   HIDN
-     *   HIDN - Health information Data Network
-     *   Intended to enable simple movement of data aside from specific standards
-     *   Common Use Cases are areas to support remote (iOT/Edge) and any other need for small footprints to larger
-     *   footprints
-     *
-     */
-    from("direct:hidn")
-            .routeId("HIDN Processing")
-            .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
-            .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
-            .setHeader("eventdate").simple("eventdate")
-            .setHeader("eventtime").simple("eventtime")
-            .setHeader("processingtype").exchangeProperty("processingtype")
-            .setHeader("industrystd").exchangeProperty("industrystd")
-            .setHeader("component").exchangeProperty("componentname")
-            .setHeader("processname").exchangeProperty("processname")
-            .setHeader("organization").exchangeProperty("organization")
-            .setHeader("careentity").exchangeProperty("careentity")
-            .setHeader("customattribute1").exchangeProperty("customattribute1")
-            .setHeader("customattribute2").exchangeProperty("customattribute2")
-            .setHeader("customattribute3").exchangeProperty("customattribute3")
-            .setHeader("camelID").exchangeProperty("camelID")
-            .setHeader("exchangeID").exchangeProperty("exchangeID")
-            .setHeader("internalMsgID").exchangeProperty("internalMsgID")
-            .setHeader("bodyData").exchangeProperty("bodyData")
-            .setHeader("bodySize").exchangeProperty("bodySize")
-            .convertBodyTo(String.class).to(getKafkaTopicUri("hidn"))
-    ;
-    /*
      * Direct actions used across platform
      *
      */
@@ -171,35 +140,6 @@ public class CamelConfiguration extends RouteBuilder {
             .setHeader("internalMsgID").exchangeProperty("internalMsgID")
             .setHeader("bodyData").exchangeProperty("bodyData")
             .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.terminologyTopic}}"));
-
-    /*
-     *  Servlet common endpoint accessable to process transactions
-     */
-    from("servlet://hidn")
-            .routeId("HIDN Servlet")
-            // Data Parsing and Conversions
-            // Normal Processing
-            .convertBodyTo(String.class)
-            .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
-            .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
-            .setHeader("eventdate").simple("eventdate")
-            .setHeader("eventtime").simple("eventtime")
-            .setHeader("processingtype").exchangeProperty("processingtype")
-            .setHeader("industrystd").exchangeProperty("industrystd")
-            .setHeader("component").exchangeProperty("componentname")
-            .setHeader("processname").exchangeProperty("processname")
-            .setHeader("organization").exchangeProperty("organization")
-            .setHeader("careentity").exchangeProperty("careentity")
-            .setHeader("customattribute1").exchangeProperty("customattribute1")
-            .setHeader("customattribute2").exchangeProperty("customattribute2")
-            .setHeader("customattribute3").exchangeProperty("customattribute3")
-            .setHeader("camelID").exchangeProperty("camelID")
-            .setHeader("exchangeID").exchangeProperty("exchangeID")
-            .setHeader("internalMsgID").exchangeProperty("internalMsgID")
-            .setHeader("bodyData").exchangeProperty("bodyData")
-            .setHeader("bodySize").exchangeProperty("bodySize")
-            .wireTap("direct:hidn")
-    ;
 
     /*
      *   HTTP Endpoint

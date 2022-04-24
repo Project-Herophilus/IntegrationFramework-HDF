@@ -1,4 +1,4 @@
-package com.redhat.idaas.connect.parsers;
+package io.connectedhealth_idaas.parsers;
 // Imports
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.camel.dataformat.bindy.annotation.CsvRecord;

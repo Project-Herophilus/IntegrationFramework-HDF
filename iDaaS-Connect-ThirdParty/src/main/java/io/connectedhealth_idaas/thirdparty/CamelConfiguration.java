@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Red Hat, Inc.
+ * Copyright 2019 Project-Herophilus
  * <p>
  * Red Hat licenses this file to you under the Apache License, version
  * 2.0 (the "License"); you may not use this file except in compliance
@@ -16,7 +16,7 @@
  */
 package io.connectedhealth_idaas.thirdparty;
 
-import javax.jms.ConnectionFactory;
+//import javax.jms.ConnectionFactory;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
@@ -31,13 +31,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.jms.connection.JmsTransactionManager;
+//import org.springframework.jms.connection.JmsTransactionManager;
 import org.springframework.stereotype.Component;
 import org.apache.camel.component.jackson.JacksonDataFormat;
 import org.apache.camel.dataformat.bindy.csv.BindyCsvDataFormat;
 import org.apache.camel.component.servlet.CamelHttpTransportServlet;
 //Parsers for any artifacts within this platform
-import com.redhat.idaas.connect.parsers.*;
+import io.connectedhealth_idaas.parsers.*;
 
 /*
  *  Kafka implementation based on https://camel.apache.org/components/latest/kafka-component.html
@@ -71,11 +71,7 @@ public class CamelConfiguration extends RouteBuilder {
     KafkaEndpoint kafkaEndpoint = new KafkaEndpoint();
     return kafkaEndpoint;
   }
-  @Bean
-  private KafkaComponent kafkaComponent(KafkaEndpoint kafkaEndpoint){
-    KafkaComponent kafka = new KafkaComponent();
-    return kafka;
-  }
+
   @Bean
   ServletRegistrationBean camelServlet() {
     // use a @Bean to register the Camel servlet which we need to do
@@ -95,14 +91,6 @@ public class CamelConfiguration extends RouteBuilder {
 
   @Override
   public void configure() throws Exception {
-    /*
-     *   HIDN
-     *   HIDN - Health information Data Network
-     *   Intended to enable simple movement of data aside from specific standards
-     *   Common Use Cases are areas to support remote (iOT/Edge) and any other need for small footprints to larger
-     *   footprints
-     * : Unstructured data, st
-     */
     /*
      *   HIDN
      *   HIDN - Health information Data Network
