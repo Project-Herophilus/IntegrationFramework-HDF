@@ -19,11 +19,22 @@ Please find details on how to help us [here](https://github.com/Project-Herophil
 For any repository to be implemented there are two types of requirements, overall general requirements
 and then there are specific submodule requirements.
 
-## General Pre-Requisites
-For all iDaaS Connect branded solutions there are some general content which can be looked at
-here in [detail](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/CloningBuildingRunningSolution.md)
+# Implementation
+The following section is designed to cover the details around implementing.
 
-## Specific Implementation Pre-Requisites
+## How To Get, Build and Run iDaaS-Connect Assets
+Within each submodule/design pattern/reference architecture in this repository there is a specific README.md. It is 
+intended to follow a specific format that covers a solution definition, how we look to continually improve, pre-requisities,
+implementation details including specialized configuration, known issues and their potential resolutions. 
+However, there are a lot of individual capabilities, we have tried to keep content relevant and specific to 
+cover specific topics. 
+- For cloning, building and running of assets that content can be found
+  [here](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/CloningBuildingRunningSolution.md).
+- Within each implementation there is a management console, the management console provides the same
+  interface and capabilities no matter what implementation you are working within, some specifics and 
+  and details can be found [here](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/AdministeringPlatform.md).
+
+## Specific Implementation Configuration Details  
 There are several key details you must make decisions on and also configure. For all of these you will
 need to update the application.properties in accordance with these decisions.
 - For every HL7 based connection you can specify a specific directory, port and whether or not 
