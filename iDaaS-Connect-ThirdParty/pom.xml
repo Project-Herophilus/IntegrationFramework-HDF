@@ -4,7 +4,7 @@
     <!--Internal Project Details-->
     <groupId>io.connectedhealth_idaas.thirdparty</groupId>
     <artifactId>io.connectedhealth_idaas.thirdparty</artifactId>
-    <version>2022.04.12</version>
+    <version>2022.04.13-SNAPSHOT</version>
 
     <properties>
         <camel.version>3.14.0</camel.version>
@@ -178,9 +178,5 @@
             </plugin>
         </plugins>
     </build>
-
-  <scm>
-    <tag>v2022.04.12</tag>
-  </scm>
 </project>
 
