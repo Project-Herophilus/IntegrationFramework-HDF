@@ -126,11 +126,11 @@ For all the URL links we have made them localhost based, simply change them to t
 
 # Platform General Pre-Requisites
 For all iDaaS design patterns it should be assumed that you will either install as part of this effort, or have the following:
-
+For these pre-requisites there is both a development/implementation and also production enablement perspective.
 - Java JDK
    Java is what everything is developed in. The current supported JDK release(s) are 1.8 and 11. We strongly recommend 11 as 
    all the build actions and activities we do are based on this JDK release.
-   <a href="https://developers.redhat.com/products/openjdk/download" target=_blank>OpenJDK Download Site</a>
+   <a href="https://developers.redhat.com/products/openjdk/download" target=_blank>OpenJDK Download Site</a>.
 - An existing Kafka (or some flavor of it) up and running. Red Hat currently implements AMQ-Streams based on Apache Kafka; 
    however, we have implemented iDaaS with numerous Kafka implementations. Please see the following files we have 
    included to try and help: <br/>

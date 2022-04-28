@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  *
  */
-package io.connectedhealth_idaas.cloud;
+package io.connectedhealth_idaas.sap;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

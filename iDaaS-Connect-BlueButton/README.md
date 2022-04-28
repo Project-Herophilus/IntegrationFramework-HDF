@@ -10,13 +10,24 @@ We are focusing on continuing to improve. With the numerous implementation and p
 have focused on success overall and as we progress forward the intent is to focus on success while being consistent.
 Please find details on how to help us [here](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/OngoingEnhancements.md).
 
-# Pre-Requisites
-For any repository to be implemented there are two types of requirements, overall general requirements
-and then there are specific submodule requirements.
+# Implementation
+The following section is designed to cover the details around implementing.
 
-## General Pre-Requisites
-For all iDaaS Connect branded solutions there are some general content which can be looked at
-here in [detail](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/CloningBuildingRunningSolution.md)
+## How To Get, Build and Run iDaaS-Connect Assets
+Within each submodule/design pattern/reference architecture in this repository there is a specific README.md. It is
+intended to follow a specific format that covers a solution definition, how we look to continually improve, pre-requisities,
+implementation details including specialized configuration, known issues and their potential resolutions.
+However, there are a lot of individual capabilities, we have tried to keep content relevant and specific to
+cover specific topics.
+- For cloning, building and running of assets that content can be found
+  [here](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/CloningBuildingRunningSolution.md).
+- Within each implementation there is a management console, the management console provides the same
+  interface and capabilities no matter what implementation you are working within, some specifics and
+  and details can be found [here](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/AdministeringPlatform.md).
+
+## Known Issues
+As of the time of this content publication there are no known specific issues. The ONLY consistent
+common issue is setting the application.properties before running the application.
 
 ## Specific Implementation Pre-Requisites
 1. Sign up for the blue button [developer sandbox](https://bluebutton.cms.gov/).
@@ -25,7 +36,7 @@ here in [detail](https://github.com/Project-Herophilus/Project-Herophilus-Assets
 * OAuth - Grant Type: authorization-code
 * Callback URLS: http://localhost:8890/callback (or another url more appropriate)
 
-All of these properties can be placed into the application.properties files in src/main/resouorces or 
+All of these properties can be placed into the application.properties files in src/main/resouorces or
 you can add a custom application.properties file location as you test this, the steps are levrage a custom
 application.properties file can be found in the same content listed above in the General Pre-Requisite section.
 
@@ -37,16 +48,6 @@ bluebutton.callback.port=8890
 Note:
 http://localhost:8890/callback is the callback URL you registered with bluebutton.cms.gov. http://localhost:8890/bluebutton will be the service URL for iDAAS-Connect-BlueButton.
 Every asset has its own defined specific port, we have done this to ensure multiple solutions can be run simultaneously.
-
-# Administrative Console
-Within each implementation there is a management console, the management console provides the same 
-interface and capabilities no matter what implementation you are working within. Specifics on the 
-Admin/Mgmt interface can be found
-[here](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/AdministeringPlatform.md).
-
-# Specific Implementation Details
-The following section is intended to cover specific implementation known issues, challenges and potential implementation
-details.
 
 ## Known Issues
 As of the time of this content publication there are no known specific issues. The ONLY consistent

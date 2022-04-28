@@ -300,3 +300,19 @@ typings/
 
 # IntelliJ idea directory exclusion
 /.idea/
+./iDaaS-Connect-BlueButton/.idea
+./iDaaS-Connect-Cloud/.idea
+./iDaaS-Connect-EDI/.idea
+./iDaaS-Connect-FHIR/.idea
+./iDaaS-Connect-HL7/.idea
+./iDaaS-Connect-SAP/.idea
+./iDaaS-Connect-ThirdParty/.idea
+
+# VSCode
+./iDaaS-Connect-BlueButton/.vscode
+./iDaaS-Connect-Cloud/.vscode
+./iDaaS-Connect-EDI/.vscode
+./iDaaS-Connect-FHIR/.vscode
+./iDaaS-Connect-HL7/.vscode
+./iDaaS-Connect-SAP/.vscode
+./iDaaS-Connect-ThirdParty/.vscode
