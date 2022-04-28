@@ -165,11 +165,12 @@
             <artifactId>idaas-eventbuilder</artifactId>
             <version>2.3.0</version>
         </dependency>
-        <!--Linux for Health -->
+        <!--Linux for Health Dependencies-->
+
         <dependency>
             <groupId>io.github.linuxforhealth</groupId>
             <artifactId>hl7v2-fhir-converter</artifactId>
-            <version>1.0.15</version>
+            <version>1.0.12</version>
         </dependency>
     </dependencies>
 
