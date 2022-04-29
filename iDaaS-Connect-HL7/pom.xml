@@ -167,7 +167,7 @@
         </dependency>
         <!--Linux for Health Dependencies-->
         <!-- https://mvnrepository.com/artifact/io.github.linuxforhealth/hl7v2-fhir-converter -->
-        <!-- JDK 1.8 based implementations -->
+        <!-- JDK 1.8 based implementations-->
         <dependency>
             <groupId>io.github.linuxforhealth</groupId>
             <artifactId>hl7v2-fhir-converter</artifactId>
