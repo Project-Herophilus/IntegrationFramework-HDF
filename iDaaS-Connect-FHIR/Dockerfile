@@ -1,10 +1,9 @@
-# Build stage
-FROM maven:3.6.0-jdk-11-slim AS build
-COPY target/idaas-connect-*.jar /app/target/
+FROM maven:3.5-jdk-8 AS build  
+COPY src /usr/src/app/src  
+COPY pom.xml /usr/src/app  
+RUN mvn -f /usr/src/app/pom.xml clean package
 
-# old -JDK 8
-# FROM openjdk:8-jdk-alpine
-# JDK 11
-FROM openjdk:11
-COPY --from=build /app/target/idaas-connect-*.jar /app/app.jar
-ENTRYPOINT ["java","-jar","/app/app.jar"]
+FROM gcr.io/distroless/java  
+COPY --from=build /usr/src/app/target/io.connectedhealth_idaas.fhir-2022.04.15-SNAPSHOT.jar /usr/app/io.connectedhealth_idaas.fhir-2022.04.15-SNAPSHOT.jar
+EXPOSE 8080  
+ENTRYPOINT ["java","-jar","/usr/app/io.connectedhealth_idaas.fhir-2022.04.15-SNAPSHOT.jar"]  

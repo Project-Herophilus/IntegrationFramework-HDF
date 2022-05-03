@@ -100,8 +100,8 @@ public class CamelConfiguration extends RouteBuilder {
     // https://tomd.xyz/camel-rest/
     // Rest Configuration
     // Define the implementing component - and accept the default host and port
-    restConfiguration().component("servlet")
-        .host("0.0.0.0").port(String.valueOf(simple("{{server.port}}")));
+    // restConfiguration().component("servlet")
+        // .host("0.0.0.0").port((simple("{{server.port}}"));
 
 
     /*
