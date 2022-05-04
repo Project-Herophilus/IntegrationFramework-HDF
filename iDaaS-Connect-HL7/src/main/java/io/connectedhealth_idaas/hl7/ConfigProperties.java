@@ -63,6 +63,7 @@ public class ConfigProperties {
     private String schTopicName;
     private String vxuTopicName;
     private String ccdaTopicName;
+    private String hl7HTTPTopicName;
 
     // Getters and Setters by Usage
     public String getConvertCCDAtoFHIR() {return convertCCDAtoFHIR;}
@@ -241,5 +242,8 @@ public class ConfigProperties {
     public void setCcdaTopicName(String ccdaTopicName) {
         this.ccdaTopicName = ccdaTopicName;
     }
+    public String getHl7HTTPTopicName() { return hl7HTTPTopicName; }
+    public void setHl7HTTPTopicName(String hl7HTTPTopicName) { this.hl7HTTPTopicName = hl7HTTPTopicName; }
+
 
 }

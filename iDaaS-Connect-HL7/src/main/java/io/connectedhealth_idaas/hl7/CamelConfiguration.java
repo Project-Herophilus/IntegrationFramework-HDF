@@ -258,6 +258,50 @@ public class CamelConfiguration extends RouteBuilder {
          *
          * https://camel.apache.org/components/2.x/dataformats/hl7-dataformat.html
          */
+
+        // HTTP
+        // Servlet Endpoint
+        from("servlet://hl7")
+                .routeId("hl7-post")
+                .convertBodyTo(String.class)
+                // set Auditing Properties
+                .setProperty("processingtype").constant("data")
+                .setProperty("appname").constant("iDAAS-Connect-HL7")
+                .setProperty("industrystd").constant("HL7-HTTP")
+                .setProperty("messagetrigger").constant("HL7")
+                .setProperty("componentname").simple("${routeId}")
+                .setProperty("processname").constant("Input")
+                .setProperty("camelID").simple("${camelId}")
+                .setProperty("exchangeID").simple("${exchangeId}")
+                .setProperty("internalMsgID").simple("${id}")
+                .setProperty("bodyData").simple("${body}")
+                .setProperty("auditdetails").constant("HL7 over HTTP document received")
+                // iDAAS KIC Processing
+                .wireTap("direct:auditing")
+                // Send to Topic
+                .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.hl7HTTPTopicName}}"))
+                // Convert HL7 to FHIR
+                .choice()
+                    .when(simple("{{idaas.convertHL7toFHIR}}"))
+                    // set Auditing Properties
+                    .setProperty("processingtype").constant("data")
+                    .setProperty("appname").constant("iDAAS-Connect-HL7")
+                    .setProperty("industrystd").constant("HL7")
+                    .setProperty("messagetrigger").constant("HTTP")
+                    .setProperty("component").simple("conversion-FHIR")
+                    .setProperty("camelID").simple("${camelId}")
+                    .setProperty("exchangeID").simple("${exchangeId}")
+                    .setProperty("internalMsgID").simple("${id}")
+                    // Conversion
+                    .bean(HL7ToFHIRConverter.class, "convert(${body})")
+                    .setProperty("bodyData").simple("${body}")
+                    .setProperty("auditdetails").constant("Converted HL7 to FHIR Resource ${body}")
+                    // iDAAS KIC - Auditing Processing
+                    .to("direct:auditing")
+                    // Persist
+                    .convertBodyTo(String.class).to(getKafkaTopicUri("fhir_conversion"))
+                .endChoice();
+        ;
         // ADT
         // Directory for File Based HL7
         from(getHL7UriDirectory(config.getHl7ADT_Directory()))
