@@ -27,9 +27,12 @@ public class ConfigProperties {
     public String getKafkaBrokers() {
         return kafkaBrokers;
     }
-
     public void setKafkaBrokers(String kafkaBrokers) {
         this.kafkaBrokers = kafkaBrokers;
     }
 
+    public String getIntegrationTopic() {return integrationTopic;}
+    public void setIntegrationTopic(String integrationTopic) { this.integrationTopic = integrationTopic;}
+    public String getAppintegrationTopic() {return appintegrationTopic;}
+    public void setAppintegrationTopic(String appintegrationTopic) { this.appintegrationTopic = appintegrationTopic;}
 }
