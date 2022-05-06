@@ -23,7 +23,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class ConfigProperties {
 
     private String kafkaBrokers;
-
+    private String integrationTopic;
+    private String appintegrationTopic;
     public String getKafkaBrokers() {
         return kafkaBrokers;
     }
