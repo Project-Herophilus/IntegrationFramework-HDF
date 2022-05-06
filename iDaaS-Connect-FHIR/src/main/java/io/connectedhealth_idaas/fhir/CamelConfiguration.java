@@ -127,7 +127,7 @@
           .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.integrationTopic}}"))
       ;
 
-      from("direct:terminologies")
+      from("direct:terminologiesprocessing")
            .routeId("iDaaS-Terminologies")
            .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
            .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
@@ -224,7 +224,7 @@
            .routeId("TerminologyProcessor")
            .choice().when(simple("{{idaas.processTerminologies}}"))
               .setBody(simple("${body}"))
-              .to(getKafkaTopicUri())
+              .wireTap("direct:terminologiesprocessing")
               // Process Response
               .convertBodyTo(String.class)
               // set Auditing Properties
