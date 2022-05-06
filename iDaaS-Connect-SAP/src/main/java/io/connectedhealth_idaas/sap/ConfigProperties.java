@@ -23,13 +23,15 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class ConfigProperties {
 
     private String kafkaBrokers;
+    private String integrationTopic;
 
     public String getKafkaBrokers() {
         return kafkaBrokers;
     }
-
     public void setKafkaBrokers(String kafkaBrokers) {
         this.kafkaBrokers = kafkaBrokers;
     }
+    public String getIntegrationTopic() {return integrationTopic;}
+    public void setIntegrationTopic(String integrationTopic) { this.integrationTopic = integrationTopic;}
 
 }

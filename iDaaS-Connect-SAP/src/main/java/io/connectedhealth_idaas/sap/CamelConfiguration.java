@@ -75,36 +75,7 @@ public class CamelConfiguration extends RouteBuilder {
 
   @Override
   public void configure() throws Exception {
-    /*
-     *   HIDN
-     *   HIDN - Health information Data Network
-     *   Intended to enable simple movement of data aside from specific standards
-     *   Common Use Cases are areas to support remote (iOT/Edge) and any other need for small footprints to larger
-     *   footprints
-     * : Unstructured data, st
-     */
-    from("direct:hidn")
-        .routeId("HIDN Processing")
-        .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
-        .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
-        .setHeader("eventdate").simple("eventdate")
-        .setHeader("eventtime").simple("eventtime")
-        .setHeader("processingtype").exchangeProperty("processingtype")
-        .setHeader("industrystd").exchangeProperty("industrystd")
-        .setHeader("component").exchangeProperty("componentname")
-        .setHeader("processname").exchangeProperty("processname")
-        .setHeader("organization").exchangeProperty("organization")
-        .setHeader("careentity").exchangeProperty("careentity")
-        .setHeader("customattribute1").exchangeProperty("customattribute1")
-        .setHeader("customattribute2").exchangeProperty("customattribute2")
-        .setHeader("customattribute3").exchangeProperty("customattribute3")
-        .setHeader("camelID").exchangeProperty("camelID")
-        .setHeader("exchangeID").exchangeProperty("exchangeID")
-        .setHeader("internalMsgID").exchangeProperty("internalMsgID")
-        .setHeader("bodyData").exchangeProperty("bodyData")
-        .setHeader("bodySize").exchangeProperty("bodySize")
-        .convertBodyTo(String.class).to(getKafkaTopicUri("hidn"))
-    ;
+
     /*
      *  Direct actions used across platform
      *
@@ -123,7 +94,7 @@ public class CamelConfiguration extends RouteBuilder {
         .setHeader("exchangeID").exchangeProperty("exchangeID")
         .setHeader("internalMsgID").exchangeProperty("internalMsgID")
         .setHeader("bodyData").exchangeProperty("bodyData")
-        .convertBodyTo(String.class).to(getKafkaTopicUri("opsmgmt_platformtransactions"))
+        .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.integrationTopic}}"))
     ;
     /*
      *  Logging
@@ -134,40 +105,10 @@ public class CamelConfiguration extends RouteBuilder {
     ;
 
     /*
-     *   General iDaaS Platform
+     *   iDaaS Connect SAP Platform
      */
 
-    /*
-     *   HIDN Servlet
-     */
-    from("servlet://hidn")
-            .routeId("HIDN")
-            // Data Parsing and Conversions
-            // Normal Processing
-            .convertBodyTo(String.class)
-            .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
-            .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
-            .setHeader("eventdate").simple("eventdate")
-            .setHeader("eventtime").simple("eventtime")
-            .setHeader("processingtype").exchangeProperty("processingtype")
-            .setHeader("industrystd").exchangeProperty("industrystd")
-            .setHeader("component").exchangeProperty("componentname")
-            .setHeader("processname").exchangeProperty("processname")
-            .setHeader("organization").exchangeProperty("organization")
-            .setHeader("careentity").exchangeProperty("careentity")
-            .setHeader("customattribute1").exchangeProperty("customattribute1")
-            .setHeader("customattribute2").exchangeProperty("customattribute2")
-            .setHeader("customattribute3").exchangeProperty("customattribute3")
-            .setHeader("camelID").exchangeProperty("camelID")
-            .setHeader("exchangeID").exchangeProperty("exchangeID")
-            .setHeader("internalMsgID").exchangeProperty("internalMsgID")
-            .setHeader("bodyData").exchangeProperty("bodyData")
-            .setHeader("bodySize").exchangeProperty("bodySize")
-            .wireTap("direct:hidn")
-    ;
-    /*
-    *  Kafka Implementation for implementing Third Party FHIR Server direct connection
-    */
+
 
 
   }

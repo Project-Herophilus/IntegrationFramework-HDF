@@ -5,7 +5,6 @@ import java.nio.file.attribute.FileTime;
 
 @ConfigurationProperties(prefix = "idaas")
 public class ConfigProperties {
-
     private String access_token;
     private double expires_in;
     private String token_type;
@@ -17,8 +16,18 @@ public class ConfigProperties {
     public String bluebuttoncallbackpath;
     public String bluebuttoncallbackhostname;
     public int bluebuttoncallbackportnumber;
-
+    private String kafkaBrokers;
+    private String integrationTopic;
+    private String terminologyTopic;
+    private String processTerminologies;
     //getters
+    public String getKafkaBrokers() {
+        return kafkaBrokers;
+    }
+    public String getIntegrationTopic() {return integrationTopic;}
+    public String getProcessTerminologies() {return processTerminologies;}
+    public String getTerminologyTopic() {return terminologyTopic;}
+
     public String getAccess_token() {
         return access_token;
     }
@@ -48,6 +57,12 @@ public class ConfigProperties {
     }
 
     //setters
+    public void setKafkaBrokers(String kafkaBrokers) {
+        this.kafkaBrokers = kafkaBrokers;
+    }
+    public void setIntegrationTopic(String integrationTopic) { this.integrationTopic = integrationTopic;}
+    public void setProcessTerminologies(String processTerminologies) { this.processTerminologies = processTerminologies;}
+    public void setTerminologyTopic(String terminologyTopic) { this.terminologyTopic = terminologyTopic;}
     public void setAccess_token(String access_token) {
         this.access_token = access_token;
     }

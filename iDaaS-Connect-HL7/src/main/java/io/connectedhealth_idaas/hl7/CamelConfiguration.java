@@ -110,25 +110,6 @@ public class CamelConfiguration extends RouteBuilder {
                 .setHeader("bodyData").exchangeProperty("bodyData")
                 .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.integrationTopic}}"));
 
-        // App Integration
-        from("direct:transactionauditing")
-                .routeId("iDaaS-AppIntegration-KIC")
-                .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
-                .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
-                .setHeader("processingtype").exchangeProperty("processingtype")
-                .setHeader("industrystd").exchangeProperty("industrystd")
-                .setHeader("component").exchangeProperty("componentname")
-                .setHeader("messagetrigger").exchangeProperty("messagetrigger")
-                .setHeader("processname").exchangeProperty("processname")
-                .setHeader("auditdetails").exchangeProperty("auditdetails")
-                .setHeader("camelID").exchangeProperty("camelID")
-                .setHeader("exchangeID").exchangeProperty("exchangeID")
-                .setHeader("internalMsgID").exchangeProperty("internalMsgID")
-                .setHeader("bodyData").exchangeProperty("bodyData")
-                .setHeader("errorID").exchangeProperty("internalMsgID")
-                .setHeader("errorData").exchangeProperty("bodyData")
-                .setHeader("transactionCount").exchangeProperty("transactionCount")
-                .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.appintegrationTopic}}"));
         /*
          *   General Output Logging
          */

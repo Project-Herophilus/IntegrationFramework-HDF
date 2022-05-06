@@ -210,26 +210,6 @@ public class CamelConfiguration extends RouteBuilder {
      *  Kafka Implementation for implementing Third Party FHIR Server direct connection
      */
 
-    // Sample Using Kafka Topic
-    // FHIR: Adverse Events
-    from(getKafkaTopicUri("fhirsvr_adverseevent"))
-        .routeId("AdverseEvent-MiddleTier")
-        // Auditing
-        .setProperty("processingtype").constant("data")
-        .setProperty("appname").constant("iDAAS-ConnectClinical-IndustryStd")
-        .setProperty("industrystd").constant("FHIR")
-        .setProperty("messagetrigger").constant("AdverseEvent")
-        .setProperty("component").simple("${routeId}")
-        .setProperty("camelID").simple("${camelId}")
-        .setProperty("exchangeID").simple("${exchangeId}")
-        .setProperty("internalMsgID").simple("${id}")
-        .setProperty("bodyData").simple("${body}")
-        .setProperty("processname").constant("MTier")
-        .setProperty("auditdetails").constant("Adverse Event to Enterprise By Data Type middle tier")
-        .wireTap("direct:auditing")
-        // Enterprise Message By Type
-        .convertBodyTo(String.class).to(getKafkaTopicUri("ent_fhirsvr_adverseevent"))
-    ;
 
     /*
      *  MandatoryReporting

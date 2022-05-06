@@ -76,37 +76,6 @@ public class CamelConfiguration extends RouteBuilder {
     public void configure() throws Exception {
 
         /*
-         *   HIDN
-         *   HIDN - Health information Data Network
-         *   Intended to enable simple movement of data aside from specific standards
-         *   Common Use Cases are areas to support remote (iOT/Edge) and any other need for small footprints to larger
-         *   footprints
-         * : Unstructured data, st
-         */
-        from("direct:hidn")
-                .routeId("HIDN Processing")
-                .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
-                .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
-                .setHeader("eventdate").simple("eventdate")
-                .setHeader("eventtime").simple("eventtime")
-                .setHeader("processingtype").exchangeProperty("processingtype")
-                .setHeader("industrystd").exchangeProperty("industrystd")
-                .setHeader("component").exchangeProperty("componentname")
-                .setHeader("processname").exchangeProperty("processname")
-                .setHeader("organization").exchangeProperty("organization")
-                .setHeader("careentity").exchangeProperty("careentity")
-                .setHeader("customattribute1").exchangeProperty("customattribute1")
-                .setHeader("customattribute2").exchangeProperty("customattribute2")
-                .setHeader("customattribute3").exchangeProperty("customattribute3")
-                .setHeader("camelID").exchangeProperty("camelID")
-                .setHeader("exchangeID").exchangeProperty("exchangeID")
-                .setHeader("internalMsgID").exchangeProperty("internalMsgID")
-                .setHeader("bodyData").exchangeProperty("bodyData")
-                .setHeader("bodySize").exchangeProperty("bodySize")
-                .convertBodyTo(String.class).to("kafka://localhost:9092?topic=hidn&brokers=localhost:9092")
-        ;
-
-        /*
          * Audit
          *
          * Direct component within platform to ensure we can centralize logic
@@ -129,7 +98,7 @@ public class CamelConfiguration extends RouteBuilder {
                 .setHeader("exchangeID").exchangeProperty("exchangeID")
                 .setHeader("internalMsgID").exchangeProperty("internalMsgID")
                 .setHeader("bodyData").exchangeProperty("bodyData")
-                .convertBodyTo(String.class).to("kafka://?topic=opsmgmt_platformtransactions&brokers=localhost:9092")
+                .convertBodyTo(String.class).to(getKafkaTopicUri("opsmgmt_platformtransactions"))
         ;
         /*
          *  Logging
