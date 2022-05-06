@@ -23,6 +23,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class ConfigProperties {
 
     private String kafkaBrokers;
+    // Kafka
+    private String integrationTopic;
+    private String appintegrationTopic;
+    private String terminologyTopic;
 
     private String fhirVendor;
 
@@ -33,6 +37,16 @@ public class ConfigProperties {
     public String getKafkaBrokers() {
         return kafkaBrokers;
     }
+    public void setKafkaBrokers(String KafkaBrokers) {
+        this.kafkaBrokers = KafkaBrokers;
+    }
+
+    public String getIntegrationTopic() {return integrationTopic;}
+    public void setIntegrationTopic(String integrationTopic) { this.integrationTopic = integrationTopic;}
+    public String getAppintegrationTopic() {return appintegrationTopic;}
+    public void setAppintegrationTopic(String appintegrationTopic) { this.appintegrationTopic = appintegrationTopic;}
+    public String getTerminologyTopic() {return terminologyTopic;}
+    public void setTerminologyTopic(String terminologyTopic) { this.terminologyTopic = terminologyTopic;}
 
     public String getFhirVendor() {
         return fhirVendor;
@@ -48,9 +62,6 @@ public class ConfigProperties {
         return microsoftURI;
     }
 
-    public void setKafkaBrokers(String KafkaBrokers) {
-        this.kafkaBrokers = KafkaBrokers;
-    }
 
     public void setFhirVendor(String FhirVendor) {
         this.fhirVendor = FhirVendor;
