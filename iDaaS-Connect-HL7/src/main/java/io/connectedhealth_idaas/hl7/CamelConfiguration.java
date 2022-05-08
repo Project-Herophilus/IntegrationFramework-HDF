@@ -136,7 +136,21 @@ public class CamelConfiguration extends RouteBuilder {
                 .setHeader("internalMsgID").exchangeProperty("internalMsgID")
                 .setHeader("bodyData").exchangeProperty("bodyData")
                 .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.terminologyTopic}}"));
-
+        from("direct:ccdafhirconversion")
+                .routeId("iDaaS-Terminologies")
+                .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
+                .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
+                .setHeader("processingtype").exchangeProperty("processingtype")
+                .setHeader("industrystd").exchangeProperty("industrystd")
+                .setHeader("component").exchangeProperty("componentname")
+                .setHeader("messagetrigger").exchangeProperty("messagetrigger")
+                .setHeader("processname").exchangeProperty("processname")
+                .setHeader("auditdetails").exchangeProperty("auditdetails")
+                .setHeader("camelID").exchangeProperty("camelID")
+                .setHeader("exchangeID").exchangeProperty("exchangeID")
+                .setHeader("internalMsgID").exchangeProperty("internalMsgID")
+                .setHeader("bodyData").exchangeProperty("bodyData")
+                .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas_ccdafhirconversionTopic}}"));
         // CCDA
         // Directory Processing
         from(getHL7CCDAUriDirectory(config.getHl7CCDA_Directory()))
@@ -179,7 +193,7 @@ public class CamelConfiguration extends RouteBuilder {
                 // iDAAS KIC - Auditing Processing
                 .to("direct:auditing")
                 // Write Parsed FHIR Terminology Transactions to Topic
-                .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.ccdaTopicName}}"))
+                .to("direct:ccdafhirconversion")
              .endChoice();
         ;
         // Servlet Endpoint
@@ -223,7 +237,7 @@ public class CamelConfiguration extends RouteBuilder {
                 // iDAAS KIC - Auditing Processing
                 .to("direct:auditing")
                 // Write Parsed FHIR Terminology Transactions to Topic
-                .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.ccdaTopicName}}"))
+                .to("direct:ccdafhirconversion")
              .endChoice();
         ;
 
@@ -280,7 +294,7 @@ public class CamelConfiguration extends RouteBuilder {
                     // iDAAS KIC - Auditing Processing
                     .to("direct:auditing")
                     // Persist
-                    .convertBodyTo(String.class).to(getKafkaTopicUri("fhir_conversion"))
+                    .to("direct:ccdafhirconversion")
                 .endChoice();
         ;
         // ADT
@@ -344,7 +358,7 @@ public class CamelConfiguration extends RouteBuilder {
                 // iDAAS KIC - Auditing Processing
                 .to("direct:auditing")
                 // Persist
-                .convertBodyTo(String.class).to(getKafkaTopicUri("fhir_conversion"))
+                .to("direct:ccdafhirconversion")
              .endChoice()
         ;
         // MLLP
@@ -407,7 +421,7 @@ public class CamelConfiguration extends RouteBuilder {
                 // iDAAS KIC - Auditing Processing
                 .to("direct:auditing")
                 // Persist
-                .convertBodyTo(String.class).to(getKafkaTopicUri("fhir_conversion"))
+                .to("direct:ccdafhirconversion")
              /*.choice()
              // Acknowledgement must go last as we leverage the HL7.ack as the inbound stream thus changing
              // everything after it
@@ -489,7 +503,7 @@ public class CamelConfiguration extends RouteBuilder {
                 // iDAAS KIC - Auditing Processing
                 .to("direct:auditing")
                 // Persist
-                .convertBodyTo(String.class).to(getKafkaTopicUri("fhir_conversion"))
+                .to("direct:ccdafhirconversion")
              .endChoice()
         ;
         // MLLP
@@ -551,7 +565,7 @@ public class CamelConfiguration extends RouteBuilder {
                 // iDAAS KIC - Auditing Processing
                 .to("direct:auditing")
                 // Persist
-                .convertBodyTo(String.class).to(getKafkaTopicUri("fhir_conversion"))
+                .to("direct:ccdafhirconversion")
                 /*
                 Response to HL7 Message Sent Built by platform
                 .choice().when(simple("{{idaas.ormACKResponse}}"))
@@ -634,7 +648,7 @@ public class CamelConfiguration extends RouteBuilder {
                 // iDAAS KIC - Auditing Processing
                 .to("direct:auditing")
                 // Persist
-                .convertBodyTo(String.class).to(getKafkaTopicUri("fhir_conversion"))
+                .to("direct:ccdafhirconversion")
              .endChoice()
         ;
         // MLLP
@@ -697,7 +711,7 @@ public class CamelConfiguration extends RouteBuilder {
                 // iDAAS KIC - Auditing Processing
                 .to("direct:auditing")
                 // Persist
-                .convertBodyTo(String.class).to(getKafkaTopicUri("fhir_conversion"))
+                .to("direct:ccdafhirconversion")
                 /*
                 //Response to HL7 Message Sent Built by platform
                 .choice().when(simple("{{idaas.oruACKResponse}}"))
@@ -1082,7 +1096,7 @@ public class CamelConfiguration extends RouteBuilder {
                 // iDAAS KIC - Auditing Processing
                 .to("direct:auditing")
                 // Persist
-                .convertBodyTo(String.class).to(getKafkaTopicUri("fhir_conversion"))
+                .to("direct:ccdafhirconversion")
              .endChoice()
         ;
         // MLLP
@@ -1146,7 +1160,7 @@ public class CamelConfiguration extends RouteBuilder {
                 // iDAAS KIC - Auditing Processing
                 .to("direct:auditing")
                 // Persist
-                .convertBodyTo(String.class).to(getKafkaTopicUri("fhir_conversion"))
+                .to("direct:ccdafhirconversion")
              //Response to HL7 Message Sent Built by platform
              /*
              .choice().when(simple("{{idaas.rdeACKResponse}}"))
@@ -1230,7 +1244,7 @@ public class CamelConfiguration extends RouteBuilder {
                 // iDAAS KIC - Auditing Processing
                 .to("direct:auditing")
                 // Persist
-                .convertBodyTo(String.class).to(getKafkaTopicUri("fhir_conversion"))
+                .to("direct:ccdafhirconversion")
                 .endChoice()
             ;
         // MLLP
@@ -1294,7 +1308,7 @@ public class CamelConfiguration extends RouteBuilder {
                  // iDAAS KIC - Auditing Processing
                  .to("direct:auditing")
                  // Persist
-                 .convertBodyTo(String.class).to(getKafkaTopicUri("fhir_conversion"))
+                .to("direct:ccdafhirconversion")
              //Response to HL7 Message Sent Built by platform
              /*
                 .choice().when(simple("{{idaas.schACKResponse}}"))
@@ -1378,7 +1392,7 @@ public class CamelConfiguration extends RouteBuilder {
                 // iDAAS KIC - Auditing Processing
                 .to("direct:auditing")
                 // Persist
-                .convertBodyTo(String.class).to(getKafkaTopicUri("fhir_conversion"))
+                .to("direct:ccdafhirconversion")
             .endChoice()
         ;
         // MLLP
@@ -1442,7 +1456,7 @@ public class CamelConfiguration extends RouteBuilder {
                 // iDAAS KIC - Auditing Processing
                 .to("direct:auditing")
                 // Persist
-                .convertBodyTo(String.class).to(getKafkaTopicUri("fhir_conversion"))
+                .to("direct:ccdafhirconversion")
              //Response to HL7 Message Sent Built by platform
              /*
              .choice().when(simple("{{idaas.vxuACKResponse}}"))
