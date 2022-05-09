@@ -3,6 +3,7 @@
  */
 package io.connectedhealth_idaas.hl7;
 
+import ca.uhn.fhir.fhirpath.IFhirPath;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.hl7.HL7;
@@ -87,10 +88,8 @@ public class CamelConfiguration extends RouteBuilder {
          * There are some values we will need to set within every route
          * We are doing this to ensure we dont need to build a series of beans
          * and we keep the processing as lightweight as possible
-         *
          *   Simple language reference
          *   https://camel.apache.org/components/latest/languages/simple-language.html
-         *
          */
 
         //Integration Based Auditing
@@ -115,7 +114,7 @@ public class CamelConfiguration extends RouteBuilder {
          */
         from("direct:logging")
                 .routeId("logging")
-                .log(LoggingLevel.INFO, log, "HL7 Message: [${body}]")
+                .log(LoggingLevel.INFO, log, "Message: [${body}]")
         ;
 
         /*
@@ -136,8 +135,9 @@ public class CamelConfiguration extends RouteBuilder {
                 .setHeader("internalMsgID").exchangeProperty("internalMsgID")
                 .setHeader("bodyData").exchangeProperty("bodyData")
                 .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.terminologyTopic}}"));
+
         from("direct:ccdafhirconversion")
-                .routeId("iDaaS-Terminologies")
+                .routeId("iDaaS-CCDAFHIRConversion")
                 .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
                 .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
                 .setHeader("processingtype").exchangeProperty("processingtype")
@@ -150,7 +150,9 @@ public class CamelConfiguration extends RouteBuilder {
                 .setHeader("exchangeID").exchangeProperty("exchangeID")
                 .setHeader("internalMsgID").exchangeProperty("internalMsgID")
                 .setHeader("bodyData").exchangeProperty("bodyData")
-                .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas_ccdafhirconversionTopic}}"));
+                .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.fhirConversionTopic}}"));
+
+
         // CCDA
         // Directory Processing
         from(getHL7CCDAUriDirectory(config.getHl7CCDA_Directory()))
@@ -223,7 +225,7 @@ public class CamelConfiguration extends RouteBuilder {
                 .setProperty("processingtype").constant("data")
                 .setProperty("appname").constant("iDAAS-Connect-HL7")
                 .setProperty("industrystd").constant("CCDA")
-                .setProperty("messagetrigger").constant("")
+                .setProperty("messagetrigger").constant("CCDA")
                 .setProperty("component").simple("${routeId}")
                 .setProperty("processname").constant("conversion")
                 .setProperty("camelID").simple("${camelId}")
@@ -233,7 +235,7 @@ public class CamelConfiguration extends RouteBuilder {
                 //Invocation of CCDA Conversion
                 // Unmarshall from XML Doc against XSD - or Bean to encapsulate features
                 .bean(CdaConversionService.class, "getFhirJsonFromCdaXMLString(${body})")
-                .setProperty("auditdetails").constant("CCDA to FHIR conversion event called")
+                .setProperty("auditdetails").simple("Converted CCDA to FHIR Resource Bundle for message ${exchangeId}")
                 // iDAAS KIC - Auditing Processing
                 .to("direct:auditing")
                 // Write Parsed FHIR Terminology Transactions to Topic
@@ -290,7 +292,7 @@ public class CamelConfiguration extends RouteBuilder {
                     // Conversion
                     .bean(HL7ToFHIRConverter.class, "convert(${body})")
                     .setProperty("bodyData").simple("${body}")
-                    .setProperty("auditdetails").constant("Converted HL7 to FHIR Resource ${body}")
+                    .setProperty("auditdetails").simple("Converted HL7 Admission to FHIR Resource Bundle for message ${exchangeId}")
                     // iDAAS KIC - Auditing Processing
                     .to("direct:auditing")
                     // Persist
@@ -354,7 +356,8 @@ public class CamelConfiguration extends RouteBuilder {
                 // Conversion
                 .bean(HL7ToFHIRConverter.class, "convert(${body})")
                 .setProperty("bodyData").simple("${body}")
-                .setProperty("auditdetails").constant("Converted HL7 Admission to FHIR Resource ${body}")
+                .setProperty("auditdetails").constant("Converted HL7 Admission to FHIR Resource")
+                .setProperty("auditdetails").simple("Converted HL7 Admission to FHIR Resource Bundle for message ${exchangeId}")
                 // iDAAS KIC - Auditing Processing
                 .to("direct:auditing")
                 // Persist
@@ -413,11 +416,12 @@ public class CamelConfiguration extends RouteBuilder {
                 .setProperty("component").simple("conversion-FHIR")
                 .setProperty("camelID").simple("${camelId}")
                 .setProperty("exchangeID").simple("${exchangeId}")
+                .setProperty("processname").constant("conversion")
                 .setProperty("internalMsgID").simple("${id}")
                 // Conversion
                 .bean(HL7ToFHIRConverter.class, "convert(${body})")
                 .setProperty("bodyData").simple("${body}")
-                .setProperty("auditdetails").constant("Converted HL7 Admission to FHIR Resource ${body}")
+                .setProperty("auditdetails").simple("Converted HL7 Admission to FHIR Resource Bundle for message ${exchangeId}")
                 // iDAAS KIC - Auditing Processing
                 .to("direct:auditing")
                 // Persist

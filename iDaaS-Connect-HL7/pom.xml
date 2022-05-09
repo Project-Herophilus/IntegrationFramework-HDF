@@ -4,7 +4,7 @@
     <!--Internal Project Details-->
     <groupId>io.connectedhealth_idaas.hl7</groupId>
     <artifactId>io.connectedhealth_idaas.hl7</artifactId>
-    <version>2022.04.19-SNAPSHOT</version>
+    <version>3.9.3-SNAPSHOT</version>
 
     <properties>
         <camel.version>3.14.0</camel.version>
@@ -135,6 +135,19 @@
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-http</artifactId>
               </dependency>
+            <!-- HAPI FHIR for CCDA Conversions -->
+        <!-- https://mvnrepository.com/artifact/ca.uhn.hapi.fhir/hapi-fhir-structures-r4 -->
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-structures-r4</artifactId>
+            <version>5.7.2</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/ca.uhn.hapi.fhir/hapi-fhir-base -->
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-base</artifactId>
+            <version>5.7.2</version>
+        </dependency>
             <!-- Logging -->
             <dependency>
                 <groupId>org.slf4j</groupId>

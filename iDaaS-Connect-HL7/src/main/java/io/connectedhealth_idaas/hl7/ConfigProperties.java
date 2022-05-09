@@ -31,7 +31,7 @@ public class ConfigProperties {
     private String integrationTopic;
     private String appintegrationTopic;
     private String terminologyTopic;
-    private String ccdaConversionTopic;
+    private String fhirConversionTopic;
 
 
     //HL7 Ports
@@ -83,8 +83,8 @@ public class ConfigProperties {
     public void setAppintegrationTopic(String appintegrationTopic) { this.appintegrationTopic = appintegrationTopic;}
     public String getTerminologyTopic() {return terminologyTopic;}
     public void setTerminologyTopic(String terminologyTopic) { this.terminologyTopic = terminologyTopic;}
-    public String getCcdaConversionTopic() { return ccdaConversionTopic; }
-    public void setCcdaConversionTopic(String ccdaConversionTopic) { this.ccdaConversionTopic = ccdaConversionTopic; }
+    public String getFhirConversionTopic() { return fhirConversionTopic;}
+    public void setFhirConversionTopic(String fhirConversionTopic) { this.fhirConversionTopic = fhirConversionTopic; }
 
     public int getAdtPort() { return adtPort;}
     public void setAdtPort(int adtPort) { this.adtPort = adtPort;}
