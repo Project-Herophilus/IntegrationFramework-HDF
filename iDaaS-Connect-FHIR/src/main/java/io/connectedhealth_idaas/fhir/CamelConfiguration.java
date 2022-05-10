@@ -159,9 +159,9 @@
       from("servlet://fhirendpoint")
            .routeId("FHIRProcessing")
            .multicast().parallelProcessing()
-           .to("direct:generalprocessing")
-           .to("direct:fhirmessaging")
-           .to("direct:terminologies")
+             .to("direct:generalprocessing")
+             .to("direct:fhirmessaging")
+             .to("direct:terminologies")
       .end();
 
       // General Data Integration

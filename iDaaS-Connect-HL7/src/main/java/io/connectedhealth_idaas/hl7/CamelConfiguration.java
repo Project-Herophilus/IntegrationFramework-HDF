@@ -3,7 +3,6 @@
  */
 package io.connectedhealth_idaas.hl7;
 
-import ca.uhn.fhir.fhirpath.IFhirPath;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.hl7.HL7;
@@ -17,13 +16,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-//import org.springframework.jms.connection.JmsTransactionManager;
-//import javax.jms.ConnectionFactory;
 import org.springframework.stereotype.Component;
-//iDaaS Event Builder
-import io.connectedhealth_idaas.eventbuilder.converters.ccda.CdaConversionService;
 // HL7 to FHIR Conversion
 import io.github.linuxforhealth.hl7.HL7ToFHIRConverter;
+// CCDA to FHIR Conversion
+import ca.uhn.fhir.fhirpath.IFhirPath;
+import io.connectedhealth_idaas.eventbuilder.converters.ccda.CdaConversionService;
 //import io.connectedhealth_idaas.eventbuilder.events.platform.HL7TerminologyProcessorEvent;
 //import io.connectedhealth_idaas.eventbuilder.events.platform.DeIdentificationEvent;
 

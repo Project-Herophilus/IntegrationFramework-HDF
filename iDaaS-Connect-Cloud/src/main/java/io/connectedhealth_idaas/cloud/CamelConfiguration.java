@@ -83,23 +83,32 @@ public class CamelConfiguration extends RouteBuilder {
     mapping.addUrlMappings("/idaas/*");
     return mapping;
   }
+  // Connector for JMS
   private String getKafkaTopicUri(String topic) {
     return "kafka:" + topic +
             "?brokers=" +
             config.getKafkaBrokers();
   }
+  // List of components can be found here: https://camel.apache.org/components/3.16.x/index.html
+  // Connector for AWS
+  private String createAWSConfig(String topic) {
+    return "";
+  }
+  // Connector for Azure
+  private String createAzureConfig(String topic) {
+    return "";
+  }
+  // Connector for GCP
+  private String createGCPConfig(String topic) {
+    return "";
+  }
+  // Connector for GCP
+  private String createGeneralConfig(String topic) {
+    return "";
+  }
 
   @Override
   public void configure() throws Exception {
-    /*
-     *   HIDN
-     *   HIDN - Health information Data Network
-     *   Intended to enable simple movement of data aside from specific standards
-     *   Common Use Cases are areas to support remote (iOT/Edge) and any other need for small footprints to larger
-     *   footprints
-     * : Unstructured data, st
-     */
-
     /*
      *  Direct actions used across platform
      *
@@ -118,28 +127,26 @@ public class CamelConfiguration extends RouteBuilder {
         .setHeader("exchangeID").exchangeProperty("exchangeID")
         .setHeader("internalMsgID").exchangeProperty("internalMsgID")
         .setHeader("bodyData").exchangeProperty("bodyData")
-        .convertBodyTo(String.class).to(getKafkaTopicUri("opsmgmt_platformtransactions"))
+        .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.integrationTopic}}"))
     ;
-     // App Integration
-     from("direct:transactionauditing")
-         .routeId("iDaaS-AppIntegration-KIC")
-         .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
-         .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
-         .setHeader("processingtype").exchangeProperty("processingtype")
-         .setHeader("industrystd").exchangeProperty("industrystd")
-         .setHeader("component").exchangeProperty("componentname")
-         .setHeader("messagetrigger").exchangeProperty("messagetrigger")
-         .setHeader("processname").exchangeProperty("processname")
-         .setHeader("auditdetails").exchangeProperty("auditdetails")
-         .setHeader("camelID").exchangeProperty("camelID")
-         .setHeader("exchangeID").exchangeProperty("exchangeID")
-         .setHeader("internalMsgID").exchangeProperty("internalMsgID")
-         .setHeader("bodyData").exchangeProperty("bodyData")
-         .setHeader("errorID").exchangeProperty("internalMsgID")
-         .setHeader("errorData").exchangeProperty("bodyData")
-         .setHeader("transactionCount").exchangeProperty("transactionCount")
-         .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.appintegrationTopic}}"))
-     ;
+    /*
+     *   Terminologies component for processing terminology events
+     */
+    from("direct:terminologies")
+            .routeId("iDaaS-Terminologies")
+            .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
+            .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
+            .setHeader("processingtype").exchangeProperty("processingtype")
+            .setHeader("industrystd").exchangeProperty("industrystd")
+            .setHeader("component").exchangeProperty("componentname")
+            .setHeader("messagetrigger").exchangeProperty("messagetrigger")
+            .setHeader("processname").exchangeProperty("processname")
+            .setHeader("auditdetails").exchangeProperty("auditdetails")
+            .setHeader("camelID").exchangeProperty("camelID")
+            .setHeader("exchangeID").exchangeProperty("exchangeID")
+            .setHeader("internalMsgID").exchangeProperty("internalMsgID")
+            .setHeader("bodyData").exchangeProperty("bodyData")
+            .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.terminologyTopic}}"));
     /*
      *  Logging
      */
@@ -148,61 +155,26 @@ public class CamelConfiguration extends RouteBuilder {
         .log(LoggingLevel.INFO, log, "Transaction Message: [${body}]")
     ;
 
-    /*
-     *   General iDaaS Platform
-     */
-
-    /*
-     *   HIDN Servlet
-     */
-    from("servlet://hidn")
-            .routeId("HIDN")
-            // Data Parsing and Conversions
-            // Normal Processing
-            .convertBodyTo(String.class)
-            .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
-            .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
-            .setHeader("eventdate").simple("eventdate")
-            .setHeader("eventtime").simple("eventtime")
-            .setHeader("processingtype").exchangeProperty("processingtype")
-            .setHeader("industrystd").exchangeProperty("industrystd")
-            .setHeader("component").exchangeProperty("componentname")
-            .setHeader("processname").exchangeProperty("processname")
-            .setHeader("organization").exchangeProperty("organization")
-            .setHeader("careentity").exchangeProperty("careentity")
-            .setHeader("customattribute1").exchangeProperty("customattribute1")
-            .setHeader("customattribute2").exchangeProperty("customattribute2")
-            .setHeader("customattribute3").exchangeProperty("customattribute3")
-            .setHeader("camelID").exchangeProperty("camelID")
-            .setHeader("exchangeID").exchangeProperty("exchangeID")
-            .setHeader("internalMsgID").exchangeProperty("internalMsgID")
-            .setHeader("bodyData").exchangeProperty("bodyData")
-            .setHeader("bodySize").exchangeProperty("bodySize")
-            .wireTap("direct:hidn")
-    ;
-    /*
-    *  Kafka Implementation for implementing Third Party FHIR Server direct connection
-    */
-
     // Sample Using Kafka Topic
-    // FHIR: Adverse Events
-    from(getKafkaTopicUri("fhirsvr_adverseevent"))
-        .routeId("AdverseEvent-MiddleTier")
+    from(getKafkaTopicUri("{{idaas.cloudTopic}}"))
+        .routeId("Cloud-Topic")
         // Auditing
         .setProperty("processingtype").constant("data")
-        .setProperty("appname").constant("iDAAS-ConnectClinical-IndustryStd")
-        .setProperty("industrystd").constant("FHIR")
-        .setProperty("messagetrigger").constant("AdverseEvent")
+        .setProperty("appname").constant("iDAAS-Cloud")
+        //.setProperty("industrystd").simple("${industrystd}")
+        //.setProperty("messagetrigger").simple("${messagetrigger}")
         .setProperty("component").simple("${routeId}")
         .setProperty("camelID").simple("${camelId}")
         .setProperty("exchangeID").simple("${exchangeId}")
         .setProperty("internalMsgID").simple("${id}")
         .setProperty("bodyData").simple("${body}")
         .setProperty("processname").constant("MTier")
-        .setProperty("auditdetails").constant("Adverse Event to Enterprise By Data Type middle tier")
-        //.wireTap("direct:auditing")
-        // Enterprise Message By Type
-        .convertBodyTo(String.class).to(getKafkaTopicUri("ent_fhirsvr_adverseevent"))
+        .setProperty("auditdetails").simple("Cloud Event received for Message ID: ${exchangeId}")
+        .wireTap("direct:auditing")
+        /*
+         * Choice Based on component
+         */
+        //.convertBodyTo(String.class).to(getKafkaTopicUri("ent_fhirsvr_adverseevent"))
     ;
 
   }
