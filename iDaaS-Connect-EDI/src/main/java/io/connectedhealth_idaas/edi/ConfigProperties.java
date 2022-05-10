@@ -28,6 +28,7 @@ public class ConfigProperties {
     private String terminologyTopic;
     //General
     private String processTerminologies;
+    private String public_cloud;
     // Specific Topics
     private String topicName270;
     private String topicName271;
@@ -56,12 +57,11 @@ public class ConfigProperties {
     public String getProcessTerminologies() {return processTerminologies;}
     public void setProcessTerminologies(String processTerminologies) { this.processTerminologies = processTerminologies;}
 
-    // Topics
+    // Topic
     public String getIntegrationTopic() {return integrationTopic;}
     public void setIntegrationTopic(String integrationTopic) { this.integrationTopic = integrationTopic;}
     public String getTerminologyTopic() {return terminologyTopic;}
     public void setTerminologyTopic(String terminologyTopic) { this.terminologyTopic = terminologyTopic;}
-
     public String getTopicName270() {
         return topicName270;
     }
@@ -147,4 +147,6 @@ public class ConfigProperties {
         this.topicName837_Output = topicName837_Output;
     }
 
+    public String getPublic_cloud() { return public_cloud;}
+    public void setPublic_cloud(String public_cloud) { this.public_cloud = public_cloud;}
 }

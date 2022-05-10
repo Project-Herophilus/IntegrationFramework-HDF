@@ -33,6 +33,7 @@ public class ConfigProperties {
     private String ibmURI;
     private String hapiURI;
     private String microsoftURI;
+    private String public_cloud;
 
     public String getKafkaBrokers() {
         return kafkaBrokers;
@@ -62,7 +63,6 @@ public class ConfigProperties {
         return microsoftURI;
     }
 
-
     public void setFhirVendor(String FhirVendor) {
         this.fhirVendor = FhirVendor;
     }
@@ -71,4 +71,6 @@ public class ConfigProperties {
     public void setHapiURI (String hapiURI) { this.hapiURI = hapiURI; }
     public void setMicrosoftURI (String microsoftURI) { this.microsoftURI = microsoftURI; }
 
+    public String getPublic_cloud() { return public_cloud;}
+    public void setPublic_cloud(String public_cloud) { this.public_cloud = public_cloud;}
 }

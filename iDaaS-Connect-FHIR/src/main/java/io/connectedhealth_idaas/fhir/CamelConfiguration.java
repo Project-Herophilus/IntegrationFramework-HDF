@@ -63,7 +63,6 @@
       return mapping;
     }
 
-    private String strLocation;
     private String getKafkaTopicUri(String inputParam) {
       return "kafka:" + inputParam+
               "?brokers=" +

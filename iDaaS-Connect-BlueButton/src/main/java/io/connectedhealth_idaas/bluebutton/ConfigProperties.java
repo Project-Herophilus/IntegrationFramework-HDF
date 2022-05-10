@@ -20,7 +20,9 @@ public class ConfigProperties {
     private String integrationTopic;
     private String terminologyTopic;
     private String processTerminologies;
-    //getters
+    private String public_cloud;
+
+    // Getters
     public String getKafkaBrokers() {
         return kafkaBrokers;
     }
@@ -55,8 +57,9 @@ public class ConfigProperties {
     public int getBluebuttoncallbackportnumber() {
         return bluebuttoncallbackportnumber;
     }
+    public String getPublic_cloud() { return public_cloud; }
 
-    //setters
+    // Setters
     public void setKafkaBrokers(String kafkaBrokers) {
         this.kafkaBrokers = kafkaBrokers;
     }
@@ -96,5 +99,5 @@ public class ConfigProperties {
     public void setBluebuttoncallbackportnumber(int bluebuttoncallbackportnumber) {
         this.bluebuttoncallbackportnumber = bluebuttoncallbackportnumber;
     }
-
+    public void setPublic_cloud(String public_cloud) { this.public_cloud = public_cloud;}
 }

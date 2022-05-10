@@ -26,7 +26,7 @@ public class ConfigProperties {
     private String integrationTopic;
     private String appintegrationTopic;
     private String iotTopic;
-
+    private String public_cloud;
     public String getKafkaBrokers() {
         return kafkaBrokers;
     }
@@ -40,4 +40,8 @@ public class ConfigProperties {
 
     public String getIotTopic() {return iotTopic;}
     public void setIotTopic(String iotTopic) { this.iotTopic = iotTopic;}
+
+    public String getPublic_cloud() { return public_cloud;}
+
+    public void setPublic_cloud(String public_cloud) { this.public_cloud = public_cloud;}
 }
