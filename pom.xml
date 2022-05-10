@@ -6,7 +6,7 @@
 
     <groupId>io.connectedhealth_idaas</groupId>
     <artifactId>idaas-connect</artifactId>
-    <version>2022.04.20-SNAPSHOT</version>
+    <version>3.90-SNAPSHOT</version>
     <name>iDAAS Connect</name>
     <packaging>pom</packaging>
 
@@ -27,6 +27,7 @@
     
     <modules>
         <!--<module>iDaaS-Connect-BlueButton</module>-->
+        <module>iDaaS-Connect-BlueButton</module>
         <module>iDaaS-Connect-Cloud</module>
     	<module>iDaaS-Connect-EDI</module>
     	<module>iDaaS-Connect-FHIR</module>

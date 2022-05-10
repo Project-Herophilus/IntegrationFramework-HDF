@@ -32,36 +32,10 @@ import org.springframework.beans.factory.annotation.Autowired;
  * General Links
  * https://camel.apache.org/components/latest/eips/split-eip.html
  * Basic Links for Implementations
- * Kafka implementation based on
- * https://camel.apache.org/components/latest/kafka-component.html JDBC
- * implementation based on
- * https://camel.apache.org/components/latest/dataformats/hl7-dataformat.html
- * JPA implementayion based on
- * https://camel.apache.org/components/latest/jpa-component.html File
- * implementation based on
- * https://camel.apache.org/components/latest/file-component.html FileWatch
- * implementation based on
- * https://camel.apache.org/components/latest/file-watch-component.html FTP/SFTP
- * and FTPS implementations based on
- * https://camel.apache.org/components/latest/ftp-component.html JMS
- * implementation based on
- * https://camel.apache.org/components/latest/jms-component.html JT400 (AS/400)
- * implementation based on
- * https://camel.apache.org/components/latest/jt400-component.html HTTP
- * implementation based on
- * https://camel.apache.org/components/latest/http-component.html HDFS
- * implementation based on
- * https://camel.apache.org/components/latest/hdfs-component.html jBPMN
- * implementation based on
- * https://camel.apache.org/components/latest/jbpm-component.html MongoDB
- * implementation based on
- * https://camel.apache.org/components/latest/mongodb-component.html RabbitMQ
- * implementation based on
- * https://camel.apache.org/components/latest/rabbitmq-component.html There are
- * lots of third party implementations to support cloud storage from Amazon AC2,
- * Box and so forth There are lots of third party implementations to support
- * cloud for Amazon Cloud Services Awaiting update to 3.1 for functionality
- * Apache Kudu implementation REST API implementations
+ * All non healthcare industry and non public cloud connectors can be
+ * leveraged.
+ * https://camel.apache.org/components/3.16.x/index.html
+ *
  */
 
 @Component
@@ -70,6 +44,11 @@ public class CamelConfiguration extends RouteBuilder {
 
   @Autowired
   private ConfigProperties config;
+
+private String getKafkaTopicUri(String topic)
+{
+  return "kafka:" + topic + "?brokers=" + config.getKafkaBrokers();
+}
 
   @Bean
   private KafkaEndpoint kafkaEndpoint() {
@@ -89,9 +68,7 @@ public class CamelConfiguration extends RouteBuilder {
     return mapping;
   }
 
-  private String getKafkaTopicUri(String topic) {
-    return "kafka:" + topic + "?brokers=" + config.getKafkaBrokers();
-  }
+
 
   @Override
   public void configure() throws Exception {

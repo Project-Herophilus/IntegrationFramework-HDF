@@ -24,7 +24,7 @@ public class ConfigProperties {
 
     private String kafkaBrokers;
     private String integrationTopic;
-
+    private String public_cloud;
     public String getKafkaBrokers() {
         return kafkaBrokers;
     }
@@ -33,5 +33,6 @@ public class ConfigProperties {
     }
     public String getIntegrationTopic() {return integrationTopic;}
     public void setIntegrationTopic(String integrationTopic) { this.integrationTopic = integrationTopic;}
-
+    public String getPublic_cloud() { return public_cloud; }
+    public void setPublic_cloud(String public_cloud) { this.public_cloud = public_cloud; }
 }

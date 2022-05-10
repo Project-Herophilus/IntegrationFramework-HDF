@@ -66,6 +66,7 @@ public class ConfigProperties {
     private String vxuTopicName;
     private String ccdaTopicName;
     private String hl7HTTPTopicName;
+    private String public_cloud;
 
     // Getters and Setters by Usage
     public String getConvertCCDAtoFHIR() {return convertCCDAtoFHIR;}
@@ -249,5 +250,6 @@ public class ConfigProperties {
     public String getHl7HTTPTopicName() { return hl7HTTPTopicName; }
     public void setHl7HTTPTopicName(String hl7HTTPTopicName) { this.hl7HTTPTopicName = hl7HTTPTopicName; }
 
-
+    public String getPublic_cloud() { return public_cloud; }
+    public void setPublic_cloud(String public_cloud) { this.public_cloud = public_cloud;}
 }

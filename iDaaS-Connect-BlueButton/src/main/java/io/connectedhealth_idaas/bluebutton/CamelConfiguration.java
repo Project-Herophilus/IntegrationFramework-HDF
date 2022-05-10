@@ -44,6 +44,10 @@ public class CamelConfiguration extends RouteBuilder {
     @Autowired
     private ConfigProperties config;
 
+    private String getKafkaTopicUri(String topic) {
+        return "kafka:" + topic + "?brokers=" + config.getKafkaBrokers();
+    }
+
     @Bean
     private KafkaEndpoint kafkaEndpoint() {
         KafkaEndpoint kafkaEndpoint = new KafkaEndpoint();
