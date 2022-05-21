@@ -169,11 +169,30 @@ public class CamelConfiguration extends RouteBuilder {
          .to(getKafkaTopicUri("{{idaas.cloudTopic}}"))
     ;
 
-
     /*
      *  Core Outbound Cloud Processing
      *
      */
+    from("servlet://publiccloud")
+            .routeId("http_cloud")
+            // set Auditing Properties
+            .convertBodyTo(String.class)
+            .setProperty("processingtype").constant("data")
+            .setProperty("appname").constant("iDAAS-Connect-Cloud")
+            .setProperty("industrystd").constant("N/A")
+            .setProperty("messagetrigger").constant("N/A")
+            .setProperty("component").simple("${routeId}")
+            .setProperty("camelID").simple("${camelId}")
+            .setProperty("exchangeID").simple("${exchangeId}")
+            .setProperty("internalMsgID").simple("${id}")
+            .setProperty("bodyData").simple("${body}")
+            .setProperty("processname").constant("Input")
+            .setProperty("auditdetails").simple("Servlet message received ${exchangeId}")
+            // iDAAS KIC - Auditing Processing
+            .wireTap("direct:auditing")
+            // Send To Topic
+            .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.cloudTopic}}"))
+    ;
     // Kafka Topic
     from(getKafkaTopicUri("{{idaas.cloudTopic}}"))
         .routeId("Cloud-Kafka-Topic")
