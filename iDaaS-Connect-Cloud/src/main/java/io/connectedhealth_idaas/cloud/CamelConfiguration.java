@@ -155,14 +155,66 @@ public class CamelConfiguration extends RouteBuilder {
         .log(LoggingLevel.INFO, log, "Transaction Message: [${body}]")
     ;
 
-    // Sample Using Kafka Topic
+    /*
+     *  Testing EndPoints
+     *  Servlet
+     */
+    from("servlet://test_publiccloud")
+         .routeId("test_http_cloud")
+         // set Auditing Properties
+         .convertBodyTo(String.class)
+         .setProperty("processingtype").constant("data")
+         .setProperty("appname").constant("iDAAS-Connect-Cloud")
+         .setProperty("industrystd").constant("N/A")
+         .setProperty("messagetrigger").constant("N/A")
+         .setProperty("component").simple("${routeId}")
+         .setProperty("camelID").simple("${camelId}")
+         .setProperty("exchangeID").simple("${exchangeId}")
+         .setProperty("internalMsgID").simple("${id}")
+         .setProperty("bodyData").simple("${body}")
+         .setProperty("processname").constant("Input")
+         .setProperty("auditdetails").simple("Servlet message received ${exchangeId}")
+         // iDAAS KIC - Auditing Processing
+         .wireTap("direct:auditing")
+         // Send To Topic
+         .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.cloudTopic}}"))
+    ;
+    /*
+     *  File Processing
+     */
+    from("file://data-input/cloud/")
+         .routeId("test_fileinput_cloud")
+         // set Auditing Properties
+         .convertBodyTo(String.class)
+         .setProperty("processingtype").constant("data")
+         .setProperty("appname").constant("iDAAS-Connect-Cloud")
+         .setProperty("industrystd").constant("N/A")
+         .setProperty("messagetrigger").constant("N/A")
+         .setProperty("component").simple("${routeId}")
+         .setProperty("camelID").simple("${camelId}")
+         .setProperty("exchangeID").simple("${exchangeId}")
+         .setProperty("internalMsgID").simple("${id}")
+         .setProperty("bodyData").simple("${body}")
+         .setProperty("processname").constant("Input")
+         .setProperty("auditdetails").simple("File Processed ${exchangeId}")
+         // iDAAS KIC - Auditing Processing
+         .wireTap("direct:auditing")
+         .to(getKafkaTopicUri("{{idaas.cloudTopic}}"))
+    ;
+
+
+    /*
+     *  Core Outbound Cloud Processing
+     *
+     */
+    // Kafka Topic
     from(getKafkaTopicUri("{{idaas.cloudTopic}}"))
-        .routeId("Cloud-Topic")
+        .routeId("Cloud-Kafka-Topic")
         // Auditing
         .setProperty("processingtype").constant("data")
         .setProperty("appname").constant("iDAAS-Cloud")
-        //.setProperty("industrystd").simple("${industrystd}")
-        //.setProperty("messagetrigger").simple("${messagetrigger}")
+        .setProperty("industrystd").constant("N/A")
+        .setProperty("messagetrigger").constant("N/A")
         .setProperty("component").simple("${routeId}")
         .setProperty("camelID").simple("${camelId}")
         .setProperty("exchangeID").simple("${exchangeId}")
@@ -174,8 +226,9 @@ public class CamelConfiguration extends RouteBuilder {
         /*
          * Choice Based on component
          */
-        //.convertBodyTo(String.class).to(getKafkaTopicUri("ent_fhirsvr_adverseevent"))
-    ;
+        ;
+
+        // HTTP EndPoint
 
   }
 }
