@@ -80,6 +80,16 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-servlet</artifactId>
         </dependency>
+        <!-- REST Swagger -->
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-rest-swagger</artifactId>
+        </dependency>
+        <!-- REST API -->
+        <dependency>
+            <groupId>org.apache.camel.springboot</groupId>
+            <artifactId>camel-rest-starter</artifactId>
+        </dependency>
         <!--Kafka -->
         <dependency>
             <groupId>org.apache.camel</groupId>
@@ -192,11 +202,11 @@
             <artifactId>idaas-eventbuilder</artifactId>
             <version>2.3.0</version>
         </dependency>
-        <dependency>
+      <!--  <dependency>
             <groupId>com.amazonaws</groupId>
             <artifactId>aws-java-sdk</artifactId>
             <version>1.11.163</version>
-        </dependency>
+        </dependency>-->
 
     </dependencies>
 

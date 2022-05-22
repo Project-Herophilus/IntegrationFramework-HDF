@@ -124,8 +124,33 @@ public class CamelConfiguration extends RouteBuilder {
 
     /*
      *  Testing EndPoints
-     *  Servlet
+     *  REST API
      */
+    /*private void restConfig(){
+      restConfiguration()
+              .apiContextPath("/api-doc")
+              .apiProperty("api.title", "Post Message REST API")
+              .apiProperty("api.version", "1.0")
+              .apiProperty("cors", "true")
+              .apiProperty("base.path", "camel/")
+              .apiProperty("api.path", "/")
+              .apiProperty("host", "")
+              .apiContextRouteId("doc-api")
+              .component("servlet")
+              .bindingMode(RestBindingMode.json);
+    }
+
+    private void restRoute(){
+      rest("/message").description("Post message to queue")
+              .post()
+              .route().routeId("message-api")
+              .inOnly("amq:test.queue")
+              .log("message sent to queue. OK")
+              .setBody(constant("message sent"));
+    }*/
+
+
+    // Servlet
     from("servlet://test_publiccloud")
          .routeId("test_http_cloud")
          // set Auditing Properties
