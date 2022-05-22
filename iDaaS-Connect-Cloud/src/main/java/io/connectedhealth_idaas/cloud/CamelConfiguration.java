@@ -84,10 +84,6 @@ public class CamelConfiguration extends RouteBuilder {
   // Config for AWS
   private String getAWSConfig(String awsInput)
   {
-    //.to("aws2-kinesis://testhealthcarekinesisstream?accessKey=RAW(AKIAUYXCPSBTBTP2F5WZ)&secretKey=RAW(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)")
-    //.to("aws2-kinesis://testhealthcarekinesisstream2?accessKey=RAW(AKIAUYXCPSBTBTP2F5WZ)&secretKey=RAW(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)")
-    //.to("aws2-sqs://testhealthcarequeue?accessKey=RAW(AKIAUYXCPSBTBTP2F5WZ)&secretKey=RAW(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)")
-
     String awsSecuritySettings= awsInput+"accessKey=RAW("+config.getAwsAccessKey()+")&secretKey=RAW("+config.getAwsSecretKey()+")";
     return awsSecuritySettings;
   }
@@ -287,8 +283,8 @@ public class CamelConfiguration extends RouteBuilder {
             // SNS Specifics
             .setHeader(Sns2Constants.SUBJECT,simple("iOT Data Received"))
             .setHeader(Sns2Constants.MESSAGE_ID,simple("${exchangeId}"))
-            .to("aws2-sns://TestSNS?accessKey=RAW(AKIAUYXCPSBTBTP2F5WZ)&secretKey=RAW(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)")
-        // Send to Kinesis
+            .to(getAWSConfig("aws2-sns://TestSNS?"))
+         // Send to Kinesis
         .choice().when(simple("{{idaas.awsKinesis}}"))
             .setProperty("processingtype").constant("data")
             .setProperty("appname").constant("iDAAS-Cloud")
@@ -323,7 +319,7 @@ public class CamelConfiguration extends RouteBuilder {
             .setHeader(Ses2Constants.SUBJECT, simple("New Publish Data to AWS"))
             .setHeader(Ses2Constants.TO, constant(Collections.singletonList("balanscott@outlook.com")))
             .setBody(simple("Data was received on ${date:now:yyyy-MM-dd} at ${date:now:HH:mm:ss:SSS}."))
-            //.to("aws2-ses://alscott@redhat.com?accessKey=RAW(AKIAUYXCPSBTBTP2F5WZ)&secretKey=RAW(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)")
+            .to(getAWSConfig("aws2-ses://alscott@redhat.com?")
         // Send to AMQ
         .choice().when(simple("{{idaas.awsMq}}"))
             .setProperty("processingtype").constant("data")
