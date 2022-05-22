@@ -144,7 +144,7 @@ public class CamelConfiguration extends RouteBuilder {
          // iDAAS KIC - Auditing Processing
          .wireTap("direct:auditing")
          // Send To Topic
-         .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.cloudTopic}}"))
+         .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.test_cloudTopic}}"))
     ;
     /*
      *  File Processing

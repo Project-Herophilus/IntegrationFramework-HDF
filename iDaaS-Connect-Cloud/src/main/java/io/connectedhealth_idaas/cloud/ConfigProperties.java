@@ -27,6 +27,7 @@ public class ConfigProperties {
     private String integrationTopic;
     private String terminologyTopic;
     private String cloudTopic;
+    private String test_cloudTopic;
     private String general_knative;
     private String general_dropbox;
     // AWS
@@ -64,6 +65,8 @@ public class ConfigProperties {
     public void setTerminologyTopic(String terminologyTopic) { this.terminologyTopic = terminologyTopic; }
     public String getCloudTopic() { return cloudTopic; }
     public void setCloudTopic(String cloudTopic) { this.cloudTopic = cloudTopic; }
+    public String getTest_cloudTopic() { return test_cloudTopic;}
+    public void setTest_cloudTopic(String test_cloudTopic) {this.test_cloudTopic = test_cloudTopic;}
 
     public String getGeneral_knative() { return general_knative; }
    public void setGeneral_knative(String general_knative) { this.general_knative = general_knative; }
