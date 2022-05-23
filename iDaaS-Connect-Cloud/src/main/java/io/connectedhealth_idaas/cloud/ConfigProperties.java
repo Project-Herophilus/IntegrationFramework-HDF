@@ -34,22 +34,11 @@ public class ConfigProperties {
     private String awsAccessKey;
     private String awsSecretKey;
     private Boolean awsS3;
+    private Boolean awsMQ;
+    private Boolean awsSQS;
     private Boolean awsKinesis;
-    private Boolean awsMq;
-    private Boolean awsSns;
-    private Boolean awsSes;
-    private Boolean awsSqs;
-    private Boolean awsLambda;
-    private Boolean awsDyanmoDB;
-    // Azure
-    //private Boolean azureCosmosDB;
-    //private Boolean azureBlobStorage;
-   // GCP
-   // private Boolean gcpBigquery;
-   // private String gcpBigquerysql;
-   // private String gcpPubsub;
-   // private String gcpStorage;
-
+    private Boolean awsSNS;
+    private Boolean awsSES;
 
     public String getKafkaBrokers() {
         return kafkaBrokers;
@@ -69,7 +58,7 @@ public class ConfigProperties {
     public void setTest_cloudTopic(String test_cloudTopic) {this.test_cloudTopic = test_cloudTopic;}
 
     public String getGeneral_knative() { return general_knative; }
-   public void setGeneral_knative(String general_knative) { this.general_knative = general_knative; }
+    public void setGeneral_knative(String general_knative) { this.general_knative = general_knative; }
 
     public String getGeneral_dropbox() { return general_dropbox;}
     public void setGeneral_dropbox(String general_dropbox) { this.general_dropbox = general_dropbox; }
@@ -86,20 +75,14 @@ public class ConfigProperties {
      */
     public Boolean getAwsS3() { return awsS3;}
     public void setAwsS3(Boolean awsS3) {this.awsS3 = awsS3;}
-    public Boolean getAwsKinesis() { return awsKinesis;}
+    public Boolean getAwsMQ() {return awsMQ;}
+    public void setAwsMQ(Boolean awsMQ) { this.awsMQ = awsMQ;}
+    public Boolean getAwsSQS() { return awsSQS;}
+    public void setAwsSQS(Boolean awsSQS) { this.awsSQS = awsSQS; }
+    public Boolean getAwsKinesis() {return awsKinesis;}
     public void setAwsKinesis(Boolean awsKinesis) {this.awsKinesis = awsKinesis;}
-    public Boolean getAwsMq() { return awsMq;}
-    public void setAwsMq(Boolean awsMq) {this.awsMq = awsMq;}
-    public Boolean getAwsSns() {return awsSns;}
-    public void setAwsSns(Boolean awsSns) { this.awsSns = awsSns;}
-    public Boolean getAwsSes() { return awsSes;}
-    public void setAwsSes(Boolean awsSes) {this.awsSes = awsSes;}
-    public Boolean getAwsSqs() {return awsSqs;}
-    public void setAwsSqs(Boolean awsSqs) { this.awsSqs = awsSqs; }
-    public Boolean getAwsDyanmoDB() { return awsDyanmoDB; }
-    public void setAwsDyanmoDB(Boolean awsDyanmoDB) { this.awsDyanmoDB = awsDyanmoDB; }
-    public Boolean getAwsLambda() { return awsLambda;}
-    public void setAwsLambda(Boolean awsLambda) { this.awsLambda = awsLambda;}
-
-
+    public Boolean getAwsSNS() { return awsSNS;}
+    public void setAwsSNS(Boolean awsSNS) { this.awsSNS = awsSNS; }
+    public Boolean getAwsSES() {return awsSES;}
+    public void setAwsSES(Boolean awsSES) {this.awsSES = awsSES; }
 }

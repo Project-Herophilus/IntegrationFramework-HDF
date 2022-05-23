@@ -26,22 +26,35 @@ public class ConfigProperties {
     private String integrationTopic;
     private String appintegrationTopic;
     private String iotTopic;
-    private String public_cloud;
+    // Public Cloud
+    private String cloudTopic;
+    private String cloudAPI;
+    private Boolean processPublicCloud;
+
     public String getKafkaBrokers() {
         return kafkaBrokers;
     }
     public void setKafkaBrokers(String kafkaBrokers) {
         this.kafkaBrokers = kafkaBrokers;
     }
+
     public String getIntegrationTopic() {return integrationTopic;}
     public void setIntegrationTopic(String integrationTopic) { this.integrationTopic = integrationTopic;}
+
     public String getAppintegrationTopic() {return appintegrationTopic;}
     public void setAppintegrationTopic(String appintegrationTopic) { this.appintegrationTopic = appintegrationTopic;}
 
     public String getIotTopic() {return iotTopic;}
     public void setIotTopic(String iotTopic) { this.iotTopic = iotTopic;}
 
-    public String getPublic_cloud() { return public_cloud;}
+    public String getCloudTopic() { return cloudTopic;}
+    public void setCloudTopic(String cloudTopic) { this.cloudTopic = cloudTopic;}
 
-    public void setPublic_cloud(String public_cloud) { this.public_cloud = public_cloud;}
+    public String getCloudAPI() { return cloudAPI; }
+    public void setCloudAPI(String cloudAPI) { this.cloudAPI = cloudAPI;}
+
+    public Boolean getProcessPublicCloud() { return processPublicCloud;}
+    public void setProcessPublicCloud(Boolean processPublicCloud) {this.processPublicCloud = processPublicCloud; }
+
+
 }

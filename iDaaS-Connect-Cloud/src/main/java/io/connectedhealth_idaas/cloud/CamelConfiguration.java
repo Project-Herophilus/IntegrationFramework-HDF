@@ -118,34 +118,6 @@ public class CamelConfiguration extends RouteBuilder {
         .log(LoggingLevel.INFO, log, "Transaction Message: [${body}]")
     ;
 
-    /*
-     *  Testing EndPoints
-     *  REST API
-     */
-    /*private void restConfig(){
-      restConfiguration()
-              .apiContextPath("/api-doc")
-              .apiProperty("api.title", "Post Message REST API")
-              .apiProperty("api.version", "1.0")
-              .apiProperty("cors", "true")
-              .apiProperty("base.path", "camel/")
-              .apiProperty("api.path", "/")
-              .apiProperty("host", "")
-              .apiContextRouteId("doc-api")
-              .component("servlet")
-              .bindingMode(RestBindingMode.json);
-    }
-
-    private void restRoute(){
-      rest("/message").description("Post message to queue")
-              .post()
-              .route().routeId("message-api")
-              .inOnly("amq:test.queue")
-              .log("message sent to queue. OK")
-              .setBody(constant("message sent"));
-    }*/
-
-
     // Servlet
     from("servlet://test_publiccloud")
          .routeId("test_http_cloud")
@@ -249,8 +221,26 @@ public class CamelConfiguration extends RouteBuilder {
             // S3 Specifics
             .setHeader(AWS2S3Constants.KEY, simple("${exchangeId}"+".dat"))
             .to("aws2-s3://testhealthcarebucket")
+            //.wireTap("direct:logging")
+        // Send to AMQ
+        .choice().when(simple("{{idaas.awsMQ}}"))
+            .setProperty("processingtype").constant("data")
+            .setProperty("appname").constant("iDAAS-Cloud")
+            .setProperty("industrystd").constant("N/A")
+            .setProperty("messagetrigger").constant("N/A")
+            .setProperty("component").simple("${routeId}")
+            .setProperty("camelID").simple("${camelId}")
+            .setProperty("exchangeID").simple("${exchangeId}")
+            .setProperty("internalMsgID").simple("${id}")
+            .setProperty("bodyData").simple("${body}")
+            .setProperty("processname").constant("AWS-AMQ")
+            .setProperty("auditdetails").simple("AWS AMQ Event processed for Message ID: ${exchangeId}")
+            .wireTap("direct:auditing")
+            .convertBodyTo(String.class)
+            .to(ExchangePattern.InOnly, "amqp:topic:myHealthcareTopic?connectionFactory=#jmsConnectionFactory")
+            .to(ExchangePattern.InOnly, "amqp:queue:myHealthcareQueue?connectionFactory=#jmsConnectionFactory")
         // Send to SQS
-        .choice().when(simple("{{idaas.awsSqs}}"))
+        .choice().when(simple("{{idaas.awsSQS}}"))
             .setProperty("processingtype").constant("data")
             .setProperty("appname").constant("iDAAS-Cloud")
             .setProperty("industrystd").constant("N/A")
@@ -264,10 +254,9 @@ public class CamelConfiguration extends RouteBuilder {
             .setProperty("auditdetails").simple("AWS SQS Event processed for Message ID: ${exchangeId}")
             .wireTap("direct:auditing")
             // SQS Specifics
-            .to(getAWSConfig("aws2-sqs://testhealthcarequeue?"))
+        .to("aws2-sqs://testhealthcare")
         // Send to SNS
-        .choice().when(simple("{{idaas.awsSns}}"))
-            //.to("aws2-sns://testhealthcaretopic?subject=The+subject+message&autoCreateTopic=true");
+        .choice().when(simple("{{idaas.awsSNS}}"))
             .setProperty("processingtype").constant("data")
             .setProperty("appname").constant("iDAAS-Cloud")
             .setProperty("industrystd").constant("N/A")
@@ -284,7 +273,26 @@ public class CamelConfiguration extends RouteBuilder {
             .setHeader(Sns2Constants.SUBJECT,simple("iOT Data Received"))
             .setHeader(Sns2Constants.MESSAGE_ID,simple("${exchangeId}"))
             .to(getAWSConfig("aws2-sns://TestSNS?"))
-         // Send to Kinesis
+        // Send to SES
+        .choice().when(simple("{{idaas.awsSES}}"))
+            .setProperty("processingtype").constant("data")
+            .setProperty("appname").constant("iDAAS-Cloud")
+            .setProperty("industrystd").constant("N/A")
+            .setProperty("messagetrigger").constant("N/A")
+            .setProperty("component").simple("${routeId}")
+            .setProperty("camelID").simple("${camelId}")
+            .setProperty("exchangeID").simple("${exchangeId}")
+            .setProperty("internalMsgID").simple("${id}")
+            .setProperty("bodyData").simple("${body}")
+            .setProperty("processname").constant("AWS-SES")
+            .setProperty("auditdetails").simple("AWS SES Event processed for Message ID: ${exchangeId}")
+            .wireTap("direct:auditing")
+            // SES
+            .setHeader(Ses2Constants.SUBJECT, simple("New Published Data to AWS for iDaaS-Connect-Cloud"))
+            .setHeader(Ses2Constants.TO, constant(Collections.singletonList("alscott@redhat.com")))
+            .setBody(simple("Data was received on ${date:now:yyyy-MM-dd} at ${date:now:HH:mm:ss:SSS}."))
+            .to("aws2-ses://alscott@redhat.com?")
+        // Send to Kinesis
         .choice().when(simple("{{idaas.awsKinesis}}"))
             .setProperty("processingtype").constant("data")
             .setProperty("appname").constant("iDAAS-Cloud")
@@ -300,46 +308,10 @@ public class CamelConfiguration extends RouteBuilder {
             .wireTap("direct:auditing")
             // Kinesis
             .setHeader(Kinesis2Constants.PARTITION_KEY,simple("Shard1"))
-            .to(getAWSConfig("aws2-kinesis://testhealthcarekinesisstream?"))
-        // Send to SES
-        .choice().when(simple("{{idaas.awsSes}}"))
-            .setProperty("processingtype").constant("data")
-            .setProperty("appname").constant("iDAAS-Cloud")
-            .setProperty("industrystd").constant("N/A")
-            .setProperty("messagetrigger").constant("N/A")
-            .setProperty("component").simple("${routeId}")
-            .setProperty("camelID").simple("${camelId}")
-            .setProperty("exchangeID").simple("${exchangeId}")
-            .setProperty("internalMsgID").simple("${id}")
-            .setProperty("bodyData").simple("${body}")
-            .setProperty("processname").constant("AWS-SES")
-            .setProperty("auditdetails").simple("AWS SES Event processed for Message ID: ${exchangeId}")
-            .wireTap("direct:auditing")
-            // SES
-            .setHeader(Ses2Constants.SUBJECT, simple("New Publish Data to AWS"))
-            .setHeader(Ses2Constants.TO, constant(Collections.singletonList("balanscott@outlook.com")))
-            .setBody(simple("Data was received on ${date:now:yyyy-MM-dd} at ${date:now:HH:mm:ss:SSS}."))
-            .to(getAWSConfig("aws2-ses://alscott@redhat.com?")
-        // Send to AMQ
-        .choice().when(simple("{{idaas.awsMq}}"))
-            .setProperty("processingtype").constant("data")
-            .setProperty("appname").constant("iDAAS-Cloud")
-            .setProperty("industrystd").constant("N/A")
-            .setProperty("messagetrigger").constant("N/A")
-            .setProperty("component").simple("${routeId}")
-            .setProperty("camelID").simple("${camelId}")
-            .setProperty("exchangeID").simple("${exchangeId}")
-            .setProperty("internalMsgID").simple("${id}")
-            .setProperty("bodyData").simple("${body}")
-            .setProperty("processname").constant("AWS-Kinesis")
-            .setProperty("auditdetails").simple("AWS AMQ Event processed for Message ID: ${exchangeId}")
-            .wireTap("direct:auditing")
-            .convertBodyTo(String.class)
-            .to(ExchangePattern.InOnly, "amqp:topic:myHealthcareTopic?connectionFactory=#jmsConnectionFactory")
-            .to(ExchangePattern.InOnly, "amqp:queue:myHealthcareQueue?connectionFactory=#jmsConnectionFactory")
-            // Lambda
+            //.to(getAWSConfig("aws2-kinesis://testhealthcarekinesisstream?"))
+            .to("aws2-kinesis://testhealthcarekinesisstream?exchangePattern=InOnly")
         .endChoice()
-    .end();
+    ;
 
   }
 }

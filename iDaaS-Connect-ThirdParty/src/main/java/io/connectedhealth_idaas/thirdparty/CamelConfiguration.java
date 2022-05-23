@@ -40,24 +40,11 @@ import org.apache.camel.component.servlet.CamelHttpTransportServlet;
 import io.connectedhealth_idaas.parsers.*;
 
 /*
- *  Kafka implementation based on https://camel.apache.org/components/latest/kafka-component.html
- *  JDBC implementation based on https://camel.apache.org/components/latest/dataformats/hl7-dataformat.html
- *  JPA implementayion based on https://camel.apache.org/components/latest/jpa-component.html
- *  File implementation based on https://camel.apache.org/components/latest/file-component.html
- *  FileWatch implementation based on https://camel.apache.org/components/latest/file-watch-component.html
- *  FTP/SFTP and FTPS implementations based on https://camel.apache.org/components/latest/ftp-component.html
- *  JMS implementation based on https://camel.apache.org/components/latest/jms-component.html
- *  JT400 (AS/400) implementation based on https://camel.apache.org/components/latest/jt400-component.html
- *  HTTP implementation based on https://camel.apache.org/components/latest/http-component.html
- *  HDFS implementation based on https://camel.apache.org/components/latest/hdfs-component.html
- *  jBPMN implementation based on https://camel.apache.org/components/latest/jbpm-component.html
- *  MongoDB implementation based on https://camel.apache.org/components/latest/mongodb-component.html
- *  RabbitMQ implementation based on https://camel.apache.org/components/latest/rabbitmq-component.html
- *  There are lots of third party implementations to support cloud storage from Amazon AC2, Box and so forth
- *  There are lots of third party implementations to support cloud for Amazon Cloud Services
- *  Awaiting update to 3.1 for functionality
- *  Apache Kudu implementation
- *  REST API implementations
+ *    This sub module is intended to be a general catch all for all types of connectivity that
+ *    are not healthcare industry standards or industry platforms like SAP. For a complete list
+ *    of all the capabilities you can see the maintained and ongoing connectors:
+ *
+ *    https://camel.apache.org/components/3.17.x/
  */
 @Component
 public class CamelConfiguration extends RouteBuilder {

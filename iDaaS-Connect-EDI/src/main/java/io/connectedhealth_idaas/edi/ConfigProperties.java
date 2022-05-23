@@ -26,9 +26,12 @@ public class ConfigProperties {
     private String kafkaBrokers;
     private String integrationTopic;
     private String terminologyTopic;
-    //General
+    // Public Cloud
     private String processTerminologies;
-    private String public_cloud;
+    private String cloudTopic;
+    private String cloudAPI;
+    private Boolean processPublicCloud;
+
     // Specific Topics
     private String topicName270;
     private String topicName271;
@@ -147,6 +150,12 @@ public class ConfigProperties {
         this.topicName837_Output = topicName837_Output;
     }
 
-    public String getPublic_cloud() { return public_cloud;}
-    public void setPublic_cloud(String public_cloud) { this.public_cloud = public_cloud;}
+    public String getCloudTopic() { return cloudTopic;}
+    public void setCloudTopic(String cloudTopic) { this.cloudTopic = cloudTopic;}
+
+    public String getCloudAPI() { return cloudAPI; }
+    public void setCloudAPI(String cloudAPI) { this.cloudAPI = cloudAPI;}
+
+    public Boolean getProcessPublicCloud() { return processPublicCloud;}
+    public void setProcessPublicCloud(Boolean processPublicCloud) {this.processPublicCloud = processPublicCloud; }
 }

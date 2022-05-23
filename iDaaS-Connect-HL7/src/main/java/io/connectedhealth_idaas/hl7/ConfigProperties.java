@@ -33,6 +33,10 @@ public class ConfigProperties {
     private String terminologyTopic;
     private String fhirConversionTopic;
 
+    // Public Cloud
+    private String cloudTopic;
+    private String cloudAPI;
+    private Boolean procesPublicCloud;
 
     //HL7 Ports
     private int adtPort;
@@ -66,7 +70,6 @@ public class ConfigProperties {
     private String vxuTopicName;
     private String ccdaTopicName;
     private String hl7HTTPTopicName;
-    private String public_cloud;
 
     // Getters and Setters by Usage
     public String getConvertCCDAtoFHIR() {return convertCCDAtoFHIR;}
@@ -250,6 +253,12 @@ public class ConfigProperties {
     public String getHl7HTTPTopicName() { return hl7HTTPTopicName; }
     public void setHl7HTTPTopicName(String hl7HTTPTopicName) { this.hl7HTTPTopicName = hl7HTTPTopicName; }
 
-    public String getPublic_cloud() { return public_cloud; }
-    public void setPublic_cloud(String public_cloud) { this.public_cloud = public_cloud;}
+    public String getCloudTopic() { return cloudTopic;}
+    public void setCloudTopic(String cloudTopic) { this.cloudTopic = cloudTopic;}
+
+    public String getCloudAPI() { return cloudAPI; }
+    public void setCloudAPI(String cloudAPI) { this.cloudAPI = cloudAPI;}
+
+    public Boolean getProcessPublicCloud() { return processPublicCloud;}
+    public void setProcessPublicCloud(Boolean processPublicCloud) {this.processPublicCloud = processPublicCloud; }
 }
