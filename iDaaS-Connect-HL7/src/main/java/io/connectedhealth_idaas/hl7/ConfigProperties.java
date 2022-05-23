@@ -36,7 +36,7 @@ public class ConfigProperties {
     // Public Cloud
     private String cloudTopic;
     private String cloudAPI;
-    private Boolean procesPublicCloud;
+    private Boolean processPublicCloud;
 
     //HL7 Ports
     private int adtPort;

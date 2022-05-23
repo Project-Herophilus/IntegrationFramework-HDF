@@ -22,7 +22,7 @@ public class ConfigProperties {
     private String processTerminologies;
     private String cloudTopic;
     private String cloudAPI;
-    private Boolean procesPublicCloud;
+    private Boolean processPublicCloud;
 
     // Getters
     public String getKafkaBrokers() {

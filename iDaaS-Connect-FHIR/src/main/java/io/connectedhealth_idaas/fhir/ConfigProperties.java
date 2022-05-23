@@ -30,14 +30,13 @@ public class ConfigProperties {
 
     private String cloudTopic;
     private String cloudAPI;
-    private Boolean procesPublicCloud;
+    private Boolean processPublicCloud;
 
     private String fhirVendor;
 
     private String ibmURI;
     private String hapiURI;
     private String microsoftURI;
-    private String public_cloud;
 
     public String getKafkaBrokers() {
         return kafkaBrokers;
