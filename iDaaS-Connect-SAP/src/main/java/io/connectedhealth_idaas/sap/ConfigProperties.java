@@ -24,15 +24,29 @@ public class ConfigProperties {
 
     private String kafkaBrokers;
     private String integrationTopic;
-    private String public_cloud;
+
+    // Public Cloud
+    private String cloudTopic;
+    private String cloudAPI;
+    private Boolean processsPublicCloud;
+
+
     public String getKafkaBrokers() {
         return kafkaBrokers;
     }
     public void setKafkaBrokers(String kafkaBrokers) {
         this.kafkaBrokers = kafkaBrokers;
     }
+
     public String getIntegrationTopic() {return integrationTopic;}
     public void setIntegrationTopic(String integrationTopic) { this.integrationTopic = integrationTopic;}
-    public String getPublic_cloud() { return public_cloud; }
-    public void setPublic_cloud(String public_cloud) { this.public_cloud = public_cloud; }
+
+    public String getCloudTopic() { return cloudTopic;}
+    public void setCloudTopic(String cloudTopic) { this.cloudTopic = cloudTopic;}
+
+    public String getCloudAPI() { return cloudAPI; }
+    public void setCloudAPI(String cloudAPI) { this.cloudAPI = cloudAPI;}
+
+    public Boolean getProcessPublicCloud() { return processPublicCloud;}
+    public void setProcessPublicCloud(Boolean processPublicCloud) {this.processPublicCloud = processPublicCloud; }
 }

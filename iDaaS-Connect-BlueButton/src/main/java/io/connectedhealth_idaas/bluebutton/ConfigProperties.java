@@ -20,84 +20,91 @@ public class ConfigProperties {
     private String integrationTopic;
     private String terminologyTopic;
     private String processTerminologies;
-    private String public_cloud;
+    private String cloudTopic;
+    private String cloudAPI;
+    private Boolean processPublicCloud;
 
     // Getters
     public String getKafkaBrokers() {
         return kafkaBrokers;
     }
+    public void setKafkaBrokers(String kafkaBrokers) { this.kafkaBrokers = kafkaBrokers;}
+
     public String getIntegrationTopic() {return integrationTopic;}
+    public void setIntegrationTopic(String integrationTopic) { this.integrationTopic = integrationTopic;}
+
     public String getProcessTerminologies() {return processTerminologies;}
+    public void setProcessTerminologies(String processTerminologies) { this.processTerminologies = processTerminologies;}
+
     public String getTerminologyTopic() {return terminologyTopic;}
+    public void setTerminologyTopic(String terminologyTopic) { this.terminologyTopic = terminologyTopic;}
 
     public String getAccess_token() {
         return access_token;
     }
-    public double getExpires_in() { return expires_in; }
-    public String getToken_type() {
-        return token_type;
-    }
-    public String getScope() {
-        return scope;
-    }
-    public String getRefresh_token() {
-        return refresh_token;
-    }
-    public String getBluebuttonclientid() { return bluebuttonclientid; }
-    public String getBluebuttonclientsecret() { return bluebuttonclientsecret; }
-    public String getBluebuttonHost() {
-        return bluebuttonHost;
-    }
-    public String getBluebuttoncallbackpath() {
-        return bluebuttoncallbackpath;
-    }
-    public String getBluebuttoncallbackhostname() {
-        return bluebuttoncallbackhostname;
-    }
-    public int getBluebuttoncallbackportnumber() {
-        return bluebuttoncallbackportnumber;
-    }
-    public String getPublic_cloud() { return public_cloud; }
+    public void setAccess_token(String access_token) {this.access_token = access_token;}
 
-    // Setters
-    public void setKafkaBrokers(String kafkaBrokers) {
-        this.kafkaBrokers = kafkaBrokers;
-    }
-    public void setIntegrationTopic(String integrationTopic) { this.integrationTopic = integrationTopic;}
-    public void setProcessTerminologies(String processTerminologies) { this.processTerminologies = processTerminologies;}
-    public void setTerminologyTopic(String terminologyTopic) { this.terminologyTopic = terminologyTopic;}
-    public void setAccess_token(String access_token) {
-        this.access_token = access_token;
-    }
+    public double getExpires_in() { return expires_in; }
     public void setExpires_in(double expires_in) {
         this.expires_in = expires_in;
+    }
+
+    public String getToken_type() {
+        return token_type;
     }
     public void setToken_type(String token_type) {
         this.token_type = token_type;
     }
+
+    public String getScope() {
+        return scope;
+    }
     public void setScope(String scope) {
         this.scope = scope;
     }
-    public void setRefresh_token(String refresh_token) {
-        this.refresh_token = refresh_token;
+
+    public String getRefresh_token() {
+        return refresh_token;
     }
+    public void setRefresh_token(String refresh_token) { this.refresh_token = refresh_token;}
+
+    public String getBluebuttonclientid() { return bluebuttonclientid; }
     public void setBluebuttonclientid(String bluebuttonclientid) {
         this.bluebuttonclientid = bluebuttonclientid;
     }
-    public void setBluebuttonclientsecret(String bluebuttonclientsecret) {
-        this.bluebuttonclientsecret = bluebuttonclientsecret;
+
+    public String getBluebuttonclientsecret() { return bluebuttonclientsecret; }
+    public void setBluebuttonclientsecret(String bluebuttonclientsecret) { this.bluebuttonclientsecret = bluebuttonclientsecret;}
+
+    public String getBluebuttonHost() {
+        return bluebuttonHost;
     }
     public void setBluebuttonHost(String bluebuttonHost) {
         this.bluebuttonHost = bluebuttonHost;
     }
-    public void setBluebuttoncallbackpath(String bluebuttoncallbackpath) {
-        this.bluebuttoncallbackpath = bluebuttoncallbackpath;
+
+    public String getBluebuttoncallbackpath() {
+        return bluebuttoncallbackpath;
     }
-    public void setBluebuttoncallbackhostname(String bluebuttoncallbackhostname1) {
-        this.bluebuttoncallbackhostname = bluebuttoncallbackhostname1;
+    public void setBluebuttoncallbackpath(String bluebuttoncallbackpath) { this.bluebuttoncallbackpath = bluebuttoncallbackpath;}
+
+    public String getBluebuttoncallbackhostname() {
+        return bluebuttoncallbackhostname;
     }
-    public void setBluebuttoncallbackportnumber(int bluebuttoncallbackportnumber) {
-        this.bluebuttoncallbackportnumber = bluebuttoncallbackportnumber;
+    public void setBluebuttoncallbackhostname(String bluebuttoncallbackhostname1) {this.bluebuttoncallbackhostname = bluebuttoncallbackhostname1;}
+
+
+    public int getBluebuttoncallbackportnumber() {
+        return bluebuttoncallbackportnumber;
     }
-    public void setPublic_cloud(String public_cloud) { this.public_cloud = public_cloud;}
+    public void setBluebuttoncallbackportnumber(int bluebuttoncallbackportnumber) {this.bluebuttoncallbackportnumber = bluebuttoncallbackportnumber;}
+
+    public String getCloudTopic() { return cloudTopic;}
+    public void setCloudTopic(String cloudTopic) { this.cloudTopic = cloudTopic;}
+
+    public String getCloudAPI() { return cloudAPI; }
+    public void setCloudAPI(String cloudAPI) { this.cloudAPI = cloudAPI;}
+
+    public Boolean getProcessPublicCloud() { return processPublicCloud;}
+    public void setProcessPublicCloud(Boolean processPublicCloud) {this.processPublicCloud = processPublicCloud; }
 }

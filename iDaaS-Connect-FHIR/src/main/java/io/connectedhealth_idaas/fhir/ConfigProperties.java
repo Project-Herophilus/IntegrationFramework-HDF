@@ -28,12 +28,15 @@ public class ConfigProperties {
     private String appintegrationTopic;
     private String terminologyTopic;
 
+    private String cloudTopic;
+    private String cloudAPI;
+    private Boolean processPublicCloud;
+
     private String fhirVendor;
 
     private String ibmURI;
     private String hapiURI;
     private String microsoftURI;
-    private String public_cloud;
 
     public String getKafkaBrokers() {
         return kafkaBrokers;
@@ -71,6 +74,13 @@ public class ConfigProperties {
     public void setHapiURI (String hapiURI) { this.hapiURI = hapiURI; }
     public void setMicrosoftURI (String microsoftURI) { this.microsoftURI = microsoftURI; }
 
-    public String getPublic_cloud() { return public_cloud;}
-    public void setPublic_cloud(String public_cloud) { this.public_cloud = public_cloud;}
+    public String getCloudTopic() { return cloudTopic;}
+    public void setCloudTopic(String cloudTopic) { this.cloudTopic = cloudTopic;}
+
+    public String getCloudAPI() { return cloudAPI; }
+    public void setCloudAPI(String cloudAPI) { this.cloudAPI = cloudAPI;}
+
+    public Boolean getProcessPublicCloud() { return processPublicCloud;}
+    public void setProcessPublicCloud(Boolean processPublicCloud) {this.processPublicCloud = processPublicCloud; }
+}
 }

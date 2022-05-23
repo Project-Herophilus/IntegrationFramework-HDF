@@ -24,11 +24,11 @@ Just to provide a few visuals to how to visualize it as we talk about each submo
 Below please find a visual that does visualize the entire iDaaS capabilities set. The key thing to note is while each specific iDaaS capability is purpose built and designed for any type of customer public or hybrid cloud our focus is on meeting data where it is securely and at scale.
 
 Here is a detailed and Cloud Agnostic visual:<br/>
-![iDaaS Cloud Agnostic Data Flow.png](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/Platform/Images/iDAAS-Platform/Implementations-Gen-CloudAgnostic.png)
+![iDaaS Cloud Agnostic Data Flow.png](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/images/iDaaS-Platform/Implementations/Implementations-Gen-CloudAgnostic.png)
 <br/>
 
 Here is a high level visual:<br/>
-![iDaaS Data Flow - Detailed.png](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/Platform/Images/iDAAS-Platform/iDAAS-DataFlow.png)
+![iDaaS Data Flow - Detailed.png](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/images/iDaaS-Platform/iDAAS-DataFlow.png)
 <br/>
 
 # iDaaS-Connect Modules
@@ -107,7 +107,7 @@ This capability to enable would require a few additional properties to be set.
 
 Below is a generic visual of how this looks (the visual below is specific to iDaaS Connect HL7): <br/>
 
-![iDaaS Platform - Visuals - iDaaS Data Flow - Detailed](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/Platform/Images/iDAAS-Platform/iDaaS-Mgmt-UI.png)
+![iDaaS Platform - Visuals - iDaaS Data Flow - Detailed](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/images/iDaaS-Platform/iDaaS-Mgmt-UI.png)
 
 Every asset has its own defined specific port, we have done this to ensure multiple solutions can be run simultaneously.
 
