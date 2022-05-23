@@ -150,6 +150,22 @@ public class CamelConfiguration extends RouteBuilder {
                 .setHeader("bodyData").exchangeProperty("bodyData")
                 .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.fhirConversionTopic}}"));
 
+        from("direct:publiccloud")
+                .routeId("iDaaS-Connect-HL7-PublicCloud")
+                .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
+                .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
+                .setHeader("processingtype").exchangeProperty("processingtype")
+                .setHeader("industrystd").exchangeProperty("industrystd")
+                .setHeader("component").exchangeProperty("componentname")
+                .setHeader("messagetrigger").exchangeProperty("messagetrigger")
+                .setHeader("processname").exchangeProperty("processname")
+                .setHeader("auditdetails").exchangeProperty("auditdetails")
+                .setHeader("camelID").exchangeProperty("camelID")
+                .setHeader("exchangeID").exchangeProperty("exchangeID")
+                .setHeader("internalMsgID").exchangeProperty("internalMsgID")
+                .setHeader("bodyData").exchangeProperty("bodyData")
+                .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.cloudTopic}}"));
+
 
         // CCDA
         // Directory Processing
@@ -216,6 +232,23 @@ public class CamelConfiguration extends RouteBuilder {
              .wireTap("direct:auditing")
              // Send to Topic
              .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.ccdaTopicName}}"))
+             // Public Cloud - Original Message
+             .choice()
+                .when(simple("{{idaas.processPublicCloud}}"))
+                // set Auditing Properties
+                .setProperty("processingtype").constant("data")
+                .setProperty("appname").constant("iDAAS-Connect-HL7")
+                .setProperty("industrystd").constant("CCDA")
+                .setProperty("messagetrigger").constant("CCDA")
+                .setProperty("component").simple("${routeId}")
+                .setProperty("processname").constant("conversion")
+                .setProperty("camelID").simple("${camelId}")
+                .setProperty("exchangeID").simple("${exchangeId}")
+                .setProperty("internalMsgID").simple("${id}")
+                .setProperty("bodyData").simple("${body}")
+                .setProperty("auditdetails").simple("CCDA message ${exchangeId}")
+                .to("direct:auditing")
+                .to("direct:publiccloud")
              // Convert CCDA to FHIR
              .choice()
                 .when(simple("{{idaas.convertCCDAtoFHIR}}"))
@@ -238,6 +271,23 @@ public class CamelConfiguration extends RouteBuilder {
                 .to("direct:auditing")
                 // Write Parsed FHIR Terminology Transactions to Topic
                 .to("direct:ccdafhirconversion")
+                .choice()
+                    .when(simple("{{idaas.processPublicCloud}}"))
+                    // set Auditing Properties
+                    .setProperty("processingtype").constant("data")
+                    .setProperty("appname").constant("iDAAS-Connect-HL7")
+                    .setProperty("industrystd").constant("CCDA")
+                    .setProperty("messagetrigger").constant("CCDA")
+                    .setProperty("component").simple("${routeId}")
+                    .setProperty("processname").constant("conversion")
+                    .setProperty("camelID").simple("${camelId}")
+                    .setProperty("exchangeID").simple("${exchangeId}")
+                    .setProperty("internalMsgID").simple("${id}")
+                    .setProperty("bodyData").simple("${body}")
+                    .setProperty("auditdetails").simple("CCDA message ${exchangeId}")
+                    .setProperty("auditdetails").simple("Converted CCDA to FHIR Resource Bundle for message ${exchangeId}")
+                    .to("direct:auditing")
+                    .to("direct:publiccloud")
              .endChoice();
         ;
 
