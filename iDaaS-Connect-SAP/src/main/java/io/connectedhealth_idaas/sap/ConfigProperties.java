@@ -28,8 +28,7 @@ public class ConfigProperties {
     // Public Cloud
     private String cloudTopic;
     private String cloudAPI;
-    private Boolean processsPublicCloud;
-
+    private Boolean processPublicCloud;
 
     public String getKafkaBrokers() {
         return kafkaBrokers;
@@ -47,6 +46,7 @@ public class ConfigProperties {
     public String getCloudAPI() { return cloudAPI; }
     public void setCloudAPI(String cloudAPI) { this.cloudAPI = cloudAPI;}
 
-    public Boolean getProcessPublicCloud() { return processPublicCloud;}
-    public void setProcessPublicCloud(Boolean processPublicCloud) {this.processPublicCloud = processPublicCloud; }
+    public Boolean getProcessPublicCloud() { return processPublicCloud; }
+
+    public void setProcessPublicCloud(Boolean processPublicCloud) { this.processPublicCloud = processPublicCloud; }
 }
