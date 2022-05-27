@@ -82,5 +82,5 @@ public class ConfigProperties {
 
     public Boolean getProcessPublicCloud() { return processPublicCloud;}
     public void setProcessPublicCloud(Boolean processPublicCloud) {this.processPublicCloud = processPublicCloud; }
-}
+
 }
