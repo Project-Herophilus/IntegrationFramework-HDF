@@ -87,7 +87,7 @@ public class CamelConfiguration extends RouteBuilder {
      *
      */
     from("direct:hidn")
-            .routeId("HIDN Processing")
+            .routeId("HIDN-Processing")
             .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
             .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
             .setHeader("eventdate").simple("eventdate")
@@ -140,7 +140,7 @@ public class CamelConfiguration extends RouteBuilder {
      *  Servlet common endpoint accessable to process transactions
      */
     from("servlet://hidn")
-        .routeId("HIDN Servlet")
+        .routeId("HIDN-Servlet")
         // Data Parsing and Conversions
         // Normal Processing
         .convertBodyTo(String.class)
@@ -169,11 +169,10 @@ public class CamelConfiguration extends RouteBuilder {
      *  Servlet common endpoint accessable to process transactions
      */
     from("servlet://iot")
-        .routeId("IoT Servlet")
+        .routeId("IoTServlet")
         // Data Parsing and Conversions
         // Normal Processing
         .convertBodyTo(String.class)
-        .routeId("IoTEventProcessor")
         // set Auditing Properties
         .convertBodyTo(String.class)
         .setProperty("processingtype").constant("data")
@@ -206,6 +205,7 @@ public class CamelConfiguration extends RouteBuilder {
      */
     // Specific filename - from("file:{{mandatory.reporting.directory}}/?fileName={{mandatory.reporting.file}}")
     from("file:{{mandatory.reporting.directory}}/")
+        .routeId("FileProcessing-MandatoryReporting")
         .choice()
           .when(simple("${file:ext} == 'csv'"))
           .split(body().tokenize("\n"))
@@ -231,18 +231,20 @@ public class CamelConfiguration extends RouteBuilder {
      *  Sample: Topic to Postgres
      *
      */
-    from(getKafkaTopicUri("MandatoryReporting")).unmarshal(new JacksonDataFormat(ReportingOutput.class))
-        /* .process(new Processor() {
+
+    /*from(getKafkaTopicUri("MandatoryReporting")).unmarshal(new JacksonDataFormat(ReportingOutput.class))
+        *//* .process(new Processor() {
         @Override
         public void process(Exchange exchange) throws Exception {
             final ReportingOutput payload = exchange.getIn().getBody(ReportingOutput.class);
            }
-        })*/
+        })*//*
+        .routeId("DBProcessing-MandatoryReporting")
         .log(LoggingLevel.INFO, log, "Transaction Message: [${body}]")
         .to("sql:insert into etl_mandatoryreporting (organizationid,patientaccountnumber, patientlastname, patientfirstname, zipcode, roombed, " +
             "age, gender, admissiondate) values( :#${body.organizationId},:#${body.patientAccount},:#${body.patientLastName}," +
             ":#${body.patientFirstName},:#${body.zipCode},:#${body.roomBed},:#${body.age},:#${body.gender},:#${body.admissionDate})");
-    ;
+    ;*/
 
     /*
      *  Sample: CSV Covid Data to Topic
@@ -251,8 +253,8 @@ public class CamelConfiguration extends RouteBuilder {
     // With "#,#...", it just iterates over the list to substitute the values.
     // No names are used there. If the message body would be ReportingOutput.class (instead of List), you can use ":#${body.organizationId}" expressions
     //
-
     from("file:{{covid.reporting.directory}}/")
+        .routeId("FileProcessing-CovidReporting")
         .choice()
         .when(simple("${file:ext} == 'csv'"))
         //.when(simple("${file:ext} == ${covid.reporting.extension}"))
@@ -266,6 +268,7 @@ public class CamelConfiguration extends RouteBuilder {
      *
      */
     from("file:{{research.data.directory}}/")
+        .routeId("FileProcessing-ResearchReporting")
         .choice()
         .when(simple("${file:ext} == 'csv'"))
         //.when(simple("${file:ext} == ${covid.reporting.extension}"))
