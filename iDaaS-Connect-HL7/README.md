@@ -151,7 +151,7 @@ It is important to know that for every HL7 Message Type/Event there is a specifi
 
 ### Implementation Data Flow Steps: HL7
 Here is a general visual intended to show the general data flow and how the accelerator design pattern is intended to work. <br/>
- <img src="https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/Platform/Images/iDAAS-Platform/DataFlow-HL7.png" width="800" height="600">
+ <img src="https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/images/iDaaS-Platform/DataFlow-HL7.png" width="800" height="600">
 
 1. Any external connecting system will use an HL7 client (external to this application) will connect to the specifically defined HL7
 Server socket (one socket per datatype) and typically stay connected.
