@@ -31,58 +31,21 @@ Here is a high level visual:<br/>
 ![iDaaS Data Flow - Detailed.png](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/images/iDaaS-Platform/iDAAS-DataFlow.png)
 <br/>
 
-# iDaaS-Connect Modules
+# iDaaS-Connect is all abour Integration 
 Like most of the repositories provided for usage, The iDaaS Connect repository consists of numerous modules within it.
 The reason for this approach is because iDaaS Connect focus is about providing a wide variety of connectivity options based
 on specific needs. Here are the modules that are in iDaaS-Connect.
 
-## iDaaS-Connect-BlueButton
-BlueButton is intended to be a very specific implementation to support puling of data to support several defined and
-specific government initiatives. We have implemented a reusable open source design pattern to help meet this critical
-mandated set of requirements.
-<br>
-[Blue Button Readme](iDaaS-Connect-BlueButton/README.md)
+| Identifier                                         | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+|----------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [Blue Button](iDaaS-Connect-BlueButton/README.md)  | BlueButton is intended to be a very specific implementation to support puling of data to support several defined and specific government initiatives.                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| [Cloud](iDaaS-Connect-Cloud/README.md)             | Cloud is intended to be a very specific set of connectivity for the three major public cloud vendors - AWS, Azure and GCP.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| [EDI](iDaaS-Connect-EDI/README.md)                 | EDI has been a standard around for decades, this repository does not introduce capabilities that compete with capabilities vailable for claims processing or other EDI very specific needs. The intent of this repository it to enable the processing of EDI data such as claims and Supply chain.                                                                                                                                                                                                                                                                                                                 |
+| [FHIR](iDaaS-Connect-FHIR/README.md)               | FHIR is a modern based integration standard that has been adopted by the government to assist them in addressing new federal mandates such as the Interoperability and Patient Access Rule. The iDaaS-Connect-FHIR component fully supports integrating to multiple  external vendor FHIR servers in a consistent design pattern manner. |
+| [HL7](iDaaS-Connect-HL7/README.md)                 | HL7 v2 is a very legacy based client/server socket protocol that has been out for decades and has thousands of unique implementations across healthcare vendors. Additionally, CCDA was developed for web services based XML based document exchanges of clinical data.                                                                                                                                                                                                                                                                                                                                            |
+| [SAP](iDaaS-Connect-SAP/README.md)                 | This iDaaS Connect accelerator is specifically designed to receive data from the various SAP supported connectors. This accelerator apart from handling the needed specific connectivity also does a minimal initial routing of data and has complete auditing integrated.                                                                                                                                                                                                                                                                                                                                         |
+| [Third Party](iDaaS-Connect-ThirdParty/README.md)  | This iDaaS Connect accelerator is specifically designed to receive data from several dozens connectors. The connectorsinclude JDBC (any jdbc compliant data source with a jar), Kafka, FTP/sFTP and sFTP, AS400, HTTP(s), REST and many more. Since this accelerator is built atop the upstream of Apache Camel this accelerator can leverage any <a href="https://camel.apache.org/components/latest/index.html" target="_blank">supported components</a>. This accelerator apart from handling the needed specific connectivity also does a minimal initial routing of data and has complete auditing integrated. |
 
-## iDaaS-Connect-Cloud
-Cloud is intended to be a very specific set of connectivity for the three major public cloud vendors - AWS, Azure and GCP. 
-<br>
-[Cloud Readme](iDaaS-Connect-Cloud/README.md)
-
-## iDaaS-Connect-EDI
-EDI has been a standard around for decades, this repository does not introduce capabilities that compete
-with capabilities vailable for claims processing or other EDI very specific needs. The intent
-of this repository it to enable the processing of EDI data such as cliams and
-Supply chain.<br>
-[EDI Readme](iDaaS-Connect-EDI/README.md)
-
-## iDaaS-Connect-FHIR
-FHIR is a modern based integration standard that has been adopted by the government to assist them in addressing new federal
-mandates such as the Interoperability and Patient Access Rule. The iDaaS-Connect-FHIR component fully supports integrating to multiple
-external vendor FHIR servers in a consistent design pattern manner.  
-[FHIR Readme](iDaaS-Connect-FHIR/README.md)
-
-## iDaaS-Connect-HL7 v2/CCDA
-HL7 v2 is a very legacy based client/server socket protocol that has been out for decades and has thousands of unique implementations
-across healthcare vendors. Additionally, CCDA was developed for web services based XML based document exchanges of clinical
-data.
-<br>
-[HL7 Readme](iDaaS-Connect-HL7/README.md)
-
-## iDaaS-Connect-SAP
-This iDaaS Connect accelerator is specifically designed to receive data from the various SAP supported connectors.
-This accelerator apart from handling the needed specific connectivity also does a minimal initial routing of data and has
-complete auditing integrated.<br>
-[SAP Readme](iDaaS-Connect-SAP/README.md)
-
-
-## iDaaS-Connect-ThirdParty
-This iDaaS Connect accelerator is specifically designed to receive data from several dozens connectors. The connectors
-include JDBC (any jdbc compliant data source with a jar), Kafka, FTP/sFTP and sFTP, AS400, HTTP(s), REST and many more.
-Since this accelerator is built atop the upstream of Apache Camel this accelerator can leverage any
-<a href="https://camel.apache.org/components/latest/index.html" target="_blank">supported components</a>.
-This accelerator apart from handling the needed specific connectivity also does a minimal initial routing of data and has
-complete auditing integrated.<br>
-[Third Party Readme](iDaaS-Connect-ThirdParty/README.md)
 
 # Add-Ons
 To support any iDaaS branded artifact there are a subset of assets avaiable to assist in the implementation : <br/>
