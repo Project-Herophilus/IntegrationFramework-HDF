@@ -1,0 +1,22 @@
+version: "3.4"
+services:
+
+  spring_boot-camel:
+    image: fhir-connect:stable
+    build: .
+    environment:
+      idaas.kafkaBrokers: "kafka:9092"
+
+  zookeeper:
+    image: confluent/zookeeper
+    environment:
+      - ZOOKEEPER_CLIENT_PORT=2181
+
+  kafka:
+    image: confluent/kafka
+    environment:
+      - KAFKA_ADVERTISED_HOST_NAME=kafka
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+    depends_on:
+      - zookeeper
+    restart: on-failure
