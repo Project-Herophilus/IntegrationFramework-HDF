@@ -5,38 +5,21 @@ package io.connectedhealth_idaas.hl7;
 
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.hl7.HL7;
-import org.apache.camel.component.hl7.HL7MLLPNettyDecoderFactory;
-import org.apache.camel.component.hl7.HL7MLLPNettyEncoderFactory;
-import org.apache.camel.component.kafka.KafkaComponent;
-import org.apache.camel.component.kafka.KafkaEndpoint;
 import org.apache.camel.component.servlet.CamelHttpTransportServlet;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 // HL7 to FHIR Conversion
 import io.github.linuxforhealth.hl7.HL7ToFHIRConverter;
 // CCDA to FHIR Conversion
-import ca.uhn.fhir.fhirpath.IFhirPath;
 import io.connectedhealth_idaas.eventbuilder.converters.ccda.CdaConversionService;
-//import io.connectedhealth_idaas.eventbuilder.events.platform.HL7TerminologyProcessorEvent;
-//import io.connectedhealth_idaas.eventbuilder.events.platform.DeIdentificationEvent;
 
 @Component
 public class CamelConfiguration extends RouteBuilder {
     private static final Logger log = LoggerFactory.getLogger(CamelConfiguration.class);
 
-    @Autowired
-    private ConfigProperties config;
-
-    @Bean
-    private KafkaEndpoint kafkaEndpoint(){
-        KafkaEndpoint kafkaEndpoint = new KafkaEndpoint();
-        return kafkaEndpoint;
-    }
     @Bean
     ServletRegistrationBean camelServlet() {
         // use a @Bean to register the Camel servlet which we need to do
@@ -47,29 +30,6 @@ public class CamelConfiguration extends RouteBuilder {
         mapping.setServlet(new CamelHttpTransportServlet());
         mapping.addUrlMappings("/idaas/*");
         return mapping;
-    }
-
-    private String getKafkaTopicUri(String topic) {
-        return "kafka:" + topic + "?brokers=" + config.getKafkaBrokers();
-    }
-    /*
-     *   Called to return a specific MLLP server based connection string for usage
-     *   Accepts a port value retrieved from the properties of the asset
-     */
-    private String getHL7Uri(int port) {
-        String s = "mllp:0.0.0.0:" + port;
-        //camel.dataformat.hl7.validate=false
-        return s;
-    }
-    /*
-     *   Calls to return a specific Directory based connection string for usage
-     *   Accepts a directory value retrieved from the properties of the asset
-     */
-    private String getHL7UriDirectory(String dirName) {
-        return "file:" + dirName + "?delete=true";
-    }
-    private String getHL7CCDAUriDirectory(String dirName) {
-        return "file:" + dirName + "?delete=true";
     }
 
     /*
@@ -105,7 +65,7 @@ public class CamelConfiguration extends RouteBuilder {
                 .setHeader("exchangeID").exchangeProperty("exchangeID")
                 .setHeader("internalMsgID").exchangeProperty("internalMsgID")
                 .setHeader("bodyData").exchangeProperty("bodyData")
-                .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.integrationTopic}}"));
+                .convertBodyTo(String.class).to("kafka:{{idaas.integrationTopic}}?brokers={{idaas.kafkaBrokers}}");
 
         /*
          *   General Output Logging
@@ -132,7 +92,7 @@ public class CamelConfiguration extends RouteBuilder {
                 .setHeader("exchangeID").exchangeProperty("exchangeID")
                 .setHeader("internalMsgID").exchangeProperty("internalMsgID")
                 .setHeader("bodyData").exchangeProperty("bodyData")
-                .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.terminologyTopic}}"));
+                .convertBodyTo(String.class).to("kafka:{{idaas.terminologyTopic}}?brokers={{idaas.kafkaBrokers}}");
 
         from("direct:ccdafhirconversion")
                 .routeId("iDaaS-CCDAFHIRConversion")
@@ -148,7 +108,7 @@ public class CamelConfiguration extends RouteBuilder {
                 .setHeader("exchangeID").exchangeProperty("exchangeID")
                 .setHeader("internalMsgID").exchangeProperty("internalMsgID")
                 .setHeader("bodyData").exchangeProperty("bodyData")
-                .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.fhirConversionTopic}}"));
+                .convertBodyTo(String.class).to("kafka:{{idaas.fhirConversionTopic}}?brokers={{idaas.kafkaBrokers}}");
 
         from("direct:publiccloud")
                 .routeId("iDaaS-Connect-HL7-PublicCloud")
@@ -164,12 +124,12 @@ public class CamelConfiguration extends RouteBuilder {
                 .setHeader("exchangeID").exchangeProperty("exchangeID")
                 .setHeader("internalMsgID").exchangeProperty("internalMsgID")
                 .setHeader("bodyData").exchangeProperty("bodyData")
-                .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.cloudTopic}}"));
+                .convertBodyTo(String.class).to("kafka:{{idaas.cloudTopic}}?brokers={{idaas.kafkaBrokers}}");
 
 
         // CCDA
         // Directory Processing
-        from(getHL7CCDAUriDirectory(config.getHl7CCDA_Directory()))
+        from("file:{{idaas.hl7.ccda.dir}}?delete=true")
              .routeId("ccdaProcessor")
              .convertBodyTo(String.class)
              // set Auditing Properties
@@ -187,7 +147,7 @@ public class CamelConfiguration extends RouteBuilder {
              // iDAAS KIC Processing
              .wireTap("direct:auditing")
              // Send to Topic
-             .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.ccdaTopicName}}"))
+             .convertBodyTo(String.class).to("kafka:{{idaas.ccdaTopicName}}?brokers={{idaas.kafkaBrokers}}")
              // Convert CCDA to FHIR
              .choice()
                 .when(simple("{{idaas.convertCCDAtoFHIR}}"))
@@ -231,7 +191,7 @@ public class CamelConfiguration extends RouteBuilder {
              // iDAAS KIC Processing
              .wireTap("direct:auditing")
              // Send to Topic
-             .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.ccdaTopicName}}"))
+             .convertBodyTo(String.class).to("kafka:{{idaas.ccdaTopicName}}?brokers={{idaas.kafkaBrokers}}")
              // Public Cloud - Original Message
              .choice()
                 .when(simple("{{idaas.processPublicCloud}}"))
@@ -324,7 +284,7 @@ public class CamelConfiguration extends RouteBuilder {
                 // iDAAS KIC Processing
                 .wireTap("direct:auditing")
                 // Send to Topic
-                .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.hl7HTTPTopicName}}"))
+                .convertBodyTo(String.class).to("kafka:{{idaas.hl7HTTPTopicName}}?brokers={{idaas.kafkaBrokers}}")
                 // Convert HL7 to FHIR
                 .choice()
                     .when(simple("{{idaas.convertHL7toFHIR}}"))
@@ -349,7 +309,7 @@ public class CamelConfiguration extends RouteBuilder {
         ;
         // ADT
         // Directory for File Based HL7
-        from(getHL7UriDirectory(config.getHl7ADT_Directory()))
+        from("file:{{idaas.hl7.adt.dir}}?delete=true")
              .routeId("hl7FileBasedAdmissions")
              .convertBodyTo(String.class)
              // set Auditing Properties
@@ -367,7 +327,7 @@ public class CamelConfiguration extends RouteBuilder {
              // iDAAS KIC Event
              .wireTap("direct:auditing")
              // Send to Topic
-             .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.adtTopicName}}"))
+             .convertBodyTo(String.class).to("kafka:{{idaas.adtTopicName}}?brokers={{idaas.kafkaBrokers}}")
              //Process Terminologies
              .choice()
                 .when(simple("{{idaas.processTerminologies}}"))
@@ -413,7 +373,7 @@ public class CamelConfiguration extends RouteBuilder {
              .endChoice()
         ;
         // MLLP
-        from(getHL7Uri(config.getAdtPort()))
+        from("mllp:0.0.0.0:{{idaas.adtPort}}")
              .routeId("hl7MLLPAdmissions")
              .convertBodyTo(String.class)
              // set Auditing Properties
@@ -431,7 +391,7 @@ public class CamelConfiguration extends RouteBuilder {
              // iDaaS KIC Processing
              .wireTap("direct:auditing")
              // Send to Topic
-             .convertBodyTo(String.class).to(getKafkaTopicUri(config.getadtTopicName()))
+             .convertBodyTo(String.class).to("kafka:{{idaas.adtTopicName}}?brokers={{idaas.kafkaBrokers}}")
              //Process Terminologies
              .choice()
                 .when(simple("{{idaas.processTerminologies}}"))
@@ -497,7 +457,7 @@ public class CamelConfiguration extends RouteBuilder {
              .endChoice();
         // ORM
         // HL7 Directory for Procesing Data
-        from(getHL7UriDirectory(config.getHl7ORM_Directory()))
+        from("file:{{idaas.hl7.orm.dir}}?delete=true")
              .routeId("hl7FileBasedOrders")
              .convertBodyTo(String.class)
              // set Auditing Properties
@@ -515,7 +475,7 @@ public class CamelConfiguration extends RouteBuilder {
              // iDAAS KIC Processing
              .wireTap("direct:auditing")
              // Send to Topic
-             .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.ormTopicName}}"))
+             .convertBodyTo(String.class).to("kafka:{{idaas.ormTopicName}}?brokers={{idaas.kafkaBrokers}}")
              //Process Terminologies
              .choice()
                 .when(simple("{{idaas.processTerminologies}}"))
@@ -559,7 +519,7 @@ public class CamelConfiguration extends RouteBuilder {
              .endChoice()
         ;
         // MLLP
-        from(getHL7Uri(config.getOrmPort()))
+        from("mllp:0.0.0.0:{{idaas.ormPort}}")
              .routeId("hl7MLLPOrders")
              .convertBodyTo(String.class)
              // set Auditing Properties
@@ -577,7 +537,7 @@ public class CamelConfiguration extends RouteBuilder {
              // iDaaS KIC Processing
              .wireTap("direct:auditing")
              // Send to Topic
-             .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.ormTopicName}}"))
+             .convertBodyTo(String.class).to("kafka:{{idaas.ormTopicName}}?brokers={{idaas.kafkaBrokers}}")
              //Process Terminologies
              .choice()
                 .when(simple("{{idaas.processTerminologies}}"))
@@ -641,7 +601,7 @@ public class CamelConfiguration extends RouteBuilder {
 
         // ORU
         // HL7 directory for Processing Data
-        from(getHL7UriDirectory(config.getHl7ORU_Directory()))
+        from("file:{{idaas.hl7.oru.dir}}?delete=true")
              .routeId("hl7FileBasedResults")
              .convertBodyTo(String.class)
              // set Auditing Properties
@@ -659,7 +619,7 @@ public class CamelConfiguration extends RouteBuilder {
              // iDAAS KIC Processing
              .wireTap("direct:auditing")
              // Send to Topic
-             .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.oruTopicName}}"))
+             .convertBodyTo(String.class).to("kafka:{{idaas.oruTopicName}}?brokers={{idaas.kafkaBrokers}}")
              //Process Terminologies
              .choice()
                 .when(simple("{{idaas.processTerminologies}}"))
@@ -704,7 +664,7 @@ public class CamelConfiguration extends RouteBuilder {
              .endChoice()
         ;
         // MLLP
-        from(getHL7Uri(config.getOruPort()))
+        from("mllp:0.0.0.0:{{idaas.oruPort}}")
              .routeId("hl7MLLPResults")
              .convertBodyTo(String.class)
              // set Auditing Properties
@@ -722,7 +682,7 @@ public class CamelConfiguration extends RouteBuilder {
              // iDaaS KIC Processing
              .wireTap("direct:auditing")
              // Send to Topic
-             .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.oruTopicName}}"))
+             .convertBodyTo(String.class).to("kafka:{{idaas.oruTopicName}}?brokers={{idaas.kafkaBrokers}}")
              //Process Terminologies
              .choice()
                 .when(simple("{{idaas.processTerminologies}}"))
@@ -787,7 +747,7 @@ public class CamelConfiguration extends RouteBuilder {
 
         // MFN
         // Directory for Processing HL7
-        from(getHL7UriDirectory(config.getHl7MFN_Directory()))
+        from("file:{{idaas.hl7.mfn.dir}}?delete=true")
              .routeId("hl7FileBasedMasterFiles")
              .convertBodyTo(String.class)
              // set Auditing Properties
@@ -805,7 +765,7 @@ public class CamelConfiguration extends RouteBuilder {
              // iDAAS KIC Processing
              .wireTap("direct:auditing")
              // Send to Topic
-             .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.mfnTopicName}}"))
+             .convertBodyTo(String.class).to("kafka:{{idaas.mfnTopicName}}?brokers={{idaas.kafkaBrokers}}")
              // Terminologies
              .choice()
                 .when(simple("{{idaas.processTerminologies}}"))
@@ -852,7 +812,7 @@ public class CamelConfiguration extends RouteBuilder {
              .endChoice()
         ;
         // MLLP
-        from(getHL7Uri(config.getMfnPort()))
+        from("mllp:0.0.0.0:{{idaas.mfnPort}}")
              .routeId("hl7MLLPMasterFiles")
              .convertBodyTo(String.class)
              // set Auditing Properties
@@ -870,7 +830,7 @@ public class CamelConfiguration extends RouteBuilder {
              // iDaaS KIC Processing
              .wireTap("direct:auditing")
              // Send to Topic
-             .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.mfnTopicName}}"))
+             .convertBodyTo(String.class).to("kafka:{{idaas.mfnTopicName}}?brokers={{idaas.kafkaBrokers}}")
              // Terminologies
              .choice()
                 .when(simple("{{idaas.processTerminologies}}"))
@@ -938,7 +898,7 @@ public class CamelConfiguration extends RouteBuilder {
 
         // MDM
         // Directory for Processing HL7 Files
-        from(getHL7UriDirectory(config.getHl7MDM_Directory()))
+        from("file:{{idaas.hl7.mdm.dir}}?delete=true")
              .routeId("hl7FileBasedMasterDocs")
              .convertBodyTo(String.class)
              // set Auditing Properties
@@ -956,7 +916,7 @@ public class CamelConfiguration extends RouteBuilder {
              // iDAAS KIC Processing
              .wireTap("direct:auditing")
              // Send to Topic
-             .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.mdmTopicName}}"))
+             .convertBodyTo(String.class).to("kafka:{{idaas.mdmTopicName}}?brokers={{idaas.kafkaBrokers}}")
              // Terminologies
              .choice()
                 .when(simple("{{idaas.processTerminologies}}"))
@@ -1003,7 +963,7 @@ public class CamelConfiguration extends RouteBuilder {
              .endChoice()
         ;
         // MLLP
-        from(getHL7Uri(config.getMdmPort()))
+        from("mllp:0.0.0.0:{{idaas.mdmPort}}")
              .routeId("hl7MLLPMasterDocs")
              .convertBodyTo(String.class)
              // set Auditing Properties
@@ -1021,7 +981,7 @@ public class CamelConfiguration extends RouteBuilder {
               //iDaaS KIC Processing
               .wireTap("direct:auditing")
               // Send to Topic
-              .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.mdmTopicName}}"))
+              .convertBodyTo(String.class).to("kafka:{{idaas.mdmTopicName}}?brokers={{idaas.kafkaBrokers}}")
               // Terminologies
               .choice()
                 .when(simple("{{idaas.processTerminologies}}"))
@@ -1088,7 +1048,7 @@ public class CamelConfiguration extends RouteBuilder {
 
         // RDE
         // Directory Processing of HL7
-        from(getHL7UriDirectory(config.getHl7RDE_Directory()))
+        from("file:{{idaas.hl7.rde.dir}}?delete=true")
              .routeId("hl7FilePharmacy")
              .convertBodyTo(String.class)
              // set Auditing Properties
@@ -1106,7 +1066,7 @@ public class CamelConfiguration extends RouteBuilder {
              // iDAAS KIC Processing
              .wireTap("direct:auditing")
              // Send to Topic
-             .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.rdeTopicName}}"))
+             .convertBodyTo(String.class).to("kafka:{{idaas.rdeTopicName}}?brokers={{idaas.kafkaBrokers}}")
              // Terminologies
              .choice()
                 .when(simple("{{idaas.processTerminologies}}"))
@@ -1152,7 +1112,7 @@ public class CamelConfiguration extends RouteBuilder {
              .endChoice()
         ;
         // MLLP
-        from(getHL7Uri(config.getRdePort()))
+        from("mllp:0.0.0.0:{{idaas.rdePort}}")
              .routeId("hl7MLLPPharmacy")
              .convertBodyTo(String.class)
              // set Auditing Properties
@@ -1170,7 +1130,7 @@ public class CamelConfiguration extends RouteBuilder {
              //iDaaS KIC Processing
              .wireTap("direct:auditing")
              // Send to Topic
-             .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.rdeTopicName}}"))
+             .convertBodyTo(String.class).to("kafka:{{idaas.rdeTopicName}}?brokers={{idaas.kafkaBrokers}}")
              // Terminologies
              .choice()
                 .when(simple("{{idaas.processTerminologies}}"))
@@ -1236,7 +1196,7 @@ public class CamelConfiguration extends RouteBuilder {
 
         // SCH
         // Directory Based Processing
-        from(getHL7UriDirectory(config.getHl7SCH_Directory()))
+        from("file:{{idaas.hl7.sch.dir}}?delete=true")
             .routeId("hl7FileSchedules")
             .convertBodyTo(String.class)
             // set Auditing Properties
@@ -1254,7 +1214,7 @@ public class CamelConfiguration extends RouteBuilder {
             // iDAAS KIC Processing
             .wireTap("direct:auditing")
             // Send to Topic
-            .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.schTopicName}}"))
+            .convertBodyTo(String.class).to("kafka:{{idaas.schTopicName}}?brokers={{idaas.kafkaBrokers}}")
             // Terminologies
             .choice()
                 .when(simple("{{idaas.processTerminologies}}"))
@@ -1300,7 +1260,7 @@ public class CamelConfiguration extends RouteBuilder {
                 .endChoice()
             ;
         // MLLP
-        from(getHL7Uri(config.getSchPort()))
+        from("mllp:0.0.0.0:{{idaas.schPort}}")
              .routeId("hl7MLLPSchedule")
              .convertBodyTo(String.class)
              // set Auditing Properties
@@ -1318,7 +1278,7 @@ public class CamelConfiguration extends RouteBuilder {
               //iDaaS KIC Processing
              .wireTap("direct:auditing")
              // Send to Topic
-             .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.schTopicName}}"))
+             .convertBodyTo(String.class).to("kafka:{{idaas.schTopicName}}?brokers={{idaas.kafkaBrokers}}")
              // Terminologies
              .choice()
                 .when(simple("{{idaas.processTerminologies}}"))
@@ -1384,7 +1344,7 @@ public class CamelConfiguration extends RouteBuilder {
 
         // VXU
         // Directory Based File Processing
-        from(getHL7UriDirectory(config.getHl7VXU_Directory()))
+        from("file:{{idaas.hl7.vxu.dir}}?delete=true")
             .routeId("hl7FileVaccinations")
             .convertBodyTo(String.class)
             // set Auditing Properties
@@ -1402,7 +1362,7 @@ public class CamelConfiguration extends RouteBuilder {
             // iDAAS KIC Processing
             .wireTap("direct:auditing")
             // Send to Topic
-            .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.vxuTopicName}}"))
+            .convertBodyTo(String.class).to("kafka:{{idaas.vxuTopicName}}?brokers={{idaas.kafkaBrokers}}")
             // Terminologies
             .choice()
                 .when(simple("{{idaas.processTerminologies}}"))
@@ -1448,7 +1408,7 @@ public class CamelConfiguration extends RouteBuilder {
             .endChoice()
         ;
         // MLLP
-        from(getHL7Uri(config.getVxuPort()))
+        from("mllp:0.0.0.0:{{idaas.vxuPort}}")
              .routeId("hl7MLLPVaccination")
              .convertBodyTo(String.class)
              // set Auditing Properties
@@ -1466,7 +1426,7 @@ public class CamelConfiguration extends RouteBuilder {
              //iDaaS KIC Processing
              .wireTap("direct:auditing")
              // Send to Topic
-             .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.vxuTopicName}}"))
+             .convertBodyTo(String.class).to("kafka:{{idaas.vxuTopicName}}?brokers={{idaas.kafkaBrokers}}")
              // Terminologies
              .choice()
                 .when(simple("{{idaas.processTerminologies}}"))

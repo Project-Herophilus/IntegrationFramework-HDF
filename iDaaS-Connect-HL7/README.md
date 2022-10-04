@@ -3,7 +3,7 @@ iDAAS-Connect-HL7 ONLY deals with enabling
 connecting to/from healthcare industry standard HL7. It also can process data for CCDA based transactions ONLY.
 The following transactions are supported:
 - HL7 messages (ADT, ORM, ORU, MFN, MDM, PHA, SCH and VXU) from any vendor and any version of HL7 v2.
-- CCDA Events 
+- CCDA Events
 
 For ease of use and implementation this design pattern has built in support for the following protocols to support data processing:
 - MLLP (Minimal Lower Layer Protocol - HL7 v2 Protocol)
@@ -23,21 +23,21 @@ and then there are specific submodule requirements.
 The following section is designed to cover the details around implementing.
 
 ## How To Get, Build and Run iDaaS-Connect Assets
-Within each submodule/design pattern/reference architecture in this repository there is a specific README.md. It is 
+Within each submodule/design pattern/reference architecture in this repository there is a specific README.md. It is
 intended to follow a specific format that covers a solution definition, how we look to continually improve, pre-requisities,
-implementation details including specialized configuration, known issues and their potential resolutions. 
-However, there are a lot of individual capabilities, we have tried to keep content relevant and specific to 
-cover specific topics. 
+implementation details including specialized configuration, known issues and their potential resolutions.
+However, there are a lot of individual capabilities, we have tried to keep content relevant and specific to
+cover specific topics.
 - For cloning, building and running of assets that content can be found
   [here](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/CloningBuildingRunningSolution.md).
 - Within each implementation there is a management console, the management console provides the same
-  interface and capabilities no matter what implementation you are working within, some specifics and 
+  interface and capabilities no matter what implementation you are working within, some specifics and
   and details can be found [here](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/AdministeringPlatform.md).
 
 ## Specific Implementation Configuration Details  
 There are several key details you must make decisions on and also configure. For all of these you will
 need to update the application.properties in accordance with these decisions.
-- For every HL7 based connection you can specify a specific directory, port and whether or not 
+- For every HL7 based connection you can specify a specific directory, port and whether or not
 you want to process the ACK/NAK responses.
 - CCDA. Key setting is whether you want to automatically convert the data with the setting
   idaas.ccdaConvert=true
@@ -46,39 +46,39 @@ you want to process the ACK/NAK responses.
   defined component for another set of assets to process.
 - convertToFHIR - is about specifically converting only HL7 messages to FHIR automatically with the
 setting idaas.convert2FHIR=true
-- Coming soon are the ability to automatically anonymize or deidentify data. with the settings 
+- Coming soon are the ability to automatically anonymize or deidentify data. with the settings
   idaas.deidentify=false and idaas.anonymize=false
 ```
 # Basics on properties
-idaas.hl7ADT_Directory=data/adt
+idaas.hl7.adt.dir=data/adt
 idaas.adtPort=10001
 idaas.adtACKResponse=true
 idaas.adtTopicName=mctn_mms_adt2
-idaas.hl7ORM_Directory=data/orm
+idaas.hl7.orm.dir=data/orm
 idaas.ormPort=10002
 idaas.ormACKResponse=true
 idaas.ormTopicName=mctn_mms_orm
-idaas.hl7ORU_Directory=data/oru
+idaas.hl7.oru.dir=data/oru
 idaas.oruPort=10003
 idaas.oruACKResponse=true
 idaas.oruTopicName=mctn_mms_oru
-idaas.hl7RDE_Directory=data/rde
+idaas.hl7.rde.dir=data/rde
 idaas.rdePort=10004
 idaas.rdeACKResponse=true
 idaas.rdeTopicName=mctn_mms_rde
-idaas.hl7MFN_Directory=data/mfn
+idaas.hl7.mfn.dir=data/mfn
 idaas.mfnPort=10005
 idaas.mfnACKResponse=true
 idaas.mfnTopicName=mctn_mms_mfn
-idaas.hl7MDM_Directory=data/mdm
+idaas.hl7.mdm.dir=data/mdm
 idaas.mdmPort=10006
 idaas.mdmACKResponse=true
 idaas.mdmTopicName=mctn_mms_mdm
-idaas.hl7SCH_Directory=data/sch
+idaas.hl7.sch.dir=data/sch
 idaas.schPort=10007
 idaas.schACKResponse=true
 idaas.schTopicName=mctn_mms_sch
-idaas.hl7VXU_Directory=data/vxu
+idaas.hl7.vxu.dir=data/vxu
 idaas.vxuPort=10008
 idaas.vxuACKResponse=true
 idaas.vxuTopicName=mctn_mms_vxu
@@ -102,7 +102,7 @@ is of a facility, we have named MCTN for an application we have named MMS. This 
 specifically defines one FHIR endpoint per FHIR resource.
 
 ## Known Issues
-As of the time of this content publication there are some specifically known issues with 
+As of the time of this content publication there are some specifically known issues with
 iDaaS Connect HL7 and how OS'es can allocate and leverage ports with hostnames. This is most
 often seen because IPV6 is enabled.
 
@@ -135,9 +135,9 @@ The new settings would then need to be reloaded with the following command line 
 
 # sysctl -p /etc/sysctl.d/ipv6.conf
 ```
-### Implementation Data Flow Specifics 
-This repository follows a very common general clinical care implementation pattern. The implementation pattern involves one system sending data to 
-another system via the HL7/MLLP message standard. 
+### Implementation Data Flow Specifics
+This repository follows a very common general clinical care implementation pattern. The implementation pattern involves one system sending data to
+another system via the HL7/MLLP message standard.
 
 |Identifier | Description |
 | ------------ | ----------- |
@@ -158,7 +158,7 @@ Server socket (one socket per datatype) and typically stay connected.
 2. The HL7 client will send a single HL7 based transaction to the HL7 server.
 3. iDAAS Connect HL7 will do the following actions:<br/>
     a. Receive the HL7 message. Internally, it will audit the data it received to a specifically defined topic.<br/>
-    b. The HL7 message will then be processed to a specifically defined topic for this implementation. There is a 
+    b. The HL7 message will then be processed to a specifically defined topic for this implementation. There is a
     specific topic pattern -  for the facility and application each data type has a specific topic define for it.
     For example: Admissions: MCTN_MMS_ADT, Orders: MCTN_MMS_ORM, Results: MCTN_MMS_ORU, etc.. <br/>
     c. An acknowledgement will then be sent back to the hl7 client (this tells the client he can send the next message,
@@ -167,4 +167,3 @@ Server socket (one socket per datatype) and typically stay connected.
 
 
 Happy using and coding....
-

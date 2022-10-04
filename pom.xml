@@ -2,92 +2,174 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <modelVersion>4.0.0</modelVersion>
+  <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.connectedhealth_idaas</groupId>
-    <artifactId>idaas-connect</artifactId>
-    <version>3.9.7-SNAPSHOT</version>
-    <name>iDAAS Connect</name>
-    <packaging>pom</packaging>
+  <groupId>io.connectedhealth_idaas</groupId>
+  <artifactId>idaas-connect</artifactId>
+  <version>3.9.7-SNAPSHOT</version>
+  <name>iDAAS Connect</name>
+  <packaging>pom</packaging>
 
-    <scm>
-      <connection>scm:git:https://github.com/Project-Herophilus/iDaaS-Connect.git</connection>
-      <url>https://github.com/Project-Herophilus/iDaaS-Connect</url>
-      <developerConnection>scm:git:https://github.com/Project-Herophilus/iDaaS-Connect</developerConnection>
-      <tag>v1.0.0</tag>
-    </scm>
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.4.4</version>
+  </parent>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+  <scm>
+    <connection>scm:git:https://github.com/Project-Herophilus/iDaaS-Connect.git</connection>
+    <url>https://github.com/Project-Herophilus/iDaaS-Connect</url>
+    <developerConnection>scm:git:https://github.com/Project-Herophilus/iDaaS-Connect</developerConnection>
+    <tag>v1.0.0</tag>
+  </scm>
 
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
-    </properties>
-    
-    <modules>
-        <!--<module>iDaaS-Connect-BlueButton</module>-->
-        <module>iDaaS-Connect-BlueButton</module>
-        <module>iDaaS-Connect-Cloud</module>
-    	<module>iDaaS-Connect-EDI</module>
-    	<module>iDaaS-Connect-FHIR</module>
-    	<module>iDaaS-Connect-HL7</module>
-        <module>iDaaS-Connect-SAP</module>
-    	<module>iDaaS-Connect-ThirdParty</module>
-    </modules>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <profiles>
-      <profile>
-        <id>releases</id>
-        <build>
-          <plugins>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-source-plugin</artifactId>
-              <version>2.2.1</version>
-              <executions>
-                <execution>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+
+    <camel.version>3.14.0</camel.version>
+    <springboot.version>2.4.4</springboot.version>
+  </properties>
+
+  <modules>
+    <!--<module>iDaaS-Connect-BlueButton</module>-->
+    <module>iDaaS-Connect-BlueButton</module>
+    <module>iDaaS-Connect-Cloud</module>
+    <module>iDaaS-Connect-EDI</module>
+    <module>iDaaS-Connect-FHIR</module>
+    <module>iDaaS-Connect-HL7</module>
+    <module>iDaaS-Connect-SAP</module>
+    <module>iDaaS-Connect-ThirdParty</module>
+  </modules>
+
+  <dependencyManagement>
+    <dependencies>
+      <!-- Spring Boot BOM -->
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${springboot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <!-- Camel BOM -->
+      <dependency>
+        <groupId>org.apache.camel.springboot</groupId>
+        <artifactId>camel-spring-boot-dependencies</artifactId>
+        <version>${camel.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>ca.uhn.hapi.fhir</groupId>
+        <artifactId>hapi-fhir-structures-r4</artifactId>
+        <version>5.7.2</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/ca.uhn.hapi.fhir/hapi-fhir-base -->
+      <dependency>
+        <groupId>ca.uhn.hapi.fhir</groupId>
+        <artifactId>hapi-fhir-base</artifactId>
+        <version>5.7.2</version>
+      </dependency>
+      <!-- Logging -->
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-simple</artifactId>
+        <version>1.7.35</version>
+      </dependency>
+      <!--https://stackoverflow.com/questions/48722138/how-to-monitor-apache-camel-routes-in-a-java-project-using-hawtio-->
+      <!-- UI -->
+      <dependency>
+        <groupId>io.hawt</groupId>
+        <artifactId>hawtio-springboot</artifactId>
+        <version>2.14.4</version>
+      </dependency>
+      <!-- https://mvnrepository.com/artifact/org.jolokia/jolokia-jvm -->
+      <dependency>
+        <groupId>org.jolokia</groupId>
+        <artifactId>jolokia-jvm</artifactId>
+        <version>1.6.2</version>
+      </dependency>
+      <!-- iDaaS Event Builder Repo or Local-->
+      <dependency>
+        <groupId>io.connectedhealth-idaas</groupId>
+        <artifactId>idaas-eventbuilder</artifactId>
+        <version>2.3.0</version>
+      </dependency>
+      <!--Linux for Health Dependencies-->
+      <!-- https://mvnrepository.com/artifact/io.github.linuxforhealth/hl7v2-fhir-converter -->
+      <!-- JDK 1.8 based implementations-->
+      <dependency>
+        <groupId>io.github.linuxforhealth</groupId>
+        <artifactId>hl7v2-fhir-converter</artifactId>
+        <version>1.0.12</version>
+      </dependency>
+      <!-- JDK 11 based implementations <dependency> <groupId>io.github.linuxforhealth</groupId> <artifactId>hl7v2-fhir-converter</artifactId> <version>1.0.18</version> </dependency>-->
+
+    </dependencies>
+  </dependencyManagement>
+
+  <profiles>
+    <profile>
+      <id>releases</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>2.2.1</version>
+            <executions>
+              <execution>
                 <id>attach-sources</id>
                 <goals>
                   <goal>jar-no-fork</goal>
                 </goals>
-                </execution>
-              </executions>
-              </plugin>
-              <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-javadoc-plugin</artifactId>
-              <version>2.9.1</version>
-              <executions>
-                <execution>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>2.9.1</version>
+            <executions>
+              <execution>
                 <id>attach-javadocs</id>
                 <goals>
                   <goal>jar</goal>
                 </goals>
-                </execution>
-              </executions>
-              </plugin>
-          </plugins>
-        </build>
-      </profile>
-    </profiles>
-  
-    <build>
-      <pluginManagement>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-release-plugin</artifactId>
-            <version>2.5.3</version>
-            <configuration>
-               <tagNameFormat>v@{project.version}</tagNameFormat>
-               <autoVersionSubmodules>true</autoVersionSubmodules>
-               <releaseProfiles>releases</releaseProfiles>
-               <scmCommentPrefix>[ci skip]</scmCommentPrefix>
-            </configuration>
+              </execution>
+            </executions>
           </plugin>
         </plugins>
-      </pluginManagement>
-    </build>
+      </build>
+    </profile>
+  </profiles>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>2.5.3</version>
+          <configuration>
+            <tagNameFormat>v@{project.version}</tagNameFormat>
+            <autoVersionSubmodules>true</autoVersionSubmodules>
+            <releaseProfiles>releases</releaseProfiles>
+            <scmCommentPrefix>[ci skip]</scmCommentPrefix>
+          </configuration>
+        </plugin>
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <version>${springboot.version}</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
 
 </project>
