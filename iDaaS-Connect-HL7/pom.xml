@@ -4,10 +4,6 @@
 
   <artifactId>hl7</artifactId>
 
-  <properties>
-    <!-- <java.version>11</java.version>-->
-  </properties>
-
   <parent>
     <groupId>io.connectedhealth_idaas</groupId>
     <artifactId>idaas-connect</artifactId>
@@ -166,7 +162,6 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <!-- <version>3.8.1</version>-->
         <configuration>
         </configuration>
       </plugin>

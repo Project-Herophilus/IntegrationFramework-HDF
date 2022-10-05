@@ -1,36 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <!--Internal Project Details-->
-    <groupId>io.connectedhealth_idaas.edi</groupId>
-    <artifactId>io.connectedhealth_idaas.edi</artifactId>
-    <version>3.9.7-SNAPSHOT</version>
 
-    <properties>
-        <camel.version>3.14.0</camel.version>
-        <springboot.version>2.4.4</springboot.version>
-    </properties>
-    <!-- https://camel.apache.org/releases/release-3.9.0/ -->
-    <dependencyManagement>
-        <dependencies>
-            <!-- Spring Boot BOM -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-dependencies</artifactId>
-                <version>${springboot.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <!-- Camel BOM -->
-            <dependency>
-                <groupId>org.apache.camel.springboot</groupId>
-                <artifactId>camel-spring-boot-dependencies</artifactId>
-                <version>${camel.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+    <artifactId>edi</artifactId>
+    <parent>
+      <groupId>io.connectedhealth_idaas</groupId>
+      <artifactId>idaas-connect</artifactId>
+      <version>3.9.7-SNAPSHOT</version>
+      <relativePath>../pom.xml</relativePath>
+    </parent>
 
     <dependencies>
         <!-- Camel -->
@@ -93,26 +71,17 @@
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-jackson</artifactId>
-            <version>3.14.0</version>
-        </dependency>
-        <!-- Logging -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.35</version>
         </dependency>
         <!--https://stackoverflow.com/questions/48722138/how-to-monitor-apache-camel-routes-in-a-java-project-using-hawtio-->
         <!-- UI -->
         <dependency>
             <groupId>io.hawt</groupId>
             <artifactId>hawtio-springboot</artifactId>
-            <version>2.14.4</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.jolokia/jolokia-jvm -->
         <dependency>
             <groupId>org.jolokia</groupId>
             <artifactId>jolokia-jvm</artifactId>
-            <version>1.6.2</version>
         </dependency>
         <!-- This dependency is mandatory for enabling Camel management via JMX / Hawtio. -->
         <dependency>
@@ -132,18 +101,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${springboot.version}</version>
             </plugin>
         </plugins>
     </build>
 </project>
-
