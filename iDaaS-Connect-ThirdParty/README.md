@@ -1,5 +1,5 @@
 # iDAAS-Connect-ThirdParty
-iDAAS-Connect-ThirdParty is ONLY intended to deal with enabling connectivity to all sorts of different types of 
+iDAAS-Connect-ThirdParty is ONLY intended to deal with enabling connectivity to all sorts of different types of
 data systems. For example: RDBMS, Kafka, Mainframe, Files, SFTP, etc. plus over one hundred other types of connectivity  
 are supported.
 
@@ -71,14 +71,19 @@ spring.datasource.password=@idaas123
 As of the time of this content publication there are no known specific issues. The ONLY consistent
 common issue is setting the application.properties before running the application.
 
-# Implementation Scenario(s): Kafka Integration 
+# Implementation Scenario(s): Kafka Integration
 This repository follows a very common general implementation. The only connector currently in this code
-base is a Kafka topic. The key sceanrio this can demonstrate is data being processed from a data science 
+base is a Kafka topic. The key sceanrio this can demonstrate is data being processed from a data science
 kafka topic.
 
 ## Implementation Data Flow Steps
-1. The Kafka client connects to a particular broker and topic and checks if there is any data to process. 
-2. If there is data it will audit the transaction processing 
+1. The Kafka client connects to a particular broker and topic and checks if there is any data to process.
+2. If there is data it will audit the transaction processing
 3. The transaction will be routed for processing within iDAAS KIC
-    
+
 Happy using and coding....
+
+
+# How to deploy using maven-plugin
+
+mvn clean oc:deploy -P openshift -Dspring.profiles.active=prod -Djkube.generator.from=default-route-openshift-image-registry.apps.cluster-4xtrr.4xtrr.sandbox293.opentlc.com/openshift/fuse7-java11-openshift:1.10

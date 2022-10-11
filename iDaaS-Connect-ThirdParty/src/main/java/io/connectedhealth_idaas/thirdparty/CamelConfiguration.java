@@ -51,11 +51,7 @@ public class CamelConfiguration extends RouteBuilder {
     mapping.addUrlMappings("/idaas/*");
     return mapping;
   }
-//  private String getKafkaTopicUri(String topic) {
-//    return "kafka:{{}}?brokers={{idaas.kafka.brokers}}" + topic +
-//            "?brokers=" +
-//            config.getKafkaBrokers();
-//  }
+
 
   @Override
   public void configure() throws Exception {

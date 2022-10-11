@@ -70,7 +70,7 @@
             <artifactId>jakarta.xml.bind-api</artifactId>
         </dependency>
         <!-- Third Party JDBC Drivers -->
-        <dependency>
+        <!-- <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
         </dependency>
@@ -81,7 +81,7 @@
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
-        </dependency>
+        </dependency> -->
         <!-- iDaaS Event Builder -->
         <dependency>
             <groupId>io.connectedhealth-idaas</groupId>
