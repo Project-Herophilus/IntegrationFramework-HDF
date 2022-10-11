@@ -16,22 +16,12 @@
  */
 package io.connectedhealth_idaas.thirdparty;
 
-//import javax.jms.ConnectionFactory;
-import org.apache.camel.ExchangePattern;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.Exchange;
-import org.apache.camel.ExchangePattern;
-import org.apache.camel.Processor;
-import org.apache.camel.component.kafka.KafkaComponent;
-import org.apache.camel.component.kafka.KafkaConstants;
-import org.apache.camel.component.kafka.KafkaEndpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
-//import org.springframework.jms.connection.JmsTransactionManager;
 import org.springframework.stereotype.Component;
 import org.apache.camel.component.jackson.JacksonDataFormat;
 import org.apache.camel.dataformat.bindy.csv.BindyCsvDataFormat;
@@ -50,15 +40,6 @@ import io.connectedhealth_idaas.parsers.*;
 public class CamelConfiguration extends RouteBuilder {
   private static final Logger log = LoggerFactory.getLogger(CamelConfiguration.class);
 
-  @Autowired
-  private ConfigProperties config;
-
-  @Bean
-  private KafkaEndpoint kafkaEndpoint(){
-    KafkaEndpoint kafkaEndpoint = new KafkaEndpoint();
-    return kafkaEndpoint;
-  }
-
   @Bean
   ServletRegistrationBean camelServlet() {
     // use a @Bean to register the Camel servlet which we need to do
@@ -70,11 +51,11 @@ public class CamelConfiguration extends RouteBuilder {
     mapping.addUrlMappings("/idaas/*");
     return mapping;
   }
-  private String getKafkaTopicUri(String topic) {
-    return "kafka:" + topic +
-            "?brokers=" +
-            config.getKafkaBrokers();
-  }
+//  private String getKafkaTopicUri(String topic) {
+//    return "kafka:{{}}?brokers={{idaas.kafka.brokers}}" + topic +
+//            "?brokers=" +
+//            config.getKafkaBrokers();
+//  }
 
   @Override
   public void configure() throws Exception {
@@ -106,7 +87,8 @@ public class CamelConfiguration extends RouteBuilder {
             .setHeader("internalMsgID").exchangeProperty("internalMsgID")
             .setHeader("bodyData").exchangeProperty("bodyData")
             .setHeader("bodySize").exchangeProperty("bodySize")
-            .convertBodyTo(String.class).to(getKafkaTopicUri("hidn"))
+            .convertBodyTo(String.class)
+            .to("kafka:hidn?brokers={{idaas.kafka.brokers}}")
     ;
     /*
      *  Direct actions used across platform
@@ -126,7 +108,8 @@ public class CamelConfiguration extends RouteBuilder {
         .setHeader("exchangeID").exchangeProperty("exchangeID")
         .setHeader("internalMsgID").exchangeProperty("internalMsgID")
         .setHeader("bodyData").exchangeProperty("bodyData")
-        .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.integrationTopic}}"))
+        .convertBodyTo(String.class)
+        .to("kafka:{{idaas.integration.topic}}?brokers={{idaas.kafka.brokers}}")
     ;
     /*
      *  Logging
@@ -190,7 +173,8 @@ public class CamelConfiguration extends RouteBuilder {
         // iDAAS KIC - Auditing Processing
         .wireTap("direct:auditing")
         // Send To Topic
-        .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.iotintegrationTopic}}"))
+        .convertBodyTo(String.class)
+        .to("kafka:{{idaas.iot.integration.topic}}?brokers={{idaas.kafka.brokers}}")
     ;
     /*
      *  Kafka Implementation for implementing Third Party FHIR Server direct connection
@@ -210,7 +194,8 @@ public class CamelConfiguration extends RouteBuilder {
           .when(simple("${file:ext} == 'csv'"))
           .split(body().tokenize("\n"))
           .streaming().unmarshal(new BindyCsvDataFormat(ReportingOutput.class))
-          .marshal(new JacksonDataFormat(ReportingOutput.class)).to(getKafkaTopicUri("MandatoryReporting"))
+          .marshal(new JacksonDataFormat(ReportingOutput.class))
+          .to("kafka:MandatoryReporting?brokers={{idaas.kafka.brokers}}")
           // Auditing
           .setProperty("processingtype").constant("csv-data")
           .setProperty("appname").constant("iDAAS-Connect-ThirdParty")
@@ -261,7 +246,7 @@ public class CamelConfiguration extends RouteBuilder {
         .split(body().tokenize("\n")).streaming()
         .unmarshal(new BindyCsvDataFormat(CovidJohnHopkinsUSDailyData.class))
         //.marshal(new JacksonDataFormat(CovidJohnHopkinsUSDailyData.class))
-        .to(getKafkaTopicUri("CovidDailyData"))
+        .to("kafka:CovidDailyData?brokers={{idaas.kafka.brokers}}")
         .endChoice();
     /*
      *  Sample: CSV Research Data to Topic
@@ -275,7 +260,7 @@ public class CamelConfiguration extends RouteBuilder {
         .split(body().tokenize("\n")).streaming()
         .unmarshal(new BindyCsvDataFormat(ResearchData.class))
         .marshal(new JacksonDataFormat(ResearchData.class))
-        .to(getKafkaTopicUri("ResearchData"))
+        .to("kafka:ResearchData?brokers={{idaas.kafka.brokers}}")
         // Auditing
         .setProperty("processingtype").constant("csv-data")
         .setProperty("appname").constant("iDAAS-Connect-ThirdParty")
