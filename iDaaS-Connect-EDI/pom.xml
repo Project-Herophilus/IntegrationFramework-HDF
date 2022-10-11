@@ -22,7 +22,7 @@
             <artifactId>spring-boot-autoconfigure</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.camel.springboot</groupId>
+            <groupId>org.apache.camel</groupId>
             <artifactId>camel-spring-boot-starter</artifactId>
         </dependency>
         <dependency>
@@ -52,11 +52,6 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-kafka</artifactId>
         </dependency>
-        <!-- Bean -->
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-bean</artifactId>
-        </dependency>
         <!-- Http -->
         <dependency>
             <groupId>org.apache.camel</groupId>
@@ -71,22 +66,6 @@
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-jackson</artifactId>
-        </dependency>
-        <!--https://stackoverflow.com/questions/48722138/how-to-monitor-apache-camel-routes-in-a-java-project-using-hawtio-->
-        <!-- UI -->
-        <dependency>
-            <groupId>io.hawt</groupId>
-            <artifactId>hawtio-springboot</artifactId>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.jolokia/jolokia-jvm -->
-        <dependency>
-            <groupId>org.jolokia</groupId>
-            <artifactId>jolokia-jvm</artifactId>
-        </dependency>
-        <!-- This dependency is mandatory for enabling Camel management via JMX / Hawtio. -->
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-management</artifactId>
         </dependency>
     </dependencies>
 
@@ -103,7 +82,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
+                <groupId>org.jboss.redhat-fuse</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>

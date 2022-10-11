@@ -106,7 +106,7 @@
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
+                <groupId>org.jboss.redhat-fuse</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>

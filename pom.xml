@@ -10,12 +10,6 @@
   <name>iDAAS Connect</name>
   <packaging>pom</packaging>
 
-  <parent>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.4.4</version>
-  </parent>
-
   <scm>
     <connection>scm:git:https://github.com/Project-Herophilus/iDaaS-Connect.git</connection>
     <url>https://github.com/Project-Herophilus/iDaaS-Connect</url>
@@ -26,43 +20,33 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-    <maven.compiler.source>1.8</maven.compiler.source>
-    <maven.compiler.target>1.8</maven.compiler.target>
-
-    <camel.version>3.14.0</camel.version>
-    <springboot.version>2.4.4</springboot.version>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
+		<fuse.bom.version>7.10.0.fuse-sb2-7_10_2-00001-redhat-00002</fuse.bom.version>
   </properties>
 
   <modules>
     <!--<module>iDaaS-Connect-BlueButton</module>-->
-    <module>iDaaS-Connect-BlueButton</module>
-    <module>iDaaS-Connect-Cloud</module>
+    <!-- <module>iDaaS-Connect-BlueButton</module>
+    <module>iDaaS-Connect-Cloud</module> -->
     <module>iDaaS-Connect-EDI</module>
-    <module>iDaaS-Connect-FHIR</module>
+    <!-- <module>iDaaS-Connect-FHIR</module> -->
     <module>iDaaS-Connect-HL7</module>
-    <module>iDaaS-Connect-SAP</module>
+    <!-- <module>iDaaS-Connect-SAP</module> -->
     <module>iDaaS-Connect-ThirdParty</module>
   </modules>
 
   <dependencyManagement>
     <dependencies>
-      <!-- Spring Boot BOM -->
+
       <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-dependencies</artifactId>
-        <version>${springboot.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <!-- Camel BOM -->
-      <dependency>
-        <groupId>org.apache.camel.springboot</groupId>
-        <artifactId>camel-spring-boot-dependencies</artifactId>
-        <version>${camel.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
+				<groupId>org.jboss.redhat-fuse</groupId>
+				<artifactId>fuse-springboot-bom</artifactId>
+				<version>${fuse.bom.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
 
       <dependency>
         <groupId>ca.uhn.hapi.fhir</groupId>
@@ -88,7 +72,6 @@
         <artifactId>hawtio-springboot</artifactId>
         <version>2.14.4</version>
       </dependency>
-      <!-- https://mvnrepository.com/artifact/org.jolokia/jolokia-jvm -->
       <dependency>
         <groupId>org.jolokia</groupId>
         <artifactId>jolokia-jvm</artifactId>
@@ -100,16 +83,12 @@
         <artifactId>idaas-eventbuilder</artifactId>
         <version>2.3.0</version>
       </dependency>
-      <!--Linux for Health Dependencies-->
-      <!-- https://mvnrepository.com/artifact/io.github.linuxforhealth/hl7v2-fhir-converter -->
-      <!-- JDK 1.8 based implementations-->
+
       <dependency>
         <groupId>io.github.linuxforhealth</groupId>
         <artifactId>hl7v2-fhir-converter</artifactId>
-        <version>1.0.12</version>
+        <version>1.0.18</version>
       </dependency>
-      <!-- JDK 11 based implementations <dependency> <groupId>io.github.linuxforhealth</groupId> <artifactId>hl7v2-fhir-converter</artifactId> <version>1.0.18</version> </dependency>-->
-
       <dependency>
           <groupId>org.postgresql</groupId>
           <artifactId>postgresql</artifactId>
@@ -182,7 +161,67 @@
         </plugins>
       </build>
     </profile>
+		<profile>
+			<id>openshift</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.jboss.redhat-fuse</groupId>
+						<artifactId>openshift-maven-plugin</artifactId>
+						<version>${fuse.bom.version}</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>resource</goal>
+									<goal>build</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+			<activation />
+		</profile>
   </profiles>
+
+  <repositories>
+		<repository>
+			<id>redhat-ga-repository</id>
+			<url>https://maven.repository.redhat.com/ga</url>
+			<releases />
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>redhat-ea-repository</id>
+			<url>https://maven.repository.redhat.com/earlyaccess/all</url>
+			<releases />
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>redhat-ga-repository</id>
+			<url>https://maven.repository.redhat.com/ga</url>
+			<releases />
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+		<pluginRepository>
+			<id>redhat-ea-repository</id>
+			<url>https://maven.repository.redhat.com/earlyaccess/all</url>
+			<releases />
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
+
 
   <build>
     <pluginManagement>
@@ -199,9 +238,9 @@
           </configuration>
         </plugin>
         <plugin>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-maven-plugin</artifactId>
-          <version>${springboot.version}</version>
+          <groupId>org.jboss.redhat-fuse</groupId>
+  				<artifactId>spring-boot-maven-plugin</artifactId>
+  				<version>${fuse.bom.version}</version>
         </plugin>
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
