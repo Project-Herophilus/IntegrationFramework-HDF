@@ -36,7 +36,7 @@ import io.connectedhealth_idaas.parsers.*;
  *
  *    https://camel.apache.org/components/3.17.x/
  */
-@Component
+//@Component
 public class CamelConfiguration extends RouteBuilder {
   private static final Logger log = LoggerFactory.getLogger(CamelConfiguration.class);
 

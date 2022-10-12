@@ -86,4 +86,8 @@ Happy using and coding....
 
 # How to deploy using maven-plugin
 
-mvn clean oc:deploy -P openshift -Dspring.profiles.active=prod -Djkube.generator.from=default-route-openshift-image-registry.apps.cluster-4xtrr.4xtrr.sandbox293.opentlc.com/openshift/fuse7-java11-openshift:1.10
+    mvn clean oc:deploy -P openshift -Djkube.generator.from=openshift/fuse7-java11-openshift:1.10 -Djkube.generator.fromMode=istag
+
+# How to run in Dev Mode
+
+    mvn spring-boot:run -Dspring-boot.run.profiles=dev
