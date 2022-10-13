@@ -31,15 +31,15 @@ public class SftpRouteBuilder extends RouteBuilder {
     onException(Exception.class)
     .handled(true)
     .log(LoggingLevel.ERROR,"${exception}")
-    .to("micrometer:counter:numExceptionHandled");
+    .to("micrometer:counter:num_exception_handled");
 
 
-    from("sftp:{{sftp.server.host}}:{{sftp.server.port}}/{{sftp.server.dir}}?username={{sftp.server.username}}&password={{sftp.server.password}}")
+    from("sftp:{{sftp.host}}:{{sftp.port}}/{{sftp.dir}}?username={{sftp.username}}&password={{sftp.password}}&move={{sftp.dir.processed}}")
     .routeId(SFTP_ROUTE_ID)
     .to("log:"+ SFTP_ROUTE_ID + "?showAll=true")
     .to("kafka:SftpFiles?brokers={{idaas.kafka.brokers}}")
     .log("${exchangeId} fully processed")
-    .to("micrometer:counter:numProcessedFiles");
+    .to("micrometer:counter:num_processed_files");
 
   }
 }
