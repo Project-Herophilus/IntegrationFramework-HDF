@@ -38,7 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  */
 
-@Component
+//@Component
 public class CamelConfiguration extends RouteBuilder {
   private static final Logger log = LoggerFactory.getLogger(CamelConfiguration.class);
 
