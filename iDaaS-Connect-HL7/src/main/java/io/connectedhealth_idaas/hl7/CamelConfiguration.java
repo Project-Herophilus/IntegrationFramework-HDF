@@ -16,7 +16,7 @@ import io.github.linuxforhealth.hl7.HL7ToFHIRConverter;
 // CCDA to FHIR Conversion
 import io.connectedhealth_idaas.eventbuilder.converters.ccda.CdaConversionService;
 
-@Component
+//@Component
 public class CamelConfiguration extends RouteBuilder {
     private static final Logger log = LoggerFactory.getLogger(CamelConfiguration.class);
 
