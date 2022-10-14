@@ -27,7 +27,7 @@ public class S3Bean  {
     @Value("${aws.bucket}")
     public String bucket;
 
-    @Value("${aws.region}")
+    @Value("${aws.region.lower}")
     public String region;
 
 

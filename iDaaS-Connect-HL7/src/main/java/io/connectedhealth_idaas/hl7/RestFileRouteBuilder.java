@@ -1,6 +1,7 @@
 package io.connectedhealth_idaas.hl7;
 
 import org.apache.camel.Exchange;
+import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.servlet.CamelHttpTransportServlet;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,11 @@ public class RestFileRouteBuilder extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
+        onException(Exception.class)
+        .handled(true)
+        .log(LoggingLevel.ERROR,"${exception}")
+        .to("micrometer:counter:num_exception_handled");
+
         restConfiguration()
         .component("servlet");
 
@@ -49,6 +55,7 @@ public class RestFileRouteBuilder extends RouteBuilder {
                 .log("Request Received.")
                 .bean(s3Bean,"extract")
                 .setHeader(Exchange.CONTENT_TYPE, constant(MediaType.APPLICATION_XML_VALUE))
+                .to("micrometer:counter:num_files_request")
             .end();
 
     }
