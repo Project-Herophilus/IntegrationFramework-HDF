@@ -52,7 +52,7 @@ public class RestFileRouteBuilder extends RouteBuilder {
             .produces(MediaType.APPLICATION_XML_VALUE)
             .route()
                 .routeId("ExtractFile")
-                .log("Request Received.")
+                .log("Request received for file ${header.file-name}.")
                 .bean(s3Bean,"extract")
                 .setHeader(Exchange.CONTENT_TYPE, constant(MediaType.APPLICATION_XML_VALUE))
                 .to("micrometer:counter:num_files_request")
