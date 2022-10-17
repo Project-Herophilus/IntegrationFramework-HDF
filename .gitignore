@@ -34,7 +34,7 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 id_file
-
+application.properties
 
 ### NetBeans ###
 nbproject/private/
