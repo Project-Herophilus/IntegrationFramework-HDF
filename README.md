@@ -41,7 +41,7 @@ BlueButton is intended to be a very specific implementation to support puling of
 specific government initiatives. We have implemented a reusable open source design pattern to help meet this critical
 mandated set of requirements.
 <br>
-[Blue Button Readme](iDaaS-Connect-BlueButton/README.md)
+[Blue Button Readme](iDaaS-Connect-CMS-BlueButton/README.md)
 
 ## iDaaS-Connect-Cloud
 Cloud is intended to be a very specific set of connectivity for the three major public cloud vendors - AWS, Azure and GCP. 

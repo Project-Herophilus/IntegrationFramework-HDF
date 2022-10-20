@@ -300,7 +300,7 @@ typings/
 
 # IntelliJ idea directory exclusion
 /.idea/
-./iDaaS-Connect-BlueButton/.idea
+iDaaS-Connect-CMS-BlueButton/.idea
 ./iDaaS-Connect-Cloud/.idea
 ./iDaaS-Connect-EDI/.idea
 ./iDaaS-Connect-FHIR/.idea
@@ -309,7 +309,7 @@ typings/
 ./iDaaS-Connect-ThirdParty/.idea
 
 # VSCode
-./iDaaS-Connect-BlueButton/.vscode
+iDaaS-Connect-CMS-BlueButton/.vscode
 ./iDaaS-Connect-Cloud/.vscode
 ./iDaaS-Connect-EDI/.vscode
 ./iDaaS-Connect-FHIR/.vscode
