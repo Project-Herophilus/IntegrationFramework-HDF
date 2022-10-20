@@ -31,7 +31,7 @@ public class RestSqlRouteBuilder extends RouteBuilder {
         onException(Exception.class)
         .handled(true)
         .log(LoggingLevel.ERROR,"${exception}")
-        .to("micrometer:counter:num_exception_handled")
+        .to("micrometer:counter:rest_exception_handled")
         .setHeader(Exchange.CONTENT_TYPE, constant(MediaType.TEXT_PLAIN_VALUE))
         .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(500))
         .setBody(simple("${exception}"));

@@ -30,7 +30,7 @@ public class SftpRouteBuilder extends RouteBuilder {
 
     onException(Exception.class)
     .log(LoggingLevel.ERROR,"${exception}")
-    .to("micrometer:counter:num_exception_handled");
+    .to("micrometer:counter:sftp_exception_handled");
 
 
     from("sftp:{{sftp.host}}:{{sftp.port}}/{{sftp.dir}}?username={{sftp.username}}&password={{sftp.password}}&move={{sftp.dir.processed}}&moveFailed={{sftp.dir.error}}&include=^.*\\.(dat|hl7)$")
