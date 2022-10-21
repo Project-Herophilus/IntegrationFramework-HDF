@@ -21,7 +21,7 @@ public class RestSqlRouteBuilder extends RouteBuilder {
         mapping.setName("CamelServlet");
         mapping.setLoadOnStartup(1);
         mapping.setServlet(new CamelHttpTransportServlet());
-        mapping.addUrlMappings("/idaas/db2/*");
+        mapping.addUrlMappings("/idaas/*");
         return mapping;
     }
 
@@ -39,7 +39,7 @@ public class RestSqlRouteBuilder extends RouteBuilder {
         restConfiguration()
         .component("servlet");
 
-        rest()
+        rest("/db2")
         .get("/membership")
             .produces(MediaType.APPLICATION_JSON_VALUE)
             .route()
