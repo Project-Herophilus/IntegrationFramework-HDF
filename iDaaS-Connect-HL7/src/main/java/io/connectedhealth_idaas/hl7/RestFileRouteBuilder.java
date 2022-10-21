@@ -54,6 +54,7 @@ public class RestFileRouteBuilder extends RouteBuilder {
                 .routeId("ExtractFile")
                 .log("Request received for file ${header.file-name}.")
                 .bean(s3Bean,"extract")
+                .to("kafka:S3Files?brokers={{idaas.kafka.brokers}}")
                 .setHeader(Exchange.CONTENT_TYPE, constant(MediaType.APPLICATION_XML_VALUE))
                 .to("micrometer:counter:num_files_request")
             .end();

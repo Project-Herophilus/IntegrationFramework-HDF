@@ -1,23 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>hl7</artifactId>
+    <artifactId>hl7</artifactId>
 
-  <parent>
-    <groupId>io.connectedhealth_idaas</groupId>
-    <artifactId>idaas-connect</artifactId>
-    <version>3.9.7-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
-  </parent>
+    <parent>
+        <groupId>io.connectedhealth_idaas</groupId>
+        <artifactId>idaas-connect</artifactId>
+        <version>3.9.7-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
-  <!-- https://camel.apache.org/releases/release-3.9.0/ -->
-  <dependencies>
-    <!-- Spring Boot -->
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-spring-boot-starter</artifactId>
-        </dependency>
+    <dependencies>
+        <!-- Spring Boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -38,148 +33,151 @@
         </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
+            <artifactId>camel-spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
             <artifactId>camel-micrometer-starter</artifactId>
         </dependency>
-    <!-- Apache Camel Components -->
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-aws</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-hl7</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-mllp</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-servlet</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-kafka</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-http</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>org.apache.camel</groupId>
-        <artifactId>camel-micrometer</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>io.micrometer</groupId>
-        <artifactId>micrometer-registry-prometheus</artifactId>
-        <scope>runtime</scope>
-    </dependency>
-    <!-- HL7 HAPI Specific Camel Support Libraries-->
-    <dependency>
-      <groupId>ca.uhn.hapi</groupId>
-      <artifactId>hapi-structures-v21</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>ca.uhn.hapi</groupId>
-      <artifactId>hapi-structures-v22</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>ca.uhn.hapi</groupId>
-      <artifactId>hapi-structures-v23</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>ca.uhn.hapi</groupId>
-      <artifactId>hapi-structures-v231</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>ca.uhn.hapi</groupId>
-      <artifactId>hapi-structures-v24</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>ca.uhn.hapi</groupId>
-      <artifactId>hapi-structures-v25</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>ca.uhn.hapi</groupId>
-      <artifactId>hapi-structures-v251</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>ca.uhn.hapi</groupId>
-      <artifactId>hapi-structures-v26</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <!-- HAPI FHIR for CCDA Conversions -->
-    <!-- https://mvnrepository.com/artifact/ca.uhn.hapi.fhir/hapi-fhir-structures-r4 -->
-    <dependency>
-      <groupId>ca.uhn.hapi.fhir</groupId>
-      <artifactId>hapi-fhir-structures-r4</artifactId>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/ca.uhn.hapi.fhir/hapi-fhir-base -->
-    <dependency>
-      <groupId>ca.uhn.hapi.fhir</groupId>
-      <artifactId>hapi-fhir-base</artifactId>
-    </dependency>
-    <!-- iDaaS Event Builder Repo or Local-->
-    <dependency>
-      <groupId>io.connectedhealth-idaas</groupId>
-      <artifactId>idaas-eventbuilder</artifactId>
-    </dependency>
-    <!--Linux for Health Dependencies-->
-    <!-- https://mvnrepository.com/artifact/io.github.linuxforhealth/hl7v2-fhir-converter -->
-    <!-- JDK 1.8 based implementations-->
-    <dependency>
-      <groupId>io.github.linuxforhealth</groupId>
-      <artifactId>hl7v2-fhir-converter</artifactId>
-    </dependency>
-    <!-- JDK 11 based implementations <dependency> <groupId>io.github.linuxforhealth</groupId> <artifactId>hl7v2-fhir-converter</artifactId> <version>1.0.18</version> </dependency>-->
-    <!--Logs -->
-    <dependency>
-        <groupId>ch.qos.logback.contrib</groupId>
-        <artifactId>logback-jackson</artifactId>
-    </dependency>
-    <dependency>
-        <groupId>ch.qos.logback.contrib</groupId>
-        <artifactId>logback-json-classic</artifactId>
-    </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-aws</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-hl7</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-mllp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-servlet</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-kafka</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-http</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-micrometer</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- HL7 HAPI Specific Camel Support Libraries-->
+        <dependency>
+            <groupId>ca.uhn.hapi</groupId>
+            <artifactId>hapi-structures-v21</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>ca.uhn.hapi</groupId>
+            <artifactId>hapi-structures-v22</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>ca.uhn.hapi</groupId>
+            <artifactId>hapi-structures-v23</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>ca.uhn.hapi</groupId>
+            <artifactId>hapi-structures-v231</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>ca.uhn.hapi</groupId>
+            <artifactId>hapi-structures-v24</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>ca.uhn.hapi</groupId>
+            <artifactId>hapi-structures-v25</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>ca.uhn.hapi</groupId>
+            <artifactId>hapi-structures-v251</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>ca.uhn.hapi</groupId>
+            <artifactId>hapi-structures-v26</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <!-- HAPI FHIR for CCDA Conversions -->
+        <!-- https://mvnrepository.com/artifact/ca.uhn.hapi.fhir/hapi-fhir-structures-r4 -->
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-structures-r4</artifactId>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/ca.uhn.hapi.fhir/hapi-fhir-base -->
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-base</artifactId>
+        </dependency>
+        <!-- iDaaS Event Builder Repo or Local-->
+        <dependency>
+            <groupId>io.connectedhealth-idaas</groupId>
+            <artifactId>idaas-eventbuilder</artifactId>
+        </dependency>
+        <!--Linux for Health Dependencies-->
+        <!-- https://mvnrepository.com/artifact/io.github.linuxforhealth/hl7v2-fhir-converter -->
+        <!-- JDK 1.8 based implementations-->
+        <dependency>
+            <groupId>io.github.linuxforhealth</groupId>
+            <artifactId>hl7v2-fhir-converter</artifactId>
+        </dependency>
+        <!-- JDK 11 based implementations <dependency> <groupId>io.github.linuxforhealth</groupId> <artifactId>hl7v2-fhir-converter</artifactId> <version>1.0.18</version> </dependency>-->
+        <!--Logs -->
+        <dependency>
+            <groupId>ch.qos.logback.contrib</groupId>
+            <artifactId>logback-jackson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback.contrib</groupId>
+            <artifactId>logback-json-classic</artifactId>
+        </dependency>
 
-  </dependencies>
+    </dependencies>
 
-  <profiles>
-    <profile>
-      <id>release</id>
-    </profile>
-  </profiles>
+    <profiles>
+        <profile>
+            <id>release</id>
+        </profile>
+    </profiles>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.jboss.redhat-fuse</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-        <configuration>
-          <executable>true</executable>
-          <mainClass>io.connectedhealth_idaas.hl7.Application</mainClass>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>repackage</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jboss.redhat-fuse</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <executable>true</executable>
+                    <mainClass>io.connectedhealth_idaas.hl7.Application</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
