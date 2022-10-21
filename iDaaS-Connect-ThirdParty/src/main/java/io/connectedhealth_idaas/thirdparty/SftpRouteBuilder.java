@@ -23,7 +23,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class SftpRouteBuilder extends RouteBuilder {
 
-  public static final String SFTP_ROUTE_ID = "sftp-third-party";
+  public static final String HL7_ROUTE_ID = "hl7-third-party";
+  public static final String DQAAS_ROUTE_ID = "dqass-third-party";
 
   @Override
   public void configure() throws Exception {
@@ -33,10 +34,17 @@ public class SftpRouteBuilder extends RouteBuilder {
     .to("micrometer:counter:sftp_exception_handled");
 
 
-    from("sftp:{{sftp.host}}:{{sftp.port}}/{{sftp.dir}}?username={{sftp.username}}&password={{sftp.password}}&move={{sftp.dir.processed}}&moveFailed={{sftp.dir.error}}&include=^.*\\.(dat|hl7)$")
-    .routeId(SFTP_ROUTE_ID)
-    .to("log:"+ SFTP_ROUTE_ID + "?showAll=true")
+    from("sftp:{{sftp.host}}:{{sftp.port}}/{{sftp.hl7.dir}}?username={{sftp.username}}&password={{sftp.password}}&move={{sftp.dir.processed}}&moveFailed={{sftp.dir.error}}&include=^.*\\.(dat|hl7)$")
+    .routeId(HL7_ROUTE_ID)
+    .to("log:"+ HL7_ROUTE_ID + "?showAll=true")
     .to("kafka:SftpFiles?brokers={{idaas.kafka.brokers}}")
+    .log("${exchangeId} fully processed")
+    .to("micrometer:counter:num_processed_files");
+
+    from("sftp:{{sftp.host}}:{{sftp.port}}/{{sftp.dqaas.dir}}?username={{sftp.username}}&password={{sftp.password}}&move={{sftp.dir.processed}}&moveFailed={{sftp.dir.error}}")
+    .routeId(DQAAS_ROUTE_ID)
+    .to("log:"+ DQAAS_ROUTE_ID + "?showAll=true")
+    .to("sftp:{{sftp.host}}:{{sftp.port}}/{{sftp.ct.dir}}?username={{sftp.username}}&password={{sftp.password}}")
     .log("${exchangeId} fully processed")
     .to("micrometer:counter:num_processed_files");
 
