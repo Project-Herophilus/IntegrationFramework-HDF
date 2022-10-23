@@ -35,6 +35,7 @@ buildNumber.properties
 .mvn/timing.properties
 id_file
 application.properties
+secret.yaml
 
 ### NetBeans ###
 nbproject/private/
