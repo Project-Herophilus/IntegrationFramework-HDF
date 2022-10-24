@@ -21,7 +21,7 @@ public class PriorAuthorizationRouteBuilder extends RouteBuilder {
 
         from("kafka:Topic278?brokers={{idaas.kafka.brokers}}&groupId=hl7-278&autoOffsetReset=earliest")
         .log("Content received: ${body}")
-        .setHeader("file-name", constant("DS.sample.xml"))
+        .setHeader("file-name", constant("{{s3.file275.key}}"))
         .bean(s3Bean,"extract")
         .log("275 Content: ${body}")
         .to("kafka:Topic275?brokers={{idaas.kafka.brokers}}")
