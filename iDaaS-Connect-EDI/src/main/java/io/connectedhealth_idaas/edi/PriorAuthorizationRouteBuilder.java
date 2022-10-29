@@ -1,11 +1,11 @@
-package io.connectedhealth_idaas.hl7;
+package io.connectedhealth_idaas.edi;
 
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class PriorAuthorizationRouteBuilder extends RouteBuilder {
 
     @Autowired

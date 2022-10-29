@@ -37,28 +37,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 
-//@Component
+@Component
 public class CamelConfiguration extends RouteBuilder {
     private static final Logger log = LoggerFactory.getLogger(CamelConfiguration.class);
 
     @Autowired
     private ConfigProperties config;
 
-    private String getKafkaTopicUri(String topic) {
-        return "kafka:" + topic + "?brokers=" + config.getKafkaBrokers();
-    }
-
-    @Bean
-    private KafkaEndpoint kafkaEndpoint() {
-        KafkaEndpoint kafkaEndpoint = new KafkaEndpoint();
-        return kafkaEndpoint;
-    }
-
-    @Bean
-    private KafkaComponent kafkaComponent(KafkaEndpoint kafkaEndpoint) {
-        KafkaComponent kafka = new KafkaComponent();
-        return kafka;
-    }
 
     @Bean
     ServletRegistrationBean camelServlet() {
@@ -79,31 +64,6 @@ public class CamelConfiguration extends RouteBuilder {
     @Override
     public void configure() throws Exception {
 
-        /*
-         * Audit
-         *
-         * Direct component within platform to ensure we can centralize logic
-         * There are some values we will need to set within every route
-         * We are doing this to ensure we dont need to build a series of beans
-         * and we keep the processing as lightweight as possible
-         *
-         */
-        from("direct:auditing")
-                .routeId("KIC-KnowledgeInsightConformance")
-                .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
-                .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
-                .setHeader("processingtype").exchangeProperty("processingtype")
-                .setHeader("industrystd").exchangeProperty("industrystd")
-                .setHeader("component").exchangeProperty("componentname")
-                .setHeader("messagetrigger").exchangeProperty("messagetrigger")
-                .setHeader("processname").exchangeProperty("processname")
-                .setHeader("auditdetails").exchangeProperty("auditdetails")
-                .setHeader("camelID").exchangeProperty("camelID")
-                .setHeader("exchangeID").exchangeProperty("exchangeID")
-                .setHeader("internalMsgID").exchangeProperty("internalMsgID")
-                .setHeader("bodyData").exchangeProperty("bodyData")
-                .convertBodyTo(String.class).to(getKafkaTopicUri("opsmgmt_platformtransactions"))
-        ;
         /*
          *  Logging
          */
@@ -194,34 +154,5 @@ public class CamelConfiguration extends RouteBuilder {
                 .to("https://sandbox.bluebutton.cms.gov/v1/fhir/ExplanationOfBenefit?bridgeEndpoint=true")
                 .to("direct:kafka");
 
-        /*
-         *  Servlet common endpoint accessable to process transactions
-         */
-        from("servlet://hidn")
-                .routeId("HIDN Servlet")
-                // Data Parsing and Conversions
-                // Normal Processing
-                .convertBodyTo(String.class)
-                .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
-                .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
-                .setHeader("eventdate").simple("eventdate")
-                .setHeader("eventtime").simple("eventtime")
-                .setHeader("processingtype").exchangeProperty("processingtype")
-                .setHeader("industrystd").exchangeProperty("industrystd")
-                .setHeader("component").exchangeProperty("componentname")
-                .setHeader("processname").exchangeProperty("processname")
-                .setHeader("organization").exchangeProperty("organization")
-                .setHeader("careentity").exchangeProperty("careentity")
-                .setHeader("customattribute1").exchangeProperty("customattribute1")
-                .setHeader("customattribute2").exchangeProperty("customattribute2")
-                .setHeader("customattribute3").exchangeProperty("customattribute3")
-                .setHeader("camelID").exchangeProperty("camelID")
-                .setHeader("exchangeID").exchangeProperty("exchangeID")
-                .setHeader("internalMsgID").exchangeProperty("internalMsgID")
-                .setHeader("bodyData").exchangeProperty("bodyData")
-                .setHeader("bodySize").exchangeProperty("bodySize")
-                .wireTap("direct:hidn")
-        ;
     }
 
-}
