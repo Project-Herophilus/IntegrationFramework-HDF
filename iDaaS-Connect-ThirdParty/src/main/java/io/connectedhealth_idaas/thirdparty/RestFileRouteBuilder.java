@@ -1,4 +1,4 @@
-package io.connectedhealth_idaas.hl7;
+package io.connectedhealth_idaas.thirdaprty;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class RestFileRouteBuilder extends RouteBuilder {
 
     @Bean
