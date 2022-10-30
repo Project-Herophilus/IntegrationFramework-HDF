@@ -81,8 +81,8 @@ public class Hl7RouteBuilder extends RouteBuilder {
         from("direct:empi")
             .choice()
                 .when(simple("{{idaas.process.Empi}}"))
-                    .routeId(Deidentification_ROUTE_ID)
-                    .to("log:" + Deidentification_ROUTE_ID + "?showAll=true")
+                    .routeId(Empi_ROUTE_ID)
+                    .to("log:" + Empi_ROUTE_ID + "?showAll=true")
                     //.log("${exchangeId} fully processed")
                     .to("micrometer:counter:deidentificationTransactions")
                     .to("kafka:{{idaas.deidentification.topic.name}}?brokers={{idaas.kafka.brokers}}")
@@ -143,8 +143,8 @@ public class Hl7RouteBuilder extends RouteBuilder {
                 .multicast().parallelProcessing()
                     // Process Terminologies
                     .to("direct:terminologies")
-                    // Convert HL7 to FHIR
-                    .to("direct:hl7fhirconversion")
+                    // Convert CCDA to FHIR
+                    .to("direct:ccdafhirconversion")
                     // Deidentification
                     .to("direct:deidentification")
                     // EMPI
