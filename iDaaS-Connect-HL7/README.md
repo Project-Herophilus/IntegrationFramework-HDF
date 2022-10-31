@@ -167,3 +167,12 @@ Server socket (one socket per datatype) and typically stay connected.
 
 
 Happy using and coding....
+
+
+## How to deploy using maven-plugin
+
+    mvn clean oc:deploy -P openshift -Djkube.generator.from=openshift/fuse7-java11-openshift:1.10 -Djkube.generator.fromMode=istag
+
+## How to run in Dev Mode
+
+    mvn spring-boot:run -Dspring-boot.run.profiles=dev

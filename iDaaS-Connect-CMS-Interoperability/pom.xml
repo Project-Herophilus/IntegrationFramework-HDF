@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>blue-button</artifactId>
+
+    <artifactId>edi</artifactId>
     <parent>
       <groupId>io.connectedhealth_idaas</groupId>
       <artifactId>idaas-connect</artifactId>
@@ -21,7 +22,7 @@
             <artifactId>spring-boot-autoconfigure</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.camel.springboot</groupId>
+            <groupId>org.apache.camel</groupId>
             <artifactId>camel-spring-boot-starter</artifactId>
         </dependency>
         <dependency>
@@ -40,7 +41,7 @@
         <!-- HTTP -->
         <dependency>
             <groupId>org.apache.camel</groupId>
-            <artifactId>camel-http</artifactId>
+            <artifactId>camel-netty</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
@@ -51,45 +52,20 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-kafka</artifactId>
         </dependency>
-        <!-- Bean -->
+        <!-- Http -->
         <dependency>
             <groupId>org.apache.camel</groupId>
-            <artifactId>camel-bean</artifactId>
+            <artifactId>camel-http</artifactId>
         </dependency>
-        <!-- PDF -->
+        <!-- Parsers -->
         <dependency>
             <groupId>org.apache.camel</groupId>
-            <artifactId>camel-pdf</artifactId>
+            <artifactId>camel-bindy</artifactId>
+            <version>3.16.0</version>
         </dependency>
-        <!-- CSV -->
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-bindy-starter</artifactId>
-        </dependency>
-        <!-- XML Parsing -->
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-jackson</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.xml.bind</groupId>
-            <artifactId>jakarta.xml.bind-api</artifactId>
-        </dependency>
-        <!--https://stackoverflow.com/questions/48722138/how-to-monitor-apache-camel-routes-in-a-java-project-using-hawtio-->
-        <!-- UI -->
-        <dependency>
-            <groupId>io.hawt</groupId>
-            <artifactId>hawtio-springboot</artifactId>
-        </dependency>
-        <!-- https://mvnrepository.com/artifact/org.jolokia/jolokia-jvm -->
-        <dependency>
-            <groupId>org.jolokia</groupId>
-            <artifactId>jolokia-jvm</artifactId>
-        </dependency>
-        <!-- This dependency is mandatory for enabling Camel management via JMX / Hawtio. -->
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-management</artifactId>
         </dependency>
     </dependencies>
 
@@ -106,8 +82,15 @@
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
+                <groupId>org.jboss.redhat-fuse</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+        				<executions>
+        					<execution>
+        						<goals>
+        							<goal>repackage</goal>
+        						</goals>
+        					</execution>
+        				</executions>
             </plugin>
         </plugins>
     </build>

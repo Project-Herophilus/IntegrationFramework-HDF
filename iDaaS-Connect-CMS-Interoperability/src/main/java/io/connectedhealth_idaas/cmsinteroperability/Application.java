@@ -14,12 +14,14 @@
  * permissions and limitations under the License.
  *
  */
-package io.connectedhealth_idaas.hl7;
+package io.connectedhealth_idaas.cmsinteroperability;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @SpringBootApplication
+@EnableConfigurationProperties(ConfigProperties.class)
 public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);

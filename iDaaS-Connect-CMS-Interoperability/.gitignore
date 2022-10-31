@@ -34,8 +34,7 @@ dependency-reduced-pom.xml
 buildNumber.properties
 .mvn/timing.properties
 id_file
-application.properties
-secret.yaml
+
 
 ### NetBeans ###
 nbproject/private/
@@ -298,22 +297,5 @@ typings/
 
 # dotenv environment variables file
 .env
-
-# IntelliJ idea directory exclusion
 /.idea/
-iDaaS-Connect-CMS-BlueButton/.idea
-./iDaaS-Connect-Cloud/.idea
-./iDaaS-Connect-EDI/.idea
-./iDaaS-Connect-FHIR/.idea
-./iDaaS-Connect-HL7/.idea
-./iDaaS-Connect-SAP/.idea
-./iDaaS-Connect-ThirdParty/.idea
 
-# VSCode
-iDaaS-Connect-CMS-BlueButton/.vscode
-./iDaaS-Connect-Cloud/.vscode
-./iDaaS-Connect-EDI/.vscode
-./iDaaS-Connect-FHIR/.vscode
-./iDaaS-Connect-HL7/.vscode
-./iDaaS-Connect-SAP/.vscode
-./iDaaS-Connect-ThirdParty/.vscode

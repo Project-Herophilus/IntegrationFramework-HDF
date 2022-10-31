@@ -36,7 +36,7 @@ import io.connectedhealth_idaas.parsers.*;
  *
  *    https://camel.apache.org/components/3.17.x/
  */
-@Component
+//@Component
 public class CamelConfiguration extends RouteBuilder {
   private static final Logger log = LoggerFactory.getLogger(CamelConfiguration.class);
 
@@ -51,11 +51,7 @@ public class CamelConfiguration extends RouteBuilder {
     mapping.addUrlMappings("/idaas/*");
     return mapping;
   }
-//  private String getKafkaTopicUri(String topic) {
-//    return "kafka:{{}}?brokers={{idaas.kafka.brokers}}" + topic +
-//            "?brokers=" +
-//            config.getKafkaBrokers();
-//  }
+
 
   @Override
   public void configure() throws Exception {
