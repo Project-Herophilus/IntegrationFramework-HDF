@@ -28,6 +28,14 @@ public class EdiRouteBuilder extends RouteBuilder {
             .log(LoggingLevel.ERROR, "${exception}")
             .to("micrometer:counter:numExceptionHandled");
 
+    /*from("kafka:Topic278?brokers={{idaas.kafka.brokers}}&groupId=hl7-278&autoOffsetReset=earliest")
+                .log("Content received: ${body}")
+                .setHeader("file-name", constant("{{s3.file275.key}}"))
+                .bean(s3Bean,"extract")
+                .log("275 Content: ${body}")
+                .to("kafka:Topic275?brokers={{idaas.kafka.brokers}}")
+                .to("micrometer:counter:files_converted");*/
+
     // 270 - Eligibility Inquiry
     // Will Respond with a 271 - Eligibility Response
     from("rest:post:/idaas/edi270")
