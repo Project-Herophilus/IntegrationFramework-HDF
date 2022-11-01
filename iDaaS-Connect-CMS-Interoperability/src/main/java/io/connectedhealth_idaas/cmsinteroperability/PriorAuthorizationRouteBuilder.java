@@ -1,4 +1,4 @@
-package io.connectedhealth_idaas.thirdparty;
+package io.connectedhealth_idaas.cmsinteroperability;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
@@ -6,7 +6,7 @@ import org.apache.camel.builder.RouteBuilder;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class PriorAuthorizationRouteBuilder extends RouteBuilder {
 
     @Override
