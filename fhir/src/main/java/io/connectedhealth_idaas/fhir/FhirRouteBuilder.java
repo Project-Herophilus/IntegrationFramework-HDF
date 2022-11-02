@@ -16,88 +16,131 @@
   */
  package io.connectedhealth_idaas.fhir;
 
+ import io.connectedhealth_idaas.eventbuilder.converters.ccda.CdaConversionService;
  import org.apache.camel.Exchange;
+ import org.apache.camel.LoggingLevel;
  import org.apache.camel.builder.RouteBuilder;
+ import org.springframework.http.MediaType;
  import org.springframework.stereotype.Component;
 
  @Component
  public class FhirRouteBuilder extends RouteBuilder {
 
-
-//     private String getFHIRServerUri(String fhirResource) {
-//         String fhirServerVendor = config.getFhirVendor();
-//         //String fhirEndPoint = "simple(${headers.resourcename})";
-//         String fhirServerURI = null;
-//         if (fhirServerVendor.equals("ibm"))
-//         {
-//             //.to("jetty:http://localhost:8090/fhir-server/api/v4/AdverseEvents?bridgeEndpoint=true&exchangePattern=InOut")
-//             //fhirServerURI = "http:"+config.getHapiURI()+fhirResource+"?bridgeEndpoint=true";
-//             fhirServerURI = config.getIbmURI()+fhirResource;
-//             fhirServerURI = fhirServerURI+"?bridgeEndpoint=true";
-//         }
-//         if (fhirServerVendor.equals("hapi"))
-//         {
-//             //fhirServerURI = "http:"+config.getHapiURI()+fhirEndPoint+"?bridgeEndpoint=true";
-//             //fhirServerURI = config.getHapiURI()+fhirEndPoint;
-//             fhirServerURI = config.getHapiURI()+fhirResource;
-//             fhirServerURI = fhirServerURI+"?bridgeEndpoint=true";
-//         }
-//         if (fhirServerVendor.equals("microsoft"))
-//         {
-//             fhirServerURI = "http:"+config.getMicrosoftURI()+fhirResource+"?bridgeEndpoint=true";
-//         }
-//         return fhirServerURI;
-//     }
-
-     /*
-      * Kafka implementation based upon https://camel.apache.org/components/latest/kafka-component.html
-      *
-      */
+     public static final String TERMINOLOGY_ROUTE_ID = "terminologies-direct";
+     public static final String DEIDENTIFICATION_ROUTE_ID = "deidentification-direct";
+     public static final String EMPI_ROUTE_ID = "empi-direct";
+     public static final String PUBLICCLOUD_ROUTE_ID = "publiccloud-direct";
+     public static final String SDOH_ROUTE_ID = "sdoh-direct";
      @Override
      public void configure() throws Exception {
+
+         onException(Exception.class)
+                 .handled(true)
+                 .log(LoggingLevel.ERROR,"${exception}")
+                 .to("micrometer:counter:fhir_exception_handled");
+
+         /*
+          *   Direct Internal Processing
+          */
+         from("direct:terminologies")
+                 .choice()
+                 .when(simple("{{idaas.process.Terminologies}}"))
+                 //.routeId("iDaaS-Terminologies")
+                 //.convertBodyTo(String.class).to("kafka:{{idaas.terminologyTopic}}?brokers={{idaas.kafkaBrokers}}");
+                 .routeId(TERMINOLOGY_ROUTE_ID)
+                 .to("log:" + TERMINOLOGY_ROUTE_ID + "?showAll=true")
+                 //.log("${exchangeId} fully processed")
+                 .to("micrometer:counter:terminologyTransactions")
+                 .to("kafka:{{idaas.terminology.topic.name}}?brokers={{idaas.kafka.brokers}}")
+                 .endChoice();
+
+         from("direct:deidentification")
+                 .choice()
+                 .when(simple("{{idaas.process.Deidentification}}"))
+                 .routeId(DEIDENTIFICATION_ROUTE_ID)
+                 .to("log:" + DEIDENTIFICATION_ROUTE_ID + "?showAll=true")
+                 //.log("${exchangeId} fully processed")
+                 .to("micrometer:counter:deidentificationTransactions")
+                 .to("kafka:{{idaas.deidentification.topic.name}}?brokers={{idaas.kafka.brokers}}")
+                 // to the deidentification API
+                 .endChoice();
+
+         from("direct:empi")
+                 .choice()
+                 .when(simple("{{idaas.process.Empi}}"))
+                 .routeId(EMPI_ROUTE_ID)
+                 .to("log:" + EMPI_ROUTE_ID + "?showAll=true")
+                 //.log("${exchangeId} fully processed")
+                 .to("micrometer:counter:deidentificationTransactions")
+                 .to("kafka:{{idaas.deidentification.topic.name}}?brokers={{idaas.kafka.brokers}}")
+                 // to the empi API
+                 .endChoice();
+
+         from("direct:publiccloud")
+                 .choice()
+                 .when(simple("{{idaas.process.PublicCloud}}"))
+                 .routeId(PUBLICCLOUD_ROUTE_ID)
+                 .to("log:" + PUBLICCLOUD_ROUTE_ID + "?showAll=true")
+                 //.log("${exchangeId} fully processed")
+                 .to("micrometer:counter:publiccloudTransactions")
+                 .to("kafka:{{idaas.publiccloud.topic.name}}?brokers={{idaas.kafka.brokers}}")
+                 .endChoice();
+
+         from("direct:sdoh")
+                 .choice()
+                 .when(simple("{{idaas.process.Sdoh}}"))
+                 .routeId(SDOH_ROUTE_ID)
+                 .to("log:" + SDOH_ROUTE_ID + "?showAll=true")
+                 //.log("${exchangeId} fully processed")
+                 .to("micrometer:counter:sdohTransactions")
+                 .to("kafka:{{idaas.sdoh.topic.name}}?brokers={{idaas.kafka.brokers}}")
+                 .endChoice();
 
          /*
           *  FHIR Processing
           */
          //https://camel.apache.org/components/3.16.x/eips/multicast-eip.html
-         from("rest:post/idaas/fhirendpoint")
+         rest("/fhirendpoint")
+                 .post()
+                 .produces(MediaType.TEXT_PLAIN_VALUE)
+                 .route()
                  .routeId("FHIRProcessing")
                  .multicast().parallelProcessing()
-                     .to("direct:generalprocessing")
+                     //.to("direct:generalprocessing")
                      .to("direct:fhirmessaging")
-                     .to("direct:terminologies")
-                 .end();
+                    // Process Terminologies
+                    .to("direct:terminologies")
+                    // Deidentification
+                    .to("direct:deidentification")
+                    // EMPI
+                    .to("direct:empi")
+                    // Public Cloud
+                    .to("direct:publiccloud")
+                    //SDOH
+                    .to("direct:sdoh")
+        .endRest();
 
          // General Data Integration
-//         from("direct:generalprocessing")
-//              .toD(getKafkaTopicUri("fhir_${headers.resourcename}"))
-//         ;
+         /*from("direct:generalprocessing")
+              .toD(("fhir_${headers.resourcename}"))
+        ;*/
 
          // Send to FHIR Server
          from("direct:fhirmessaging")
              .routeId("FHIRMessaging")
+                 // we should test before even trying this because if there is no
+                 // ${headers.resourcename} in the message it will never work
                  .choice().when(simple("{{idaas.processToFHIR}}"))
-                    .setHeader(Exchange.CONTENT_TYPE,constant("application/json"))
-                    //.toD(getFHIRServerUri("AllergyIntolerance"))
-                    // http://simple%7BAdverseEvent%7D?bridgeEndpoint=true
-                    //.toD(getFHIRServerUri(String.valueOf(simple("${headers.resourcename}"))))
-                    .setBody(simple("${body}"))
-                    //.toD(getFHIRServerUri("${headers.resourcename}"))
-                 // Process Response
-                 .convertBodyTo(String.class)
+                        .setHeader(Exchange.CONTENT_TYPE,constant("application/json"))
+                        //.toD(getFHIRServerUri("AllergyIntolerance"))
+                        //.toD(String.valueOf(simple("${headers.resourcename}")))
+                        .setBody(simple("${body}"))
+                        .toD(("${idaas.fhirserverURI}"+"${headers.resourcename}?bridgeEndpoint=true"))
+                        // Process Response
+                        .convertBodyTo(String.class)
              .endChoice();
 
-         // Send to Terminology Processes
-         from("direct:terminologies")
-              .routeId("TerminologyProcessor")
-                 .choice().when(simple("{{idaas.processTerminologies}}"))
-                    .setBody(simple("${body}"))
-                 .endChoice();
 
-         from("rest:post/idaas/AdverseEvent")
-              // Send To Topic
-              //.toD(getKafkaTopicUri("fhir_testoutput"))
-         ;
 
      }
  }
