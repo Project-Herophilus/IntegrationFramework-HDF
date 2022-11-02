@@ -26,14 +26,14 @@
     </properties>
 
     <modules>
-        <module>idaas-connect-cms-bluebutton</module>
-        <module>idaas-connect-cms-interoperability</module>
-        <module>idaas-connect-cloud</module>
-        <module>idaas-connect-edi</module>
-        <module>idaas-connect-fhir</module>
-        <module>idaas-connect-hl7</module>
-        <module>idaas-connect-sap</module>
-        <module>idaas-connect-third-party</module>
+        <module>cms-blue-button</module>
+        <module>cms-interoperability</module>
+        <module>cloud</module>
+        <module>edi</module>
+        <module>fhir</module>
+        <module>hl7</module>
+        <module>sap</module>
+        <module>third-party</module>
     </modules>
 
     <dependencyManagement>
