@@ -20,30 +20,19 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Map;
 import org.apache.camel.Exchange;
-import org.apache.camel.LoggingLevel;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.builder.SimpleBuilder;
 import org.apache.camel.component.http.HttpMethods;
 import org.apache.camel.component.jackson.JacksonDataFormat;
-import org.apache.camel.component.kafka.KafkaComponent;
-import org.apache.camel.component.kafka.KafkaEndpoint;
 import org.apache.camel.component.servlet.CamelHttpTransportServlet;
 import org.apache.camel.model.rest.RestBindingMode;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 
 @Component
 public class CmsInteropBlueButton extends RouteBuilder {
-    private static final Logger log = LoggerFactory.getLogger(CamelConfiguration.class);
-
-    @Autowired
-    private ConfigProperties config;
-
+    //@Autowired
 
     @Bean
     ServletRegistrationBean camelServlet() {
@@ -57,34 +46,20 @@ public class CmsInteropBlueButton extends RouteBuilder {
         return mapping;
     }
 
-    /*
-     * Kafka implementation based upon https://camel.apache.org/components/latest/kafka-component.html
-     *
-     */
     @Override
     public void configure() throws Exception {
-
-        /*
-         *  Logging
-         */
-        from("direct:logging")
-                .routeId("Logging")
-                .log(LoggingLevel.INFO, log, "HL7 Admissions Message: [${body}]")
-        //To invoke Logging
-        //.to("direct:logging")
-        ;
 
         /*
          * Rest Endpoint Implementation
          */
         restConfiguration()
                 .component("netty-http")
-                .host(config.bluebuttoncallbackhostname)
-                .port(config.bluebuttoncallbackportnumber)
+                //.host(config.bluebuttoncallbackhostname)
+                //.port(config.bluebuttoncallbackportnumber)
                 .bindingMode(RestBindingMode.json);
         rest()
-                .get("/bluebutton").to("direct:authorize")
-                .get("/" + config.bluebuttoncallbackpath).to("direct:callback");
+                .get("/bluebutton").to("direct:authorize");
+                //.get("/" + config.bluebuttoncallbackpath).to("direct:callback");
 
         from("direct:authorize")
                 .setHeader("Location", simple("https://sandbox.bluebutton.cms.gov/v1/o/authorize/?response_type=code&client_id={{idaas.bluebuttonclientid}}&redirect_uri=http://{{idaas.bluebuttoncallbackhostname}}:{{idaas.bluebuttoncallbackportnumber}}/{{idaas.bluebuttoncallbackpath}}&scope=patient/Patient.read patient/Coverage.read patient/ExplanationOfBenefit.read profile"))
@@ -94,26 +69,26 @@ public class CmsInteropBlueButton extends RouteBuilder {
                 .process(new Processor() {
                     @Override
                     public void process(Exchange exchange) throws Exception {
-                        String clientId = SimpleBuilder.simple(config.bluebuttonclientid).evaluate(exchange, String.class);
-                        String clientSecret = SimpleBuilder.simple(config.bluebuttonclientsecret).evaluate(exchange, String.class);
+                        //String clientId = SimpleBuilder.simple(config.bluebuttonclientid).evaluate(exchange, String.class);
+                        //String clientSecret = SimpleBuilder.simple(config.bluebuttonclientsecret).evaluate(exchange, String.class);
                         String code = exchange.getIn().getHeader("code", String.class);
                         String body = "code=" + code + "&grant_type=authorization_code";
-                        String auth = clientId + ":" + clientSecret;
-                        String authHeader = "Basic " + Base64.getEncoder().encodeToString(auth.getBytes(StandardCharsets.UTF_8));
+                        //String auth = clientId + ":" + clientSecret;
+                        //String authHeader = "Basic " + Base64.getEncoder().encodeToString(auth.getBytes(StandardCharsets.UTF_8));
                         exchange.getIn().setHeader(Exchange.HTTP_METHOD, "POST");
-                        exchange.getIn().setHeader("Authorization", authHeader);
+                        //exchange.getIn().setHeader("Authorization", authHeader);
                         exchange.getIn().setHeader("Content-Type", "application/x-www-form-urlencoded");
                         exchange.getIn().setHeader("Content-Length", body.length());
                         exchange.getIn().setBody(body);
                     }
                 })
                 .to("https://sandbox.bluebutton.cms.gov/v1/o/token/?bridgeEndpoint=true")
-                .unmarshal(new JacksonDataFormat(ConfigProperties.class))
+                //.unmarshal(new JacksonDataFormat(ConfigProperties.class))
                 .process(new Processor() {
                     @Override
                     public void process(final Exchange exchange) throws Exception {
-                        final ConfigProperties payload = exchange.getIn().getBody(ConfigProperties.class);
-                        exchange.getIn().setBody(payload.getAccess_token());
+                  //      final ConfigProperties payload = exchange.getIn().getBody(ConfigProperties.class);
+                  //      exchange.getIn().setBody(payload.getAccess_token());
                     }
                 })
                 .removeHeader("*")
