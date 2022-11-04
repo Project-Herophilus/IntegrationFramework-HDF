@@ -36,6 +36,8 @@ public class Hl7RouteBuilder extends RouteBuilder {
     public static final String DEIDENTIFICATION_ROUTE_ID = "deidentification-direct";
     public static final String EMPI_ROUTE_ID = "empi-direct";
     public static final String CCDACONVERSION_ROUTE_ID = "ccdaconversion-direct";
+    public static final String DATATIER_ROUTE_ID = "datatier-direct";
+    public static final String HEDA_ROUTE_ID = "heda-direct";
     public static final String HL7CCONVERSION_ROUTE_ID = "hl7conversion-direct";
     public static final String PUBLICCLOUD_ROUTE_ID = "publiccloud-direct";
     public static final String PROCESSACKS_ROUTE_ID = "processacks-direct";
@@ -51,8 +53,6 @@ public class Hl7RouteBuilder extends RouteBuilder {
                 .handled(true)
                 .log(LoggingLevel.ERROR,"${exception}")
                 .to("micrometer:counter:hl7_exception_handled");
-
-
         /*
          *   Direct Internal Processing
          */
@@ -78,6 +78,17 @@ public class Hl7RouteBuilder extends RouteBuilder {
                 .bean(CdaConversionService.class, "getFhirJsonFromCdaXMLString(${body})")
                 .to("kafka:{{idaas.ccdaconversion.topic.name}}?brokers={{idaas.kafka.brokers}}");
 
+        from("direct:datatier")
+                .choice()
+                .when(simple("{{idaas.process.DataTier}}"))
+                    .routeId(DATATIER_ROUTE_ID)
+                    .to("log:" + DATATIER_ROUTE_ID + "?showAll=true")
+                    //.log("${exchangeId} fully processed")
+                    .to("micrometer:counter:datatierTransactions")
+                    .to("kafka:{{idaas.datatier.topic.name}}?brokers={{idaas.kafka.brokers}}")
+                    // to the deidentification API
+                .endChoice();
+
         from("direct:deidentification")
             .choice()
                 .when(simple("{{idaas.process.Deidentification}}"))
@@ -99,6 +110,16 @@ public class Hl7RouteBuilder extends RouteBuilder {
                     .to("kafka:{{idaas.deidentification.topic.name}}?brokers={{idaas.kafka.brokers}}")
                     // to the empi API
             .endChoice();
+
+        from("direct:heda")
+                .choice()
+                .when(simple("{{idaas.process.HEDA}}"))
+                    .routeId(HEDA_ROUTE_ID)
+                    .to("log:" + HEDA_ROUTE_ID + "?showAll=true")
+                    //.log("${exchangeId} fully processed")
+                    .to("micrometer:counter:hedaTransactions")
+                    .to("kafka:{{idaas.heda.topic.name}}?brokers={{idaas.kafka.brokers}}")
+                .endChoice();
 
         from("direct:hl7fhirconversion")
              .choice()
@@ -145,6 +166,9 @@ public class Hl7RouteBuilder extends RouteBuilder {
         /*
          *   Rest EndPoints
          */
+        restConfiguration()
+                .component("servlet");
+
         rest("/ccda")
             .post()
                 .produces(MediaType.TEXT_PLAIN_VALUE)
@@ -159,10 +183,14 @@ public class Hl7RouteBuilder extends RouteBuilder {
                     .to("direct:terminologies")
                     // Convert CCDA to FHIR
                     .to("direct:ccdafhirconversion")
+                    // Data Tier
+                    .to("direct:datatier")
                     // Deidentification
                     .to("direct:deidentification")
                     // EMPI
                     .to("direct:empi")
+                    // HEDA
+                    .to("direct:heda")
                     // Public Cloud
                     .to("direct:publiccloud")
                     //SDOH
@@ -183,10 +211,14 @@ public class Hl7RouteBuilder extends RouteBuilder {
                     .to("direct:terminologies")
                     // Convert HL7 to FHIR
                     .to("direct:hl7fhirconversion")
+                    // Data Tier
+                    .to("direct:datatier")
                     // Deidentification
                     .to("direct:deidentification")
                     // EMPI
                     .to("direct:empi")
+                    // HEDA
+                    .to("direct:heda")
                     // Public Cloud
                     .to("direct:publiccloud")
                     //SDOH
@@ -232,10 +264,14 @@ public class Hl7RouteBuilder extends RouteBuilder {
                     .to("direct:terminologies")
                     // Convert HL7 to FHIR
                     .to("direct:hl7fhirconversion")
+                    // Data Tier
+                    .to("direct:datatier")
                     // Deidentification
                     .to("direct:deidentification")
                     // EMPI
                     .to("direct:empi")
+                    // HEDA
+                    .to("direct:heda")
                     // Public Cloud
                     .to("direct:publiccloud")
                     //SDOH
