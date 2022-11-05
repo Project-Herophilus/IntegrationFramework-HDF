@@ -26,13 +26,14 @@
     </properties>
 
     <modules>
-        <!-- <module>iDaaS-Connect-BlueButton</module>
-        <module>iDaaS-Connect-Cloud</module> -->
-        <module>iDaaS-Connect-EDI</module>
-        <!-- <module>iDaaS-Connect-FHIR</module> -->
-        <module>iDaaS-Connect-HL7</module>
-        <!-- <module>iDaaS-Connect-SAP</module> -->
-        <module>iDaaS-Connect-ThirdParty</module>
+        <module>cms-blue-button</module>
+        <module>cms-interoperability</module>
+        <module>cloud</module>
+        <module>edi</module>
+        <module>fhir</module>
+        <module>hl7</module>
+        <module>sap</module>
+        <module>third-party</module>
     </modules>
 
     <dependencyManagement>
@@ -89,6 +90,11 @@
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
                 <version>42.3.2</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ibm.db2</groupId>
+                <artifactId>jcc</artifactId>
+                <version>11.5.7.0</version>
             </dependency>
             <dependency>
                 <groupId>net.snowflake</groupId>

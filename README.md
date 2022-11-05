@@ -31,7 +31,7 @@ Here is a high level visual:<br/>
 ![iDaaS Data Flow - Detailed.png](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/images/iDaaS-Platform/iDAAS-DataFlow.png)
 <br/>
 
-# iDaaS-Connect is all abour Integration 
+# iDaaS-Connect is all about Integration 
 Like most of the repositories provided for usage, The iDaaS Connect repository consists of numerous modules within it.
 The reason for this approach is because iDaaS Connect focus is about providing a wide variety of connectivity options based
 on specific needs. Here are the modules that are in iDaaS-Connect.
