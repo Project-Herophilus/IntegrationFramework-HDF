@@ -1,0 +1,21 @@
+metadata:
+  annotations:
+    secret.jkube.io/update-on-change: ${project.artifactId}
+spec:
+  replicas: 1
+  template:
+    spec:
+      volumes:
+        - name: config
+          secret:
+            secretName: ${project.artifactId}
+            items:
+            - key: application.properties
+              path: application.properties
+      containers:
+        - env:
+            - name: JAVA_OPTS_APPEND
+              value: --spring.config.location=/deployments/config/application.properties
+          volumeMounts:
+            - name: config
+              mountPath: /deployments/config
