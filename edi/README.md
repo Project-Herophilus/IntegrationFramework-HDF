@@ -10,10 +10,31 @@ Please find details on how to help us [here](https://github.com/Project-Herophil
 
 # Pre-Requisites
 For any repository to be implemented there are two types of requirements, overall general requirements
-and then there are specific submodule requirements.
+and then there are specific submodule requirements. We try and maintain as close to a current detailed list
+as we can, for those specifics please check [here](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/PreRequisites.md).
 
-# Implementation
+It is important to understand that if ANY detailed
+level of EDI debatching and processing is required than this can connect to that trusted sources, this platform
+is able to process data <b>BUT</b> in no way is advertising that we do complex debatching and other EDI centric
+engine activities. Those can be built within this or leveraged from third parties, that is an implementation specific
+decision.
+
+# Connectivity and Scenarios Provided within the Code
+Within this module the following connectivity scenarios and examples are provided.
+
+## Converters and Processes
+- Each endpoint connectivity has configurable processes built in for empi, heda (healthcare event
+  driven architecture), datatier, deidentificaton, public cloud, SDOH and terminologies.
+
+## Endpoint Connectivity
+- Rest endpoints for 270, 276, 278, 834, 835, 837
+
+# Implementating this Module
 The following section is designed to cover the details around implementing.
+
+## Implementation Guides to Help
+For the specifics around one or more specific implementations for this module please feel free to look
+[here](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/Platform-Content/ImplementationGuides/intro.md).
 
 ## How To Get, Build and Run iDaaS-Connect Assets
 Within each submodule/design pattern/reference architecture in this repository there is a specific README.md. It is
@@ -28,28 +49,4 @@ cover specific topics.
   and details can be found [here](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/AdministeringPlatform.md).
 
 ## Known Issues
-As of the time of this content publication there are no known specific issues. The ONLY consistent
-common issue is setting the application.properties before running the application.
-
-## Specific Implementation Pre-Requisites
-As of this content release there are no specific prerequisites, all of them will be downloaded as
-part of the build process (covered above in the General Pre-Requisites section).
-
-# Specific Implementation Details
-The following section is intended to cover specific implementation known issues, challenges and potential implementation
-details.
-
-## Known Issues
-As of the time of this content publication there are no known specific issues. The ONLY consistent
-common issue is setting the application.properties before running the application.
-
-## Implementation Example(s): EDI Data Processing
-This repository follows a very common general implementation of processing a file from a filesystem. The intent is to pick
-up the file and process it and then leverage the existing iDaaS-EventBuilder library to show it being processed and manipulated.
-
-### Implementation Data Flow Steps
-
-1. Every 1 minute the defined directory is looked at for any .edi file, if found the file is processed into a matching structure.
-2. The data structure is then persisted into a kafka topic.
-
-Happy using and coding....
+As of the time of this content publication there are no known specific issues. 

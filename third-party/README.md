@@ -8,8 +8,31 @@ We are focusing on continuing to improve. With the numerous implementation and p
 have focused on success overall and as we progress forward the intent is to focus on success while being consistent.
 Please find details on how to help us [here](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/OngoingEnhancements.md).
 
-# Implementation
+# Pre-Requisites
+For any repository to be implemented there are two types of requirements, overall general requirements
+and then there are specific submodule requirements. We try and maintain as close to a current detailed list
+as we can, for those specifics please check [here](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/PreRequisites.md).
+
+# Connectivity and Scenarios Provided within the Code
+Within this module the following connectivity scenarios and examples are provided.
+
+## Converters and Processes
+- Each endpoint connectivity has configurable processes built in for empi, heda (healthcare event
+  driven architecture), datatier, deidentificaton, public cloud, SDOH and terminologies.
+
+## Endpoint Connectivity
+- Rest endpoint for IoT data.
+- SFTP File retrieval.
+- Rest endpoint created to provide a file list, this example uses AWS S3 but could use any connectable protocol.
+- Rest endpoint that enables retrieval of files, it works off the same AWS S3 source the file list does.
+- Rest endpoint that queries a database table and provides a data driven response.
+
+# Implementating this Module
 The following section is designed to cover the details around implementing.
+
+## Implementation Guides to Help
+For the specifics around one or more specific implementations for this module please feel free to look
+[here](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/Platform-Content/ImplementationGuides/intro.md).
 
 ## How To Get, Build and Run iDaaS-Connect Assets
 Within each submodule/design pattern/reference architecture in this repository there is a specific README.md. It is
@@ -24,70 +47,4 @@ cover specific topics.
   and details can be found [here](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/AdministeringPlatform.md).
 
 ## Known Issues
-As of the time of this content publication there are no known specific issues. The ONLY consistent
-common issue is setting the application.properties before running the application.
-
-## Specific Implementation Pre-Requisites
-This solution contains three supporting directories. The intent of these artifacts to enable
-resources to work locally: <br/>
-+ DDLs: DDL used within this specific design pattern/accelerator.
-
-# Administrative Console
-Within each implementation there is a management console, the management console provides the same
-interface and capabilities no matter what implementation you are working within. Specifics on the
-Admin/Mgmt interface can be found
-[here](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/AdministeringPlatform.md).
-
-# Specific Implementation Details
-The following section is intended to cover specific implementation known issues, challenges and potential implementation
-details.
-- Make sure you specify the specific directories correctly
-- Make sure you specify the database you are connecting to correctly
-```
-# Server - Internal
-server.host=9983
-# Kafka
-kafkaBrokers=localhost:9092
-# Reporting Directory and File Name
-#mandatory.reporting.directory=/MandatoryReporting
-mandatory.reporting.directory=src/data/MandatoryReporting
-mandatory.reporting.file=ReportingExample.csv
-# Covid Directory and File Ext
-covid.reporting.directory=src/data/CovidData
-covid.reporting.extension=*.csv
-# Reseach Data Directory and File Ext
-research.data.directory=src/data/ResearchData
-covid.reporting.extension=*.csv
-# JDBC Database
-spring.datasource.url=jdbc:mysql://localhost/idaas
-                     #jdbc:postgresql://localhost:5432/idaas
-spring.datasource.username=idaas
-spring.datasource.password=@idaas123
-#spring.database.driver-class-name=com.mysql.cj.jdbc.Driver
-#org.postgresql.Driver
-```
-
-## Known Issues
-As of the time of this content publication there are no known specific issues. The ONLY consistent
-common issue is setting the application.properties before running the application.
-
-# Implementation Scenario(s): Kafka Integration
-This repository follows a very common general implementation. The only connector currently in this code
-base is a Kafka topic. The key sceanrio this can demonstrate is data being processed from a data science
-kafka topic.
-
-## Implementation Data Flow Steps
-1. The Kafka client connects to a particular broker and topic and checks if there is any data to process.
-2. If there is data it will audit the transaction processing
-3. The transaction will be routed for processing within iDAAS KIC
-
-Happy using and coding....
-
-
-## How to deploy using maven-plugin
-
-    mvn clean oc:deploy -P openshift -Djkube.generator.from=openshift/fuse7-java11-openshift:1.10 -Djkube.generator.fromMode=istag
-
-## How to run in Dev Mode
-
-    mvn spring-boot:run -Dspring-boot.run.profiles=dev
+As of the time of this content publication there are no known implementation centric issues that have been reported.
