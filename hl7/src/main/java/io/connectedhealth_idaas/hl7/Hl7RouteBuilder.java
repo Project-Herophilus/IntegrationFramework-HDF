@@ -45,6 +45,13 @@ public class Hl7RouteBuilder extends RouteBuilder {
     public static final String CCDAPOST_ROUTE_ID = "ccda-post-inbound";
     public static final String HL7POST_ROUTE_ID = "hl7-post-inbound";
     public static final String HL7ADT_ROUTE_ID = "hl7-adt-inbound";
+    public static final String HL7MDM_ROUTE_ID = "hl7-mdm-inbound";
+    public static final String HL7MFN_ROUTE_ID = "hl7-mfn-inbound";
+    public static final String HL7ORM_ROUTE_ID = "hl7-orm-inbound";
+    public static final String HL7ORU_ROUTE_ID = "hl7-oru-inbound";
+    public static final String HL7RDE_ROUTE_ID = "hl7-rde-inbound";
+    public static final String HL7SCH_ROUTE_ID = "hl7-sch-inbound";
+    public static final String HL7VXU_ROUTE_ID = "hl7-vxu-inbound";
 
     @Override
     public void configure() throws Exception {
@@ -69,23 +76,31 @@ public class Hl7RouteBuilder extends RouteBuilder {
             .endChoice();
 
         from("direct:ccdafhirconversion")
-                .routeId(CCDACONVERSION_ROUTE_ID)
-                .to("log:" + CCDACONVERSION_ROUTE_ID + "?showAll=true")
-                //.log("${exchangeId} fully processed")
-                .to("micrometer:counter:ccdaConversionTransactions")
-                // Invocation of CCDA Conversion
-                // Unmarshall from XML Doc against XSD - or Bean to encapsulate features
-                .bean(CdaConversionService.class, "getFhirJsonFromCdaXMLString(${body})")
-                .to("kafka:{{idaas.ccdaconversion.topic.name}}?brokers={{idaas.kafka.brokers}}")
-                // Adding support for sending CCDA Documents to other processes
-                .to("direct:datatier")
-                .to("direct:publiccloud");
+                .choice()
+                .when(simple("{{idaas.convert.CCDAtoFHIR}}"))
+                    .routeId(CCDACONVERSION_ROUTE_ID)
+                    //.to("log:" + CCDACONVERSION_ROUTE_ID + "?showAll=true")
+                    //.log("${exchangeId} fully processed")
+                    .to("micrometer:counter:ccdaConversionTransactions")
+                    // Invocation of CCDA Conversion
+                    // Unmarshall from XML Doc against XSD - or Bean to encapsulate features
+                    .bean(CdaConversionService.class, "getFhirJsonFromCdaXMLString(${body})")
+                    .to("kafka:{{idaas.ccdaconversion.topic.name}}?brokers={{idaas.kafka.brokers}}")
+                    // Adding support for sending CCDA Documents to other processes
+                    //.to("direct:datatier")
+                    //.to("direct:publiccloud");
+                    .to("micrometer:counter:datatierTransactions")
+                    .to("kafka:{{idaas.datatier.topic.name}}?brokers={{idaas.kafka.brokers}}")
+                    .to("micrometer:counter:publiccloudTransactions")
+                    .to("kafka:{{idaas.publiccloud.topic.name}}?brokers={{idaas.kafka.brokers}}")
+                    .setBody(simple("CCDA FHIR Conversion Completed"))
+                .endChoice();
 
         from("direct:datatier")
                 .choice()
                 .when(simple("{{idaas.process.DataTier}}"))
                     .routeId(DATATIER_ROUTE_ID)
-                    .to("log:" + DATATIER_ROUTE_ID + "?showAll=true")
+                    //.to("log:" + DATATIER_ROUTE_ID + "?showAll=true")
                     //.log("${exchangeId} fully processed")
                     .to("micrometer:counter:datatierTransactions")
                     .to("kafka:{{idaas.datatier.topic.name}}?brokers={{idaas.kafka.brokers}}")
@@ -96,7 +111,7 @@ public class Hl7RouteBuilder extends RouteBuilder {
             .choice()
                 .when(simple("{{idaas.process.Deidentification}}"))
                     .routeId(DEIDENTIFICATION_ROUTE_ID)
-                    .to("log:" + DEIDENTIFICATION_ROUTE_ID + "?showAll=true")
+                    //.to("log:" + DEIDENTIFICATION_ROUTE_ID + "?showAll=true")
                     //.log("${exchangeId} fully processed")
                     .to("micrometer:counter:deidentificationTransactions")
                     .to("kafka:{{idaas.deidentification.topic.name}}?brokers={{idaas.kafka.brokers}}")
@@ -107,7 +122,7 @@ public class Hl7RouteBuilder extends RouteBuilder {
             .choice()
                 .when(simple("{{idaas.process.Empi}}"))
                     .routeId(EMPI_ROUTE_ID)
-                    .to("log:" + EMPI_ROUTE_ID + "?showAll=true")
+                    //.to("log:" + EMPI_ROUTE_ID + "?showAll=true")
                     //.log("${exchangeId} fully processed")
                     .to("micrometer:counter:deidentificationTransactions")
                     .to("kafka:{{idaas.deidentification.topic.name}}?brokers={{idaas.kafka.brokers}}")
@@ -129,22 +144,26 @@ public class Hl7RouteBuilder extends RouteBuilder {
                 .when(simple("{{idaas.convert.HL7toFHIR}}"))
                     .routeId(HL7CCONVERSION_ROUTE_ID)
                     .bean(HL7ToFHIRConverter.class, "convert(${body})")
-                    .to("log:" + HL7CCONVERSION_ROUTE_ID + "?showAll=true")
+                    //.to("log:" + HL7CCONVERSION_ROUTE_ID + "?showAll=true")
                     //.log("${exchangeId} fully processed")
                     .to("micrometer:counter:hl7ConversionTransactions")
                     // Conversion
                     .bean(HL7ToFHIRConverter.class, "convert(${body})")
                     .to("kafka:{{idaas.hl7conversion.topic.name}}?brokers={{idaas.kafka.brokers}}")
-                    // Adding support for sending CCDA Documents to other processes
+                    // Adding support for sending FHIR Resources to other processes
+                    .to("micrometer:counter:datatierTransactions")
                     .to("direct:datatier")
+                    //.to("kafka:{{idaas.datatier.topic.name}}?brokers={{idaas.kafka.brokers}}")
+                    .to("micrometer:counter:publiccloudTransactions")
                     .to("direct:publiccloud")
+                    //.to("kafka:{{idaas.publiccloud.topic.name}}?brokers={{idaas.kafka.brokers}}")
             .endChoice();
 
         from("direct:publiccloud")
              .choice()
                 .when(simple("{{idaas.process.PublicCloud}}"))
                     .routeId(PUBLICCLOUD_ROUTE_ID)
-                    .to("log:" + PUBLICCLOUD_ROUTE_ID + "?showAll=true")
+                    //.to("log:" + PUBLICCLOUD_ROUTE_ID + "?showAll=true")
                     //.log("${exchangeId} fully processed")
                     .to("micrometer:counter:publiccloudTransactions")
                     .to("kafka:{{idaas.publiccloud.topic.name}}?brokers={{idaas.kafka.brokers}}")
@@ -154,7 +173,7 @@ public class Hl7RouteBuilder extends RouteBuilder {
                 .choice()
                 .when(simple("{{idaas.process.Acks}}"))
                     .routeId(PROCESSACKS_ROUTE_ID)
-                    .to("log:" + PROCESSACKS_ROUTE_ID + "?showAll=true")
+                    //.to("log:" + PROCESSACKS_ROUTE_ID + "?showAll=true")
                     //.log("${exchangeId} fully processed")
                     .to("kafka:{{idaas.processacks.topic.name}}?brokers={{idaas.kafka.brokers}}")
              .endChoice();
@@ -163,7 +182,7 @@ public class Hl7RouteBuilder extends RouteBuilder {
             .choice()
                 .when(simple("{{idaas.process.Sdoh}}"))
                     .routeId(SDOH_ROUTE_ID)
-                    .to("log:" + SDOH_ROUTE_ID + "?showAll=true")
+                    //.to("log:" + SDOH_ROUTE_ID + "?showAll=true")
                     //.log("${exchangeId} fully processed")
                     .to("micrometer:counter:sdohTransactions")
                     .to("kafka:{{idaas.sdoh.topic.name}}?brokers={{idaas.kafka.brokers}}")
@@ -239,7 +258,7 @@ public class Hl7RouteBuilder extends RouteBuilder {
                 .routeId(HL7ADT_ROUTE_ID)
                 .to("log:" + HL7ADT_ROUTE_ID + "?showAll=true")
                 //.log("${exchangeId} fully processed")
-                .to("micrometer:counter:HL7PostTransactions")
+                .to("micrometer:counter:HL7-ADT-PostTransactions")
                 .to("kafka:{{idaas.hl7adt.topic.name}}?brokers={{idaas.kafka.brokers}}")
                 //.to("fluentd:")
                 // This is to ensure that processes can run independently and if they transform data
@@ -266,6 +285,222 @@ public class Hl7RouteBuilder extends RouteBuilder {
                     .to("direct:processacks")
                 .end();
 
+        from("mllp:0.0.0.0:{{idaas.port.mdm}}")
+                .routeId(HL7MDM_ROUTE_ID)
+                .to("log:" + HL7MDM_ROUTE_ID + "?showAll=true")
+                //.log("${exchangeId} fully processed")
+                .to("micrometer:counter:HL7-MDM-PostTransactions")
+                .to("kafka:{{idaas.hl7mdm.topic.name}}?brokers={{idaas.kafka.brokers}}")
+                //.to("fluentd:")
+                // This is to ensure that processes can run independently and if they transform data
+                // it will not mess with any other processes
+                .multicast().parallelProcessing()
+                // Process Terminologies
+                .to("direct:terminologies")
+                // Convert HL7 to FHIR
+                .to("direct:hl7fhirconversion")
+                // Data Tier
+                .to("direct:datatier")
+                // Deidentification
+                .to("direct:deidentification")
+                // EMPI
+                .to("direct:empi")
+                // HEDA
+                .to("direct:heda")
+                // Public Cloud
+                .to("direct:publiccloud")
+                //SDOH
+                .to("direct:sdoh")
+                //ACKs
+                // if we want to persist ACK generated by MLLP component
+                .to("direct:processacks")
+        .end();
+
+        from("mllp:0.0.0.0:{{idaas.port.mfn}}")
+                .routeId(HL7MFN_ROUTE_ID)
+                .to("log:" + HL7MFN_ROUTE_ID + "?showAll=true")
+                //.log("${exchangeId} fully processed")
+                .to("micrometer:counter:HL7-MFN-PostTransactions")
+                .to("kafka:{{idaas.hl7mfn.topic.name}}?brokers={{idaas.kafka.brokers}}")
+                //.to("fluentd:")
+                // This is to ensure that processes can run independently and if they transform data
+                // it will not mess with any other processes
+                .multicast().parallelProcessing()
+                // Process Terminologies
+                .to("direct:terminologies")
+                // Convert HL7 to FHIR
+                .to("direct:hl7fhirconversion")
+                // Data Tier
+                .to("direct:datatier")
+                // Deidentification
+                .to("direct:deidentification")
+                // EMPI
+                .to("direct:empi")
+                // HEDA
+                .to("direct:heda")
+                // Public Cloud
+                .to("direct:publiccloud")
+                //SDOH
+                .to("direct:sdoh")
+                //ACKs
+                // if we want to persist ACK generated by MLLP component
+                .to("direct:processacks")
+        .end();
+
+        from("mllp:0.0.0.0:{{idaas.port.orm}}")
+                .routeId(HL7ORM_ROUTE_ID)
+                .to("log:" + HL7ORM_ROUTE_ID + "?showAll=true")
+                //.log("${exchangeId} fully processed")
+                .to("micrometer:counter:HL7-ORM-PostTransactions")
+                .to("kafka:{{idaas.hl7orm.topic.name}}?brokers={{idaas.kafka.brokers}}")
+                //.to("fluentd:")
+                // This is to ensure that processes can run independently and if they transform data
+                // it will not mess with any other processes
+                .multicast().parallelProcessing()
+                // Process Terminologies
+                .to("direct:terminologies")
+                // Convert HL7 to FHIR
+                .to("direct:hl7fhirconversion")
+                // Data Tier
+                .to("direct:datatier")
+                // Deidentification
+                .to("direct:deidentification")
+                // EMPI
+                .to("direct:empi")
+                // HEDA
+                .to("direct:heda")
+                // Public Cloud
+                .to("direct:publiccloud")
+                //SDOH
+                .to("direct:sdoh")
+                //ACKs
+                // if we want to persist ACK generated by MLLP component
+                .to("direct:processacks")
+        .end();
+
+        from("mllp:0.0.0.0:{{idaas.port.oru}}")
+                .routeId(HL7ORU_ROUTE_ID)
+                .to("log:" + HL7ORU_ROUTE_ID + "?showAll=true")
+                //.log("${exchangeId} fully processed")
+                .to("micrometer:counter:HL7-ORU-PostTransactions")
+                .to("kafka:{{idaas.hl7oru.topic.name}}?brokers={{idaas.kafka.brokers}}")
+                //.to("fluentd:")
+                // This is to ensure that processes can run independently and if they transform data
+                // it will not mess with any other processes
+                .multicast().parallelProcessing()
+                // Process Terminologies
+                .to("direct:terminologies")
+                // Convert HL7 to FHIR
+                .to("direct:hl7fhirconversion")
+                // Data Tier
+                .to("direct:datatier")
+                // Deidentification
+                .to("direct:deidentification")
+                // EMPI
+                .to("direct:empi")
+                // HEDA
+                .to("direct:heda")
+                // Public Cloud
+                .to("direct:publiccloud")
+                //SDOH
+                .to("direct:sdoh")
+                //ACKs
+                // if we want to persist ACK generated by MLLP component
+                .to("direct:processacks")
+        .end();
+
+        from("mllp:0.0.0.0:{{idaas.port.rde}}")
+                .routeId(HL7RDE_ROUTE_ID)
+                .to("log:" + HL7RDE_ROUTE_ID + "?showAll=true")
+                //.log("${exchangeId} fully processed")
+                .to("micrometer:counter:HL7-RDE-PostTransactions")
+                .to("kafka:{{idaas.hl7rde.topic.name}}?brokers={{idaas.kafka.brokers}}")
+                //.to("fluentd:")
+                // This is to ensure that processes can run independently and if they transform data
+                // it will not mess with any other processes
+                .multicast().parallelProcessing()
+                // Process Terminologies
+                .to("direct:terminologies")
+                // Convert HL7 to FHIR
+                .to("direct:hl7fhirconversion")
+                // Data Tier
+                .to("direct:datatier")
+                // Deidentification
+                .to("direct:deidentification")
+                // EMPI
+                .to("direct:empi")
+                // HEDA
+                .to("direct:heda")
+                // Public Cloud
+                .to("direct:publiccloud")
+                //SDOH
+                .to("direct:sdoh")
+                //ACKs
+                // if we want to persist ACK generated by MLLP component
+                .to("direct:processacks")
+        .end();
+
+        from("mllp:0.0.0.0:{{idaas.port.sch}}")
+                .routeId(HL7SCH_ROUTE_ID)
+                .to("log:" + HL7SCH_ROUTE_ID + "?showAll=true")
+                //.log("${exchangeId} fully processed")
+                .to("micrometer:counter:HL7-SCH-PostTransactions")
+                .to("kafka:{{idaas.hl7sch.topic.name}}?brokers={{idaas.kafka.brokers}}")
+                //.to("fluentd:")
+                // This is to ensure that processes can run independently and if they transform data
+                // it will not mess with any other processes
+                .multicast().parallelProcessing()
+                // Process Terminologies
+                .to("direct:terminologies")
+                // Convert HL7 to FHIR
+                .to("direct:hl7fhirconversion")
+                // Data Tier
+                .to("direct:datatier")
+                // Deidentification
+                .to("direct:deidentification")
+                // EMPI
+                .to("direct:empi")
+                // HEDA
+                .to("direct:heda")
+                // Public Cloud
+                .to("direct:publiccloud")
+                //SDOH
+                .to("direct:sdoh")
+                //ACKs
+                // if we want to persist ACK generated by MLLP component
+                .to("direct:processacks")
+        .end();
+
+        from("mllp:0.0.0.0:{{idaas.port.vxu}}")
+                .routeId(HL7VXU_ROUTE_ID)
+                .to("log:" + HL7VXU_ROUTE_ID + "?showAll=true")
+                //.log("${exchangeId} fully processed")
+                .to("micrometer:counter:HL7-VXU-PostTransactions")
+                .to("kafka:{{idaas.hl7vxu.topic.name}}?brokers={{idaas.kafka.brokers}}")
+                //.to("fluentd:")
+                // This is to ensure that processes can run independently and if they transform data
+                // it will not mess with any other processes
+                .multicast().parallelProcessing()
+                // Process Terminologies
+                .to("direct:terminologies")
+                // Convert HL7 to FHIR
+                .to("direct:hl7fhirconversion")
+                // Data Tier
+                .to("direct:datatier")
+                // Deidentification
+                .to("direct:deidentification")
+                // EMPI
+                .to("direct:empi")
+                // HEDA
+                .to("direct:heda")
+                // Public Cloud
+                .to("direct:publiccloud")
+                //SDOH
+                .to("direct:sdoh")
+                //ACKs
+                // if we want to persist ACK generated by MLLP component
+                .to("direct:processacks")
+        .end();
           /*from("rest:post/idaas/hl7")
                 .routeId(HL7POST_ROUTE_ID)
                 .to("log:" + HL7POST_ROUTE_ID + "?showAll=true")
