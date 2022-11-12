@@ -76,7 +76,10 @@ public class Hl7RouteBuilder extends RouteBuilder {
                 // Invocation of CCDA Conversion
                 // Unmarshall from XML Doc against XSD - or Bean to encapsulate features
                 .bean(CdaConversionService.class, "getFhirJsonFromCdaXMLString(${body})")
-                .to("kafka:{{idaas.ccdaconversion.topic.name}}?brokers={{idaas.kafka.brokers}}");
+                .to("kafka:{{idaas.ccdaconversion.topic.name}}?brokers={{idaas.kafka.brokers}}")
+                // Adding support for sending CCDA Documents to other processes
+                .to("direct:datatier")
+                .to("direct:publiccloud");
 
         from("direct:datatier")
                 .choice()
@@ -132,6 +135,9 @@ public class Hl7RouteBuilder extends RouteBuilder {
                     // Conversion
                     .bean(HL7ToFHIRConverter.class, "convert(${body})")
                     .to("kafka:{{idaas.hl7conversion.topic.name}}?brokers={{idaas.kafka.brokers}}")
+                    // Adding support for sending CCDA Documents to other processes
+                    .to("direct:datatier")
+                    .to("direct:publiccloud")
             .endChoice();
 
         from("direct:publiccloud")

@@ -64,7 +64,7 @@
                      //.convertBodyTo(String.class).to("kafka:{{idaas.terminologyTopic}}?brokers={{idaas.kafkaBrokers}}");
                      .routeId(TERMINOLOGY_ROUTE_ID)
                      .to("log:" + TERMINOLOGY_ROUTE_ID + "?showAll=true")
-                     //.log("${exchangeId} fully processed")
+                     .log("${exchangeId} fully processed")
                      .to("micrometer:counter:terminologyTransactions")
                      .to("kafka:{{idaas.terminology.topic.name}}?brokers={{idaas.kafka.brokers}}")
                  .endChoice();
@@ -136,16 +136,22 @@
          from("direct:fhirmessaging")
                  .routeId("FHIRMessaging")
                  // we should test before even trying this because if there is no
+                 .log("${headers.resourcename} fully processed")
                  // ${headers.resourcename} in the message it will never work
+                 // Persist to Topic
+                 .to("micrometer:counter:fhirTopicTransactions")
+                 .to("kafka:{{idaas.fhir.topic.name}}?brokers={{idaas.kafka.brokers}}")
+                 // Specific Topic for Each FHIR Resource
+                 .toD(String.valueOf(simple("kafka:{{idaas.fhir.topic.name}}"+"_"+"${headers.resourcename}")))
                  .choice().when(simple("{{idaas.processToFHIR}}"))
-                 .setHeader(Exchange.CONTENT_TYPE,constant("application/json"))
-                 //.toD(getFHIRServerUri("AllergyIntolerance"))
-                 //.toD(String.valueOf(simple("${headers.resourcename}")))
-                 .setBody(simple("${body}"))
-                 .toD(("${idaas.fhirserverURI}"+"${headers.resourcename}?bridgeEndpoint=true"))
-                 // Process Response
-                 .convertBodyTo(String.class)
-         .endChoice();
+                     .to("micrometer:counter:fhirServerTransactions")
+                     .setHeader(Exchange.CONTENT_TYPE,constant("application/json"))
+                     .setBody(simple("${body}"))
+                     //.toD(getFHIRServerUri("AllergyIntolerance"))
+                     //.toD(String.valueOf(simple("${headers.resourcename}")))
+                     // .toD(("${idaas.fhirserverURI}"+"${headers.resourcename}?bridgeEndpoint=true"))
+                     // Process Response
+                 .endChoice();
 
          restConfiguration()
                  .component("servlet");
