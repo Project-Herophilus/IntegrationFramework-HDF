@@ -93,7 +93,6 @@ public class Hl7RouteBuilder extends RouteBuilder {
                     .to("kafka:{{idaas.datatier.topic.name}}?brokers={{idaas.kafka.brokers}}")
                     .to("micrometer:counter:publiccloudTransactions")
                     .to("kafka:{{idaas.publiccloud.topic.name}}?brokers={{idaas.kafka.brokers}}")
-                    .setBody(simple("CCDA FHIR Conversion Completed"))
                 .endChoice();
 
         from("direct:datatier")
@@ -204,22 +203,24 @@ public class Hl7RouteBuilder extends RouteBuilder {
                     .to("micrometer:counter:ccdaPostedTransactions")
                     .to("kafka:{{idaas.ccdapost.topic.name}}?brokers={{idaas.kafka.brokers}}")
                     .multicast().parallelProcessing()
-                    // Process Terminologies
-                    .to("direct:terminologies")
-                    // Convert CCDA to FHIR
-                    .to("direct:ccdafhirconversion")
-                    // Data Tier
-                    .to("direct:datatier")
-                    // Deidentification
-                    .to("direct:deidentification")
-                    // EMPI
-                    .to("direct:empi")
-                    // HEDA
-                    .to("direct:heda")
-                    // Public Cloud
-                    .to("direct:publiccloud")
-                    //SDOH
-                    .to("direct:sdoh")
+                        // Process Terminologies
+                        .to("direct:terminologies")
+                        // Convert CCDA to FHIR
+                        .to("direct:ccdafhirconversion")
+                        // Data Tier
+                        .to("direct:datatier")
+                        // Deidentification
+                        .to("direct:deidentification")
+                        // EMPI
+                        .to("direct:empi")
+                        // HEDA
+                        .to("direct:heda")
+                        // Public Cloud
+                        .to("direct:publiccloud")
+                        //SDOH
+                        .to("direct:sdoh")
+                    .end()
+                    //.outputType('CCDA FHIR Conversion Completed');
         .endRest();
 
         rest("/hl7")

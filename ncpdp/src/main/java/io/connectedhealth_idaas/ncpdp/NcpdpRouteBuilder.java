@@ -16,7 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EprescribeRouteBuilder extends RouteBuilder {
+public class NcpdpRouteBuilder extends RouteBuilder {
   @Bean
   ServletRegistrationBean camelServlet() {
     // use a @Bean to register the Camel servlet which we need to do
@@ -46,12 +46,12 @@ public class EprescribeRouteBuilder extends RouteBuilder {
             .log(LoggingLevel.ERROR, "${exception}")
             .to("micrometer:counter:eprescribeExceptionHandled");
 
+    /*
      *   Direct Internal Processing
      */
     from("direct:terminologies")
             .choice()
             .when(simple("{{idaas.process.Terminologies}}"))
-            //.routeId("iDaaS-Terminologies")
             //.convertBodyTo(String.class).to("kafka:{{idaas.terminologyTopic}}?brokers={{idaas.kafkaBrokers}}");
             .routeId(TERMINOLOGY_ROUTE_ID)
             .to("log:" + TERMINOLOGY_ROUTE_ID + "?showAll=true")
@@ -131,7 +131,7 @@ public class EprescribeRouteBuilder extends RouteBuilder {
             .post()
             .produces(MediaType.TEXT_PLAIN_VALUE)
             .route()
-            .to("log:" + EDI270_INBD_ROUTE_ID + "?showAll=true")
+            .to("log:" + RXFILL_INBD_ROUTE_ID + "?showAll=true")
             .log("${exchangeId} fully processed")
             .to("micrometer:counter:rxfillProcessedEvents")
             .to("kafka:{{idaas.rxfill.topic.name}}?brokers={{idaas.kafka.brokers}}")

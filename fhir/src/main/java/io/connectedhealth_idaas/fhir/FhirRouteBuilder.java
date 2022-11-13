@@ -142,7 +142,7 @@
                  .to("micrometer:counter:fhirTopicTransactions")
                  .to("kafka:{{idaas.fhir.topic.name}}?brokers={{idaas.kafka.brokers}}")
                  // Specific Topic for Each FHIR Resource
-                 .toD(String.valueOf(simple("kafka:{{idaas.fhir.topic.name}}"+"_"+"${headers.resourcename}")))
+                 .toD(String.valueOf("kafka:{{idaas.fhir.topic.name}}"+"_"+"${headers.resourcename}?brokers={{idaas.kafka.brokers}}"))
                  .choice().when(simple("{{idaas.processToFHIR}}"))
                      .to("micrometer:counter:fhirServerTransactions")
                      .setHeader(Exchange.CONTENT_TYPE,constant("application/json"))
