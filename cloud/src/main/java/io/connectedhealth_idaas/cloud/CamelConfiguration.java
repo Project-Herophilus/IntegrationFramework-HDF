@@ -19,13 +19,14 @@ package io.connectedhealth_idaas.cloud;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.ExchangePattern;
-import org.apache.camel.component.aws.kinesis.KinesisConstants;
-import org.apache.camel.component.aws.s3.S3Constants;
-import org.apache.camel.component.aws.ses.SesConstants;
-import org.apache.camel.component.aws.sns.SnsConstants;
-import org.apache.camel.component.kafka.KafkaComponent;
-import org.apache.camel.component.kafka.KafkaEndpoint;
-import org.apache.camel.component.servlet.CamelHttpTransportServlet;
+// AWS Imports
+//import org.apache.camel.component.aws.kinesis.KinesisConstants;
+//import org.apache.camel.component.aws.s3.S3Constants;
+//import org.apache.camel.component.aws.ses.SesConstants;
+//import org.apache.camel.component.aws.sns.SnsConstants;
+//import org.apache.camel.component.kafka.KafkaComponent;
+//import org.apache.camel.component.kafka.KafkaEndpoint;
+//import org.apache.camel.component.servlet.CamelHttpTransportServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,27 +35,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import java.util.Collections;
 
-/*
- *  Apache Camel Connectors Can Be found here
- *
- */
 @Component
 public class CamelConfiguration extends RouteBuilder {
-  private static final Logger log = LoggerFactory.getLogger(CamelConfiguration.class);
 
-  @Autowired
-  private ConfigProperties config;
-
-  @Bean
-  private KafkaEndpoint kafkaEndpoint(){
-    KafkaEndpoint kafkaEndpoint = new KafkaEndpoint();
-    return kafkaEndpoint;
-  }
-  @Bean
-  private KafkaComponent kafkaComponent(KafkaEndpoint kafkaEndpoint){
-    KafkaComponent kafka = new KafkaComponent();
-    return kafka;
-  }
   @Bean
   ServletRegistrationBean camelServlet() {
     // use a @Bean to register the Camel servlet which we need to do
@@ -66,244 +49,102 @@ public class CamelConfiguration extends RouteBuilder {
     mapping.addUrlMappings("/idaas/*");
     return mapping;
   }
-  // Connector for JMS
-  private String getKafkaTopicUri(String topic) {
-    return "kafka:" + topic +
-            "?brokers=" +
-            config.getKafkaBrokers();
-  }
+
+  public static final String AWSS3_ROUTE_ID = "aws-s3-inbound";
+  public static final String AWSMQQUEUE_ROUTE_ID = "aws-mqqueue-inbound";
+  public static final String AWSMQTOPIC_ROUTE_ID = "aws-mqtopic-inbound";
+  public static final String AWSSQS_ROUTE_ID = "aws-sqs-inbound";
+  public static final String AWSKINESIS_ROUTE_ID = "aws-kinesis-inbound";
+
   // List of components can be found here: https://camel.apache.org/components/3.16.x/index.html
   // Config for AWS
-  private String getAWSConfig(String awsInput)
+  /*private String getAWSConfig(String awsInput)
   {
     String awsSecuritySettings= awsInput+"accessKey=RAW("+config.getAwsAccessKey()+")&secretKey=RAW("+config.getAwsSecretKey()+")";
     return awsSecuritySettings;
   }
-
+*/
   @Override
   public void configure() throws Exception {
-    /*
-     *  Direct actions used across platform
-     *
-     */
-    from("direct:auditing")
-        .routeId("iDaaS-KIC")
-        .setHeader("messageprocesseddate").simple("${date:now:yyyy-MM-dd}")
-        .setHeader("messageprocessedtime").simple("${date:now:HH:mm:ss:SSS}")
-        .setHeader("processingtype").exchangeProperty("processingtype")
-        .setHeader("industrystd").exchangeProperty("industrystd")
-        .setHeader("component").exchangeProperty("componentname")
-        .setHeader("messagetrigger").exchangeProperty("messagetrigger")
-        .setHeader("processname").exchangeProperty("processname")
-        .setHeader("auditdetails").exchangeProperty("auditdetails")
-        .setHeader("camelID").exchangeProperty("camelID")
-        .setHeader("exchangeID").exchangeProperty("exchangeID")
-        .setHeader("internalMsgID").exchangeProperty("internalMsgID")
-        .setHeader("bodyData").exchangeProperty("bodyData")
-        .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.integrationTopic}}"))
-    ;
-    /*
-     *  Logging
-     */
-    from("direct:logging")
-        .routeId("Logging")
-        .log(LoggingLevel.INFO, log, "Transaction Message: [${body}]")
-    ;
+    onException(Exception.class)
+        .handled(true)
+        .log(LoggingLevel.ERROR,"${exception}")
+        .to("micrometer:counter:cloud_exception_handled");
 
-    // Servlet
-    from("servlet://test_publiccloud")
-         .routeId("test_http_cloud")
-         // set Auditing Properties
-         .convertBodyTo(String.class)
-         .setProperty("processingtype").constant("data")
-         .setProperty("appname").constant("iDAAS-Connect-Cloud")
-         .setProperty("industrystd").constant("N/A")
-         .setProperty("messagetrigger").constant("N/A")
-         .setProperty("component").simple("${routeId}")
-         .setProperty("camelID").simple("${camelId}")
-         .setProperty("exchangeID").simple("${exchangeId}")
-         .setProperty("internalMsgID").simple("${id}")
-         .setProperty("bodyData").simple("${body}")
-         .setProperty("processname").constant("Input")
-         .setProperty("auditdetails").simple("Servlet message received ${exchangeId}")
-         // iDAAS KIC - Auditing Processing
-         .wireTap("direct:auditing")
-         // Send To Topic
-         .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.test_cloudTopic}}"))
-    ;
-    /*
-     *  File Processing
-     */
-    from("file://data-input/cloud/")
-         .routeId("test_fileinput_cloud")
-         // set Auditing Properties
-         .convertBodyTo(String.class)
-         .setProperty("processingtype").constant("data")
-         .setProperty("appname").constant("iDAAS-Connect-Cloud")
-         .setProperty("industrystd").constant("N/A")
-         .setProperty("messagetrigger").constant("N/A")
-         .setProperty("component").simple("${routeId}")
-         .setProperty("camelID").simple("${camelId}")
-         .setProperty("exchangeID").simple("${exchangeId}")
-         .setProperty("internalMsgID").simple("${id}")
-         .setProperty("bodyData").simple("${body}")
-         .setProperty("processname").constant("Input")
-         .setProperty("auditdetails").simple("File Processed ${exchangeId}")
-         // iDAAS KIC - Auditing Processing
-         .wireTap("direct:auditing")
-         .to(getKafkaTopicUri("{{idaas.cloudTopic}}"))
-    ;
+    rest("/s3-listfiles")
+            .get()
+            .produces(MediaType.TEXT_PLAIN_VALUE)
+            .route()
+            .routeId("FileList")
+            .log("Request Received.")
+            .to("aws-s3://public-idaas?accessKey={{aws.access.key}}&secretKey={{aws.secret.key}}&region={{aws.region}}&operation=listObjects")
+            .bean(s3Bean,"list")
+            .endRest()
+            .get("/{file-name}")
+            .produces(MediaType.APPLICATION_XML_VALUE)
+            .route()
+            .routeId("ExtractFile")
+            .log("Request received for file ${header.file-name}.")
+            .bean(s3Bean,"extract")
+            .to("kafka:S3Files?brokers={{idaas.kafka.brokers}}")
+            .setHeader(Exchange.CONTENT_TYPE, constant(MediaType.APPLICATION_XML_VALUE))
+            .to("micrometer:counter:num_files_request")
+            .end();
 
-    /*
-     *  Core Outbound Cloud Processing
-     *
-     */
-    from("servlet://publiccloud")
-            .routeId("http_cloud")
-            // set Auditing Properties
-            .convertBodyTo(String.class)
-            .setProperty("processingtype").constant("data")
-            .setProperty("appname").constant("iDAAS-Connect-Cloud")
-            .setProperty("industrystd").constant("N/A")
-            .setProperty("messagetrigger").constant("N/A")
-            .setProperty("component").simple("${routeId}")
-            .setProperty("camelID").simple("${camelId}")
-            .setProperty("exchangeID").simple("${exchangeId}")
-            .setProperty("internalMsgID").simple("${id}")
-            .setProperty("bodyData").simple("${body}")
-            .setProperty("processname").constant("Input")
-            .setProperty("auditdetails").simple("Servlet message received ${exchangeId}")
-            // iDAAS KIC - Auditing Processing
-            .wireTap("direct:auditing")
-            // Send To Topic
-            .convertBodyTo(String.class).to(getKafkaTopicUri("{{idaas.cloudTopic}}"))
-    ;
-    // Kafka Topic
-    from(getKafkaTopicUri("{{idaas.cloudTopic}}"))
-        .routeId("Cloud-Kafka-Topic")
-        //.multicast().parallelProcessing()
-        //.to("direct:generalprocessing")
-        // Auditing
-        .setProperty("processingtype").constant("data")
-        .setProperty("appname").constant("iDAAS-Cloud")
-        .setProperty("industrystd").constant("N/A")
-        .setProperty("messagetrigger").constant("N/A")
-        .setProperty("component").simple("${routeId}")
-        .setProperty("camelID").simple("${camelId}")
-        .setProperty("exchangeID").simple("${exchangeId}")
-        .setProperty("internalMsgID").simple("${id}")
-        .setProperty("bodyData").simple("${body}")
-        .setProperty("processname").constant("MTier Cloud Topic")
-        .setProperty("auditdetails").simple("Cloud Event received for Message ID: ${exchangeId}")
-        .wireTap("direct:auditing")
-        // Send To S3
-        .choice().when(simple("{{idaas.awsS3}}"))
-            .setProperty("processingtype").constant("data")
-            .setProperty("appname").constant("iDAAS-Cloud")
-            .setProperty("industrystd").constant("N/A")
-            .setProperty("messagetrigger").constant("N/A")
-            .setProperty("component").simple("${routeId}")
-            .setProperty("camelID").simple("${camelId}")
-            .setProperty("exchangeID").simple("${exchangeId}")
-            .setProperty("internalMsgID").simple("${id}")
-            .setProperty("bodyData").simple("${body}")
-            .setProperty("processname").constant("AWS-S3")
-            .setProperty("auditdetails").simple("AWS S3 Event processed for Message ID: ${exchangeId}")
-            .wireTap("direct:auditing")
+        // S3
+    //https://github.com/Talend/apache-camel/blob/master/components/camel-aws/src/main/docs/aws-s3-component.adoc
+    // from("aws-s3:helloBucket?accessKey=yourAccessKey&secretKey=yourSecretKey&prefix=hello.txt")
+        /*from("aws2-s3://{{idaas.aws.bucketName}}")
+        .choice()
+            .when(simple("{{idaas.aws.S3}}"))
             // S3 Specifics
-            .setHeader(S3Constants.KEY, simple("${exchangeId}"+".dat"))
-            .to("aws2-s3://testhealthcarebucket")
-            //.wireTap("direct:logging")
-        // Send to AMQ
-        .choice().when(simple("{{idaas.awsMQ}}"))
-            .setProperty("processingtype").constant("data")
-            .setProperty("appname").constant("iDAAS-Cloud")
-            .setProperty("industrystd").constant("N/A")
-            .setProperty("messagetrigger").constant("N/A")
-            .setProperty("component").simple("${routeId}")
-            .setProperty("camelID").simple("${camelId}")
-            .setProperty("exchangeID").simple("${exchangeId}")
-            .setProperty("internalMsgID").simple("${id}")
-            .setProperty("bodyData").simple("${body}")
-            .setProperty("processname").constant("AWS-AMQ")
-            .setProperty("auditdetails").simple("AWS AMQ Event processed for Message ID: ${exchangeId}")
-            .wireTap("direct:auditing")
-            .convertBodyTo(String.class)
-            .to(ExchangePattern.InOnly, "amqp:topic:myHealthcareTopic?connectionFactory=#jmsConnectionFactory")
-            .to(ExchangePattern.InOnly, "amqp:queue:myHealthcareQueue?connectionFactory=#jmsConnectionFactory")
-        // Send to SQS
-        .choice().when(simple("{{idaas.awsSQS}}"))
-            .setProperty("processingtype").constant("data")
-            .setProperty("appname").constant("iDAAS-Cloud")
-            .setProperty("industrystd").constant("N/A")
-            .setProperty("messagetrigger").constant("N/A")
-            .setProperty("component").simple("${routeId}")
-            .setProperty("camelID").simple("${camelId}")
-            .setProperty("exchangeID").simple("${exchangeId}")
-            .setProperty("internalMsgID").simple("${id}")
-            .setProperty("bodyData").simple("${body}")
-            .setProperty("processname").constant("AWS-SQS")
-            .setProperty("auditdetails").simple("AWS SQS Event processed for Message ID: ${exchangeId}")
-            .wireTap("direct:auditing")
+            //.setHeader(S3Constants.KEY, simple("${exchangeId}"+".dat"))
+            .routeId(AWSS3_ROUTE_ID)
+            .to("log:" + AWSS3_ROUTE_ID + "?showAll=true")
+            .log("${exchangeId} fully processed")
+            .to("micrometer:counter:awsS3ProcessTransactions")
+            .to("kafka:{{idaas.awss3.topic.name}}?brokers={{idaas.kafka.brokers}}")
+        .endChoice();
+
+        // AMQ Queue
+        from(ExchangePattern.OutOnly, "amqp:queue:{{idaas.aws.mq.queue}}")
+        .choice().when(simple("{{idaas.aws.MQ.Queue}}"))
+            .routeId(AWSMQQUEUE_ROUTE_ID)
+            .to("log:" + AWSMQQUEUE_ROUTE_ID + "?showAll=true")
+            .log("${exchangeId} fully processed")
+            .to("micrometer:counter:awsMQQueueProcessTransactions")
+            .to("kafka:{{idaas.awsmqqueue.topic.name}}?brokers={{idaas.kafka.brokers}}")
+        .endChoice();
+
+        // AMQ Topic
+        from(ExchangePattern.InOnly, "amqp:topic:{{idaas.aws.mq.topic}}")
+        .choice().when(simple("{{idaas.aws.MQ.Topic}}"))
+            .routeId(AWSMQTOPIC_ROUTE_ID)
+            .to("log:" + AWSMQTOPIC_ROUTE_ID + "?showAll=true")
+            .log("${exchangeId} fully processed")
+            .to("micrometer:counter:awsMQTopicProcessTransactions")
+            .to("kafka:{{idaas.awsmqtopic.topic.name}}?brokers={{idaas.kafka.brokers}}")
+        .endChoice();
+
+        // SQS
+        from("aws2-sqs://{{idaas.aws.sqs}}")
+        .choice().when(simple("{{idaas.aws.SQS}}"))
             // SQS Specifics
-        .to("aws2-sqs://testhealthcare")
-        // Send to SNS
-        .choice().when(simple("{{idaas.awsSNS}}"))
-            .setProperty("processingtype").constant("data")
-            .setProperty("appname").constant("iDAAS-Cloud")
-            .setProperty("industrystd").constant("N/A")
-            .setProperty("messagetrigger").constant("N/A")
-            .setProperty("component").simple("${routeId}")
-            .setProperty("camelID").simple("${camelId}")
-            .setProperty("exchangeID").simple("${exchangeId}")
-            .setProperty("internalMsgID").simple("${id}")
-            .setProperty("bodyData").simple("${body}")
-            .setProperty("processname").constant("AWS-SNS")
-            .setProperty("auditdetails").simple("AWS SNS Event processed for Message ID: ${exchangeId}")
-            .wireTap("direct:auditing")
-            // SNS Specifics
-            .setHeader(SnsConstants.SUBJECT,simple("iOT Data Received"))
-            .setHeader(SnsConstants.MESSAGE_ID,simple("${exchangeId}"))
-            .to(getAWSConfig("aws2-sns://TestSNS?"))
-        // Send to SES
-        .choice().when(simple("{{idaas.awsSES}}"))
-            .setProperty("processingtype").constant("data")
-            .setProperty("appname").constant("iDAAS-Cloud")
-            .setProperty("industrystd").constant("N/A")
-            .setProperty("messagetrigger").constant("N/A")
-            .setProperty("component").simple("${routeId}")
-            .setProperty("camelID").simple("${camelId}")
-            .setProperty("exchangeID").simple("${exchangeId}")
-            .setProperty("internalMsgID").simple("${id}")
-            .setProperty("bodyData").simple("${body}")
-            .setProperty("processname").constant("AWS-SES")
-            .setProperty("auditdetails").simple("AWS SES Event processed for Message ID: ${exchangeId}")
-            .wireTap("direct:auditing")
-            // SES
-            .setHeader(SesConstants.SUBJECT, simple("New Published Data to AWS for iDaaS-Connect-Cloud"))
-            .setHeader(SesConstants.TO, constant(Collections.singletonList("alscott@redhat.com")))
-            .setBody(simple("Data was received on ${date:now:yyyy-MM-dd} at ${date:now:HH:mm:ss:SSS}."))
-            .to("aws2-ses://alscott@redhat.com?")
-        // Send to Kinesis
-        .choice().when(simple("{{idaas.awsKinesis}}"))
-            .setProperty("processingtype").constant("data")
-            .setProperty("appname").constant("iDAAS-Cloud")
-            .setProperty("industrystd").constant("N/A")
-            .setProperty("messagetrigger").constant("N/A")
-            .setProperty("component").simple("${routeId}")
-            .setProperty("camelID").simple("${camelId}")
-            .setProperty("exchangeID").simple("${exchangeId}")
-            .setProperty("internalMsgID").simple("${id}")
-            .setProperty("bodyData").simple("${body}")
-            .setProperty("processname").constant("AWS-Kinesis")
-            .setProperty("auditdetails").simple("AWS Kinesis Event processed for Message ID: ${exchangeId}")
-            .wireTap("direct:auditing")
+            .routeId(AWSSQS_ROUTE_ID)
+            .to("log:" + AWSSQS_ROUTE_ID + "?showAll=true")
+            .log("${exchangeId} fully processed")
+            .to("micrometer:counter:awsSQSProcessTransactions")
+            .to("kafka:{{idaas.awssqs.topic.name}}?brokers={{idaas.kafka.brokers}}")
+        .endChoice();
+
+        // Kinesis
+       *//* .choice().when(simple("{{idaas.aws.Kinesis}}"))
             // Kinesis
             .setHeader(KinesisConstants.PARTITION_KEY,simple("Shard1"))
             //.to(getAWSConfig("aws2-kinesis://testhealthcarekinesisstream?"))
-            .to("aws2-kinesis://testhealthcarekinesisstream?exchangePattern=InOnly")
-        .endChoice()
-    ;
+            .from("aws2-kinesis://testhealthcarekinesisstream?exchangePattern=OutOnly")
+        .endChoice()*//*
+*/
 
   }
 }
