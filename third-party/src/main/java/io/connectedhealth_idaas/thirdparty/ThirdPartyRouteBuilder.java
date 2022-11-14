@@ -130,6 +130,8 @@ public class ThirdPartyRouteBuilder extends RouteBuilder {
                 .endChoice();
 
         // Routes
+        // Comment back in after you properly populate the sftp parameters within the application properties
+        /*
         from("sftp:{{sftp.host}}:{{sftp.port}}/{{sftp.hl7.dir}}?username={{sftp.username}}&password={{sftp.password}}&move={{sftp.dir.processed}}&moveFailed={{sftp.dir.error}}&include=^.*\\.(dat|hl7)$")
                 .routeId(HL7_ROUTE_ID)
                 .to("log:"+ HL7_ROUTE_ID + "?showAll=true")
@@ -143,7 +145,7 @@ public class ThirdPartyRouteBuilder extends RouteBuilder {
                 .to("sftp:{{sftp.host}}:{{sftp.port}}/{{sftp.ct.dir}}?username={{sftp.username}}&password={{sftp.password}}")
                 .log("${exchangeId} fully processed")
                 .to("micrometer:counter:num_processed_files");
-
+        /*
         restConfiguration()
                 .component("servlet");
 
