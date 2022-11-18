@@ -136,22 +136,29 @@
          from("direct:fhirmessaging")
                  .routeId("FHIRMessaging")
                  // we should test before even trying this because if there is no
-                 .log("${headers.resourcename} fully processed")
                  // ${headers.resourcename} in the message it will never work
-                 // Persist to Topic
-                 .to("micrometer:counter:fhirTopicTransactions")
-                 .to("kafka:{{idaas.fhir.topic.name}}?brokers={{idaas.kafka.brokers}}")
-                 // Specific Topic for Each FHIR Resource
-                 .toD(String.valueOf("kafka:{{idaas.fhir.topic.name}}"+"_"+"${headers.resourcename}?brokers={{idaas.kafka.brokers}}"))
-                 .choice().when(simple("{{idaas.processToFHIR}}"))
-                     .to("micrometer:counter:fhirServerTransactions")
-                     .setHeader(Exchange.CONTENT_TYPE,constant("application/json"))
-                     .setBody(simple("${body}"))
-                     //.toD(getFHIRServerUri("AllergyIntolerance"))
-                     //.toD(String.valueOf(simple("${headers.resourcename}")))
-                     // .toD(("${idaas.fhirserverURI}"+"${headers.resourcename}?bridgeEndpoint=true"))
-                     // Process Response
-                 .endChoice();
+                 // https://camel.apache.org/components/3.18.x/languages/simple-language.html
+                 .choice().when(simple("${headers.resourcename} != null"))
+                 // testing for null
+                 //simple("${header.baz} == null")
+                 // testing for not null
+                 //simple("${header.baz} != null")
+                    .log("${headers.resourcename} fully processed")
+                    // Persist to Topic
+                    .to("micrometer:counter:fhirTopicTransactions")
+                    .to("kafka:{{idaas.fhir.topic.name}}?brokers={{idaas.kafka.brokers}}")
+                    // Specific Topic for Each FHIR Resource
+                    .toD(String.valueOf("kafka:{{idaas.fhir.topic.name}}"+"_"+"${headers.resourcename}?brokers={{idaas.kafka.brokers}}"))
+                    .choice().when(simple("{{idaas.processToFHIR}}"))
+                        .to("micrometer:counter:fhirServerTransactions")
+                        .setHeader(Exchange.CONTENT_TYPE,constant("application/json"))
+                        .setBody(simple("${body}"))
+                         //.toD(getFHIRServerUri("AllergyIntolerance"))
+                         //.toD(String.valueOf(simple("${headers.resourcename}")))
+                         // .toD(("${idaas.fhirserverURI}"+"${headers.resourcename}?bridgeEndpoint=true"))
+                         // Process Response
+                    .endChoice()
+                .endChoice();
 
          restConfiguration()
                  .component("servlet");
