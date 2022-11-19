@@ -36,7 +36,6 @@ buildNumber.properties
 id_file
 application.properties
 secret.yaml
-configmap.yaml
 
 ### NetBeans ###
 nbproject/private/
