@@ -89,15 +89,20 @@ Every asset has its own defined specific port, we have done this to ensure multi
 ## Administrative Interface(s) Specifics
 For all the URL links we have made them localhost based, simply change them to the server the solution is running on.
 
-| iDaaS Connect Asset       | Port | Admin URL   | JMX URL|                                                                                   
-|---------------------------| ----   |--------------------------------------------------|------------------------------------------------------------------------------------------| 
-| iDaaS Connect HL7         | 9980| http://localhost:9980/actuator/hawtio/index.html                                                                                           | http://localhost:9980/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* | 
-| iDaaS Connect FHIR        | 9981| http://localhost:9981/actuator/hawtio/index.html                                                                                           | http://localhost:9981/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
-| iDaaS Connect BlueButton  | 9982| http://localhost:9982/actuator/hawtio/index.html                                                                                           | http://localhost:9982/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
-| iDaaS Connect Third Party | 9983| http://localhost:9983/actuator/hawtio/index.html                                                                                           | http://localhost:9983/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
-| iDaaS Connect EDI         | 9984| http://localhost:9984/actuator/hawtio/index.html                                                                                           | http://localhost:9984/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
-| iDaaS Connect Cloud       | 9985| http://localhost:9985/actuator/hawtio/index.html                                                                                           | http://localhost:9985/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
-| iDaaS Connect SAP         | 9986| http://localhost:9986/actuator/hawtio/index.html | http://localhost:9986/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
+
+| iDaaS Connect Asset | Port | Admin URL                                        | JMX URL                                                                                   |                                                                                   
+|-------------------|------|--------------------------------------------------|-------------------------------------------------------------------------------------------| 
+| HL7               | 9980 | http://localhost:9980/actuator/hawtio/index.html | http://localhost:9980/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* | 
+| FHIR | 9981 | http://localhost:9981/actuator/hawtio/index.html | http://localhost:9981/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
+| CMS-BlueButton | 9982 | http://localhost:9982/actuator/hawtio/index.html | http://localhost:9982/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
+| Third Party | 9983 | http://localhost:9983/actuator/hawtio/index.html | http://localhost:9983/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
+| EDI | 9984 | http://localhost:9984/actuator/hawtio/index.html | http://localhost:9984/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
+| Cloud | 9985 | http://localhost:9985/actuator/hawtio/index.html | http://localhost:9985/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
+| SAP | 9986 | http://localhost:9986/actuator/hawtio/index.html | http://localhost:9986/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
+| NCPDP | 9987 | http://localhost:9987/actuator/hawtio/index.html | http://localhost:9987/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
+| CMS-Interoperability | 9988 | http://localhost:9988/actuator/hawtio/index.html | http://localhost:9988/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
+
+For more specific details you can go [here](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/AdministeringPlatform.md).
 
 # Platform General Pre-Requisites
 

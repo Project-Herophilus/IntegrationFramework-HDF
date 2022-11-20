@@ -1,0 +1,52 @@
+kind: ConfigMap
+apiVersion: v4
+metadata:
+  name: ${project.artifactId}
+  namespace: idaas-v4
+  managedFields:
+    - manager: Mozilla
+      apiVersion: v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        'f:data':
+          'f:idaas.datatier.topic.name': {}
+          'f:idaas.sdoh.topic.name': {}
+          'f:idaas.kafka.brokers': {}
+          'f:idaas.iot.integration.topic': {}
+          'f:idaas.terminology.topic.name': {}
+          'f:idaas.heda.topic.name': {}
+          'f:idaas.publiccloud.topic.name': {}
+          'f:idaas.process.PublicCloud': {}
+          'f:idaas.process.Terminologies': {}
+          'f:idaas.process.Sdoh': {}
+          'f:idaas.process.Deidentification': {}
+          'f:idaas.process.Empi': {}
+          'f:idaas.process.DataTier': {}
+          'f:idaas.process.HEDA': {}
+          'f:idaas.api.deidentification': {}
+          'f:idaas.api.empi': {}
+          'f:idaas.api.cloud': {}
+          'f:idaas.rxfill.topic.name': {}
+data:
+  idaas.datatier.topic.name: datatier
+  idaas.deidentification.topic.name: deidentification
+  idaas.heda.topic.name: hedainbound
+  idaas.iot.integration.topic: iot
+  idaas.kafka.brokers: localhost:9092
+  idaas.publiccloud.topic.name: cloud
+  idaas.sdoh.topic.name: sdoh
+  idaas.terminology.topic.name: terminologies
+  # Module Topics
+  idaas.rxfill.topic.name: rxfill
+  # Processes
+  idaas.process.PublicCloud: true
+  idaas.process.Terminologies: true
+  idaas.process.Sdoh: true
+  idaas.process.Deidentification: false
+  idaas.process.Empi: false
+  idaas.process.DataTier: false
+  idaas.process.HEDA: false
+  # External APIs
+  idaas.api.deidentification: http://localhost:8001/api/deidentification
+  idaas.api.empi: http://localhost:8001/api/empi
+  idaas.api.cloud: urlendpoint

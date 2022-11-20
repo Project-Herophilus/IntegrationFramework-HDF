@@ -25,8 +25,8 @@ public class ThirdPartyRouteBuilder extends RouteBuilder {
         mapping.addUrlMappings("/idaas/*");
         return mapping;
     }
-    @Autowired
-    private S3Bean s3Bean;
+    //@Autowired
+    //private S3Bean s3Bean;
 
     // Public Variables
     public static final String TERMINOLOGY_ROUTE_ID = "terminologies-direct";

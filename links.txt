@@ -1,0 +1,6 @@
+
+// Maven Plugin Resource Fragments
+https://stackoverflow.com/questions/58305798/how-to-create-kubernetes-configmap-from-properties-file-during-maven-build
+
+https://itnext.io/understanding-kubernetes-maven-plugin-resource-fragments-configuration-32b1d1e757a1
+https://capgemini.github.io/engineering/externalising-spring-boot-config-with-kubernetes/

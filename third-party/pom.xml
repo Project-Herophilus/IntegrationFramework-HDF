@@ -122,6 +122,16 @@
             <groupId>ch.qos.logback.contrib</groupId>
             <artifactId>logback-json-classic</artifactId>
         </dependency>
+        <!-- UI -->
+        <!-- Only comment in if testing locally -->
+        <!--   <dependency>
+             <groupId>io.hawt</groupId>
+             <artifactId>hawtio-springboot</artifactId>
+         </dependency>
+         <dependency>
+             <groupId>org.jolokia</groupId>
+             <artifactId>jolokia-jvm</artifactId>
+         </dependency>-->
 
     </dependencies>
 

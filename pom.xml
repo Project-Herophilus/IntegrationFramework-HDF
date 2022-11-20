@@ -64,16 +64,17 @@
             </dependency>
             <!--https://stackoverflow.com/questions/48722138/how-to-monitor-apache-camel-routes-in-a-java-project-using-hawtio-->
             <!-- UI -->
-            <dependency>
-                <groupId>io.hawt</groupId>
-                <artifactId>hawtio-springboot</artifactId>
-                <version>2.14.4</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jolokia</groupId>
-                <artifactId>jolokia-jvm</artifactId>
-                <version>1.6.2</version>
-            </dependency>
+            <!-- Only needed to comment in if testing local-->
+            <!--   <dependency>
+                 <groupId>io.hawt</groupId>
+                 <artifactId>hawtio-springboot</artifactId>
+                 <version>2.14.4</version>
+             </dependency>
+             <dependency>
+                 <groupId>org.jolokia</groupId>
+                 <artifactId>jolokia-jvm</artifactId>
+                 <version>1.6.2</version>
+             </dependency>-->
             <!-- iDaaS Event Builder Repo or Local-->
             <dependency>
                 <groupId>io.connectedhealth-idaas</groupId>
