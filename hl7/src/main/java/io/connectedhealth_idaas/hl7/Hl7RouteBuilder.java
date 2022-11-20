@@ -28,8 +28,8 @@ public class Hl7RouteBuilder extends RouteBuilder {
         return mapping;
     }
 
-    @Autowired
-    private S3Bean s3Bean;
+    //@Autowired
+    //private S3Bean s3Bean;
 
     // Public Variables
     public static final String TERMINOLOGY_ROUTE_ID = "terminologies-direct";
@@ -71,7 +71,7 @@ public class Hl7RouteBuilder extends RouteBuilder {
                     .routeId(TERMINOLOGY_ROUTE_ID)
                     .to("log:" + TERMINOLOGY_ROUTE_ID + "?showAll=true")
                     //.log("${exchangeId} fully processed")
-                    .to("micrometer:counter:terminologyTransactions")
+                    .to("micrometer:counter:terminology_Inbd_Transactions")
                     .to("kafka:{{idaas.terminology.topic.name}}?brokers={{idaas.kafka.brokers}}")
             .endChoice();
 
@@ -81,17 +81,18 @@ public class Hl7RouteBuilder extends RouteBuilder {
                     .routeId(CCDACONVERSION_ROUTE_ID)
                     //.to("log:" + CCDACONVERSION_ROUTE_ID + "?showAll=true")
                     //.log("${exchangeId} fully processed")
-                    .to("micrometer:counter:ccdaConversionTransactions")
+                    .to("micrometer:counter:ccdaConversion_Inbd_Transactions")
                     // Invocation of CCDA Conversion
                     // Unmarshall from XML Doc against XSD - or Bean to encapsulate features
                     .bean(CdaConversionService.class, "getFhirJsonFromCdaXMLString(${body})")
+                    .to("micrometer:counter:ccdaConversion_Outbd_Transactions")
                     .to("kafka:{{idaas.ccdaconversion.topic.name}}?brokers={{idaas.kafka.brokers}}")
                     // Adding support for sending CCDA Documents to other processes
                     //.to("direct:datatier")
                     //.to("direct:publiccloud");
-                    .to("micrometer:counter:datatierTransactions")
+                    .to("micrometer:counter:datatier_Inbd_Transactions")
                     .to("kafka:{{idaas.datatier.topic.name}}?brokers={{idaas.kafka.brokers}}")
-                    .to("micrometer:counter:publiccloudTransactions")
+                    .to("micrometer:counter:publiccloud_Inbd_Transactions")
                     .to("kafka:{{idaas.publiccloud.topic.name}}?brokers={{idaas.kafka.brokers}}")
                 .endChoice();
 
@@ -101,7 +102,7 @@ public class Hl7RouteBuilder extends RouteBuilder {
                     .routeId(DATATIER_ROUTE_ID)
                     //.to("log:" + DATATIER_ROUTE_ID + "?showAll=true")
                     //.log("${exchangeId} fully processed")
-                    .to("micrometer:counter:datatierTransactions")
+                    .to("micrometer:counter:datatier_Inbd_Transactions")
                     .to("kafka:{{idaas.datatier.topic.name}}?brokers={{idaas.kafka.brokers}}")
                     // to the deidentification API
                 .endChoice();
@@ -112,7 +113,7 @@ public class Hl7RouteBuilder extends RouteBuilder {
                     .routeId(DEIDENTIFICATION_ROUTE_ID)
                     //.to("log:" + DEIDENTIFICATION_ROUTE_ID + "?showAll=true")
                     //.log("${exchangeId} fully processed")
-                    .to("micrometer:counter:deidentificationTransactions")
+                    .to("micrometer:counter:deidentification_Inbd_Transactions")
                     .to("kafka:{{idaas.deidentification.topic.name}}?brokers={{idaas.kafka.brokers}}")
                     // to the deidentification API
             .endChoice();
@@ -123,7 +124,7 @@ public class Hl7RouteBuilder extends RouteBuilder {
                     .routeId(EMPI_ROUTE_ID)
                     //.to("log:" + EMPI_ROUTE_ID + "?showAll=true")
                     //.log("${exchangeId} fully processed")
-                    .to("micrometer:counter:deidentificationTransactions")
+                    .to("micrometer:counter:empi_Inbd_Transactions")
                     .to("kafka:{{idaas.deidentification.topic.name}}?brokers={{idaas.kafka.brokers}}")
                     // to the empi API
             .endChoice();
@@ -134,7 +135,7 @@ public class Hl7RouteBuilder extends RouteBuilder {
                     .routeId(HEDA_ROUTE_ID)
                     .to("log:" + HEDA_ROUTE_ID + "?showAll=true")
                     //.log("${exchangeId} fully processed")
-                    .to("micrometer:counter:hedaTransactions")
+                    .to("micrometer:counter:heda_Inbd_Transactions")
                     .to("kafka:{{idaas.heda.topic.name}}?brokers={{idaas.kafka.brokers}}")
                 .endChoice();
 
@@ -145,15 +146,16 @@ public class Hl7RouteBuilder extends RouteBuilder {
                     .bean(HL7ToFHIRConverter.class, "convert(${body})")
                     //.to("log:" + HL7CCONVERSION_ROUTE_ID + "?showAll=true")
                     //.log("${exchangeId} fully processed")
-                    .to("micrometer:counter:hl7ConversionTransactions")
+                    .to("micrometer:counter:hl7Conversion_Inbd_Transactions")
                     // Conversion
                     .bean(HL7ToFHIRConverter.class, "convert(${body})")
+                    .to("micrometer:counter:hl7Conversion_Outbd_Transactions")
                     .to("kafka:{{idaas.hl7conversion.topic.name}}?brokers={{idaas.kafka.brokers}}")
                     // Adding support for sending FHIR Resources to other processes
-                    .to("micrometer:counter:datatierTransactions")
+                    .to("micrometer:counter:datatier_Inbd_Transactions")
                     .to("direct:datatier")
                     //.to("kafka:{{idaas.datatier.topic.name}}?brokers={{idaas.kafka.brokers}}")
-                    .to("micrometer:counter:publiccloudTransactions")
+                    .to("micrometer:counter:publiccloud_Inbd_Transactions")
                     .to("direct:publiccloud")
                     //.to("kafka:{{idaas.publiccloud.topic.name}}?brokers={{idaas.kafka.brokers}}")
             .endChoice();
@@ -164,7 +166,7 @@ public class Hl7RouteBuilder extends RouteBuilder {
                     .routeId(PUBLICCLOUD_ROUTE_ID)
                     //.to("log:" + PUBLICCLOUD_ROUTE_ID + "?showAll=true")
                     //.log("${exchangeId} fully processed")
-                    .to("micrometer:counter:publiccloudTransactions")
+                    .to("micrometer:counter:publiccloud_Inbd_Transactions")
                     .to("kafka:{{idaas.publiccloud.topic.name}}?brokers={{idaas.kafka.brokers}}")
              .endChoice();
 
@@ -174,6 +176,7 @@ public class Hl7RouteBuilder extends RouteBuilder {
                     .routeId(PROCESSACKS_ROUTE_ID)
                     //.to("log:" + PROCESSACKS_ROUTE_ID + "?showAll=true")
                     //.log("${exchangeId} fully processed")
+                    .to("micrometer:counter:processAcks_Inbd_Transactions")
                     .to("kafka:{{idaas.processacks.topic.name}}?brokers={{idaas.kafka.brokers}}")
              .endChoice();
 
@@ -183,7 +186,7 @@ public class Hl7RouteBuilder extends RouteBuilder {
                     .routeId(SDOH_ROUTE_ID)
                     //.to("log:" + SDOH_ROUTE_ID + "?showAll=true")
                     //.log("${exchangeId} fully processed")
-                    .to("micrometer:counter:sdohTransactions")
+                    .to("micrometer:counter:sdoh_Inbd_Transactions")
                     .to("kafka:{{idaas.sdoh.topic.name}}?brokers={{idaas.kafka.brokers}}")
             .endChoice();
 
@@ -200,7 +203,7 @@ public class Hl7RouteBuilder extends RouteBuilder {
                     .routeId(CCDAPOST_ROUTE_ID)
                     .to("log:" + CCDAPOST_ROUTE_ID + "?showAll=true")
                     .log("${exchangeId} fully processed")
-                    .to("micrometer:counter:ccdaPostedTransactions")
+                    .to("micrometer:counter:ccda_Inbd_PostedTransactions")
                     .to("kafka:{{idaas.ccdapost.topic.name}}?brokers={{idaas.kafka.brokers}}")
                     .multicast().parallelProcessing()
                         // Process Terminologies
@@ -230,7 +233,7 @@ public class Hl7RouteBuilder extends RouteBuilder {
                     .routeId(HL7POST_ROUTE_ID)
                     .to("log:" + HL7POST_ROUTE_ID + "?showAll=true")
                     //.log("${exchangeId} fully processed")
-                    .to("micrometer:counter:HL7PostTransactions")
+                    .to("micrometer:counter:HL7Post_Inbd_Transactions")
                     .to("kafka:{{idaas.hl7post.topic.name}}?brokers={{idaas.kafka.brokers}}")
                     .multicast().parallelProcessing()
                     // Process Terminologies
@@ -259,7 +262,7 @@ public class Hl7RouteBuilder extends RouteBuilder {
                 .routeId(HL7ADT_ROUTE_ID)
                 .to("log:" + HL7ADT_ROUTE_ID + "?showAll=true")
                 //.log("${exchangeId} fully processed")
-                .to("micrometer:counter:HL7-ADT-PostTransactions")
+                .to("micrometer:counter:HL7_ADT_Inbd_Transactions")
                 .to("kafka:{{idaas.hl7adt.topic.name}}?brokers={{idaas.kafka.brokers}}")
                 //.to("fluentd:")
                 // This is to ensure that processes can run independently and if they transform data
@@ -290,7 +293,7 @@ public class Hl7RouteBuilder extends RouteBuilder {
                 .routeId(HL7MDM_ROUTE_ID)
                 .to("log:" + HL7MDM_ROUTE_ID + "?showAll=true")
                 //.log("${exchangeId} fully processed")
-                .to("micrometer:counter:HL7-MDM-PostTransactions")
+                .to("micrometer:counter:HL7_MDM_Inbd_Transactions")
                 .to("kafka:{{idaas.hl7mdm.topic.name}}?brokers={{idaas.kafka.brokers}}")
                 //.to("fluentd:")
                 // This is to ensure that processes can run independently and if they transform data
@@ -321,7 +324,7 @@ public class Hl7RouteBuilder extends RouteBuilder {
                 .routeId(HL7MFN_ROUTE_ID)
                 .to("log:" + HL7MFN_ROUTE_ID + "?showAll=true")
                 //.log("${exchangeId} fully processed")
-                .to("micrometer:counter:HL7-MFN-PostTransactions")
+                .to("micrometer:counter:HL7_MFN_Inbd_Transactions")
                 .to("kafka:{{idaas.hl7mfn.topic.name}}?brokers={{idaas.kafka.brokers}}")
                 //.to("fluentd:")
                 // This is to ensure that processes can run independently and if they transform data
@@ -352,7 +355,7 @@ public class Hl7RouteBuilder extends RouteBuilder {
                 .routeId(HL7ORM_ROUTE_ID)
                 .to("log:" + HL7ORM_ROUTE_ID + "?showAll=true")
                 //.log("${exchangeId} fully processed")
-                .to("micrometer:counter:HL7-ORM-PostTransactions")
+                .to("micrometer:counter:HL7_ORM_Inbd_Transactions")
                 .to("kafka:{{idaas.hl7orm.topic.name}}?brokers={{idaas.kafka.brokers}}")
                 //.to("fluentd:")
                 // This is to ensure that processes can run independently and if they transform data
@@ -383,7 +386,7 @@ public class Hl7RouteBuilder extends RouteBuilder {
                 .routeId(HL7ORU_ROUTE_ID)
                 .to("log:" + HL7ORU_ROUTE_ID + "?showAll=true")
                 //.log("${exchangeId} fully processed")
-                .to("micrometer:counter:HL7-ORU-PostTransactions")
+                .to("micrometer:counter:HL7_ORU_Inbd_Transactions")
                 .to("kafka:{{idaas.hl7oru.topic.name}}?brokers={{idaas.kafka.brokers}}")
                 //.to("fluentd:")
                 // This is to ensure that processes can run independently and if they transform data
@@ -414,7 +417,7 @@ public class Hl7RouteBuilder extends RouteBuilder {
                 .routeId(HL7RDE_ROUTE_ID)
                 .to("log:" + HL7RDE_ROUTE_ID + "?showAll=true")
                 //.log("${exchangeId} fully processed")
-                .to("micrometer:counter:HL7-RDE-PostTransactions")
+                .to("micrometer:counter:HL7_RDE_Inbd_Transactions")
                 .to("kafka:{{idaas.hl7rde.topic.name}}?brokers={{idaas.kafka.brokers}}")
                 //.to("fluentd:")
                 // This is to ensure that processes can run independently and if they transform data
@@ -445,7 +448,7 @@ public class Hl7RouteBuilder extends RouteBuilder {
                 .routeId(HL7SCH_ROUTE_ID)
                 .to("log:" + HL7SCH_ROUTE_ID + "?showAll=true")
                 //.log("${exchangeId} fully processed")
-                .to("micrometer:counter:HL7-SCH-PostTransactions")
+                .to("micrometer:counter:HL7_SCH_Inbd_Transactions")
                 .to("kafka:{{idaas.hl7sch.topic.name}}?brokers={{idaas.kafka.brokers}}")
                 //.to("fluentd:")
                 // This is to ensure that processes can run independently and if they transform data
@@ -476,7 +479,7 @@ public class Hl7RouteBuilder extends RouteBuilder {
                 .routeId(HL7VXU_ROUTE_ID)
                 .to("log:" + HL7VXU_ROUTE_ID + "?showAll=true")
                 //.log("${exchangeId} fully processed")
-                .to("micrometer:counter:HL7-VXU-PostTransactions")
+                .to("micrometer:counter:HL7_VXU_Inbd_Transactions")
                 .to("kafka:{{idaas.hl7vxu.topic.name}}?brokers={{idaas.kafka.brokers}}")
                 //.to("fluentd:")
                 // This is to ensure that processes can run independently and if they transform data

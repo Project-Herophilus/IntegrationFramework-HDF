@@ -16,8 +16,6 @@ metadata:
           'f:idaas.terminology.topic.name': {}
           'f:idaas.heda.topic.name': {}
           'f:idaas.publiccloud.topic.name': {}
-          'f:idaas.fhir.topic.name': {}
-          'f:idaas.iot.integration.topic.name': {}
           'f:idaas.process.PublicCloud': {}
           'f:idaas.process.Terminologies': {}
           'f:idaas.process.Sdoh': {}
@@ -28,17 +26,46 @@ metadata:
           'f:idaas.api.deidentification': {}
           'f:idaas.api.empi': {}
           'f:idaas.api.cloud': {}
+          'f:idaas.ccdapost.topic.name': {}
+          'f:idaas.hl7post.topic.name': {}
+          'f:idaas.hl7conversion.topic.name': {}
+          'f:idaas.ccdaconversion.topic.name': {}
+          'f:idaas.port.adt': {}
+          'f:idaas.port.mdm': {}
+          'f:idaas.port.mfn': {}
+          'f:idaas.port.orm': {}
+          'f:idaas.port.oru': {}
+          'f:idaas.port.rde': {}
+          'f:idaas.port.sch': {}
+          'f:idaas.port.vxu': {}
+          'f:idaas.convert.CCDAtoFHIR': {}
+          'f:idaas.convert.HL7toFHIR': {}
 data:
   idaas.datatier.topic.name: datatier
   idaas.deidentification.topic.name: deidentification
   idaas.heda.topic.name: hedainbound
+  idaas.iot.integration.topic: iot
   idaas.kafka.brokers: localhost:9092
   idaas.publiccloud.topic.name: cloud
   idaas.sdoh.topic.name: sdoh
   idaas.terminology.topic.name: terminologies
   # Module Topics
-  idaas.iot.integration.topic: iot
-  idaas.fhir.topic.name: fhir
+  idaas.ccdapost.topic.name: ccdapost
+  idaas.hl7post.topic.name: hl7post
+  idaas.hl7conversion.topic.name: fhir
+  idaas.ccdaconversion.topic.name: fhirbundle
+  ## HL7 Ports
+  idaas.port.adt: 10001
+  idaas.port.mdm: 10002
+  idaas.port.mfn: 10003
+  idaas.port.orm: 10004
+  idaas.port.oru: 10005
+  idaas.port.rde: 10006
+  idaas.port.sch: 10007
+  idaas.port.vxu: 10008
+  ## Conversions
+  idaas.convert.CCDAtoFHIR: true
+  idaas.convert.HL7toFHIR: true
   # Processes
   idaas.process.PublicCloud: true
   idaas.process.Terminologies: true
@@ -51,7 +78,3 @@ data:
   idaas.api.deidentification: http://localhost:8001/api/deidentification
   idaas.api.empi: http://localhost:8001/api/empi
   idaas.api.cloud: urlendpoint
-  # Custom Project Attributes
-  idaas.fhirServerURI: localhost:8888/fhir/
-  idaas.process.FHIR: true
-  idaas.process.FHIRBundles: false

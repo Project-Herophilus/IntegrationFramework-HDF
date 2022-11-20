@@ -97,7 +97,7 @@
                      .routeId(EMPI_ROUTE_ID)
                      .to("log:" + EMPI_ROUTE_ID + "?showAll=true")
                      //.log("${exchangeId} fully processed")
-                     .to("micrometer:counter:deidentification_Inbd_Transactions")
+                     .to("micrometer:counter:empi_Inbd_Transactions")
                      .to("kafka:{{idaas.deidentification.topic.name}}?brokers={{idaas.kafka.brokers}}")
                  // to the empi API
                  .endChoice();

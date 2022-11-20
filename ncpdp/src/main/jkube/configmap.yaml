@@ -16,8 +16,6 @@ metadata:
           'f:idaas.terminology.topic.name': {}
           'f:idaas.heda.topic.name': {}
           'f:idaas.publiccloud.topic.name': {}
-          'f:idaas.fhir.topic.name': {}
-          'f:idaas.iot.integration.topic.name': {}
           'f:idaas.process.PublicCloud': {}
           'f:idaas.process.Terminologies': {}
           'f:idaas.process.Sdoh': {}
@@ -28,17 +26,18 @@ metadata:
           'f:idaas.api.deidentification': {}
           'f:idaas.api.empi': {}
           'f:idaas.api.cloud': {}
+          'f:idaas.rxfill.topic.name': {}
 data:
   idaas.datatier.topic.name: datatier
   idaas.deidentification.topic.name: deidentification
   idaas.heda.topic.name: hedainbound
+  idaas.iot.integration.topic: iot
   idaas.kafka.brokers: localhost:9092
   idaas.publiccloud.topic.name: cloud
   idaas.sdoh.topic.name: sdoh
   idaas.terminology.topic.name: terminologies
   # Module Topics
-  idaas.iot.integration.topic: iot
-  idaas.fhir.topic.name: fhir
+  idaas.rxfill.topic.name: rxfill
   # Processes
   idaas.process.PublicCloud: true
   idaas.process.Terminologies: true
@@ -51,7 +50,3 @@ data:
   idaas.api.deidentification: http://localhost:8001/api/deidentification
   idaas.api.empi: http://localhost:8001/api/empi
   idaas.api.cloud: urlendpoint
-  # Custom Project Attributes
-  idaas.fhirServerURI: localhost:8888/fhir/
-  idaas.process.FHIR: true
-  idaas.process.FHIRBundles: false

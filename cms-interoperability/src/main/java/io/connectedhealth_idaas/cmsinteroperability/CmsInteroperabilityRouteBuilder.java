@@ -67,7 +67,7 @@ public class CmsInteroperabilityRouteBuilder extends RouteBuilder {
             .routeId(TERMINOLOGY_ROUTE_ID)
             .to("log:" + TERMINOLOGY_ROUTE_ID + "?showAll=true")
             //.log("${exchangeId} fully processed")
-            .to("micrometer:counter:terminologyTransactions")
+            .to("micrometer:counter:terminology_Inbd_Transactions")
             .to("kafka:{{idaas.terminology.topic.name}}?brokers={{idaas.kafka.brokers}}")
             .endChoice();
 
@@ -77,7 +77,7 @@ public class CmsInteroperabilityRouteBuilder extends RouteBuilder {
             .routeId(DATATIER_ROUTE_ID)
             .to("log:" + DATATIER_ROUTE_ID + "?showAll=true")
             //.log("${exchangeId} fully processed")
-            .to("micrometer:counter:datatierTransactions")
+            .to("micrometer:counter:datatier_Inbd_Transactions")
             .to("kafka:{{idaas.datatier.topic.name}}?brokers={{idaas.kafka.brokers}}")
             // to the deidentification API
             .endChoice();
@@ -88,7 +88,7 @@ public class CmsInteroperabilityRouteBuilder extends RouteBuilder {
             .routeId(DEIDENTIFICATION_ROUTE_ID)
             .to("log:" + DEIDENTIFICATION_ROUTE_ID + "?showAll=true")
             //.log("${exchangeId} fully processed")
-            .to("micrometer:counter:deidentificationTransactions")
+            .to("micrometer:counter:deidentification_Inbd_Transactions")
             .to("kafka:{{idaas.deidentification.topic.name}}?brokers={{idaas.kafka.brokers}}")
             // to the deidentification API
             .endChoice();
@@ -99,7 +99,7 @@ public class CmsInteroperabilityRouteBuilder extends RouteBuilder {
             .routeId(EMPI_ROUTE_ID)
             .to("log:" + EMPI_ROUTE_ID + "?showAll=true")
             //.log("${exchangeId} fully processed")
-            .to("micrometer:counter:deidentificationTransactions")
+            .to("micrometer:counter:empi_Inbd_Transactions")
             .to("kafka:{{idaas.deidentification.topic.name}}?brokers={{idaas.kafka.brokers}}")
             // to the empi API
             .endChoice();
@@ -110,7 +110,7 @@ public class CmsInteroperabilityRouteBuilder extends RouteBuilder {
             .routeId(HEDA_ROUTE_ID)
             .to("log:" + HEDA_ROUTE_ID + "?showAll=true")
             //.log("${exchangeId} fully processed")
-            .to("micrometer:counter:hedaTransactions")
+            .to("micrometer:counter:heda_Inbd_Transactions")
             .to("kafka:{{idaas.heda.topic.name}}?brokers={{idaas.kafka.brokers}}")
             .endChoice();
 
@@ -120,7 +120,7 @@ public class CmsInteroperabilityRouteBuilder extends RouteBuilder {
             .routeId(PUBLICCLOUD_ROUTE_ID)
             .to("log:" + PUBLICCLOUD_ROUTE_ID + "?showAll=true")
             //.log("${exchangeId} fully processed")
-            .to("micrometer:counter:publiccloudTransactions")
+            .to("micrometer:counter:publiccloud_Inbd_Transactions")
             .to("kafka:{{idaas.publiccloud.topic.name}}?brokers={{idaas.kafka.brokers}}")
             .endChoice();
 
@@ -130,7 +130,7 @@ public class CmsInteroperabilityRouteBuilder extends RouteBuilder {
             .routeId(SDOH_ROUTE_ID)
             .to("log:" + SDOH_ROUTE_ID + "?showAll=true")
             //.log("${exchangeId} fully processed")
-            .to("micrometer:counter:sdohTransactions")
+            .to("micrometer:counter:sdoh_Inbd_Transactions")
             .to("kafka:{{idaas.sdoh.topic.name}}?brokers={{idaas.kafka.brokers}}")
             .endChoice();
 
@@ -149,7 +149,7 @@ public class CmsInteroperabilityRouteBuilder extends RouteBuilder {
             .routeId(XDS_INBD_ROUTE_ID)
             .to("log:" + XDS_INBD_ROUTE_ID + "?showAll=true")
             .log("${exchangeId} fully processed")
-            .to("micrometer:counter:numProcessedFiles")
+            .to("micrometer:counter:REST_Inbd_xdsrequest")
             .to("kafka:{{idaas.xds.topic.name}}?brokers={{idaas.kafka.brokers}}");
             //perform needed XDS Lookup
             //respond with a XDS Response
@@ -158,7 +158,7 @@ public class CmsInteroperabilityRouteBuilder extends RouteBuilder {
             .routeId(PIXAddUpdate_INBD_ROUTE_ID)
             .to("log:" + PIXAddUpdate_INBD_ROUTE_ID + "?showAll=true")
             .log("${exchangeId} fully processed")
-            .to("micrometer:counter:numProcessedFiles")
+            .to("micrometer:REST_Inbd_pixaddupdate")
             .to("kafka:{{idaas.pixaddupdate.topic.name}}?brokers={{idaas.kafka.brokers}}");
             //perform needed Actions to persist PIX Documents to a XDS Repository/DataStore
     // Provide Required Docs
@@ -166,7 +166,7 @@ public class CmsInteroperabilityRouteBuilder extends RouteBuilder {
             .routeId(ProvideReqDocs_INBD_ROUTE_ID)
             .to("log:" + ProvideReqDocs_INBD_ROUTE_ID + "?showAll=true")
             .log("${exchangeId} fully processed")
-            .to("micrometer:counter:numProcessedFiles")
+            .to("micrometer:REST_Inbd_providerreqdocs")
             .to("kafka:{{idaas.providerreqdocs.topic.name}}?brokers={{idaas.kafka.brokers}}");
             //perform needed Actions to persist Provide Docs to a XDS Repository/DataStore
 
@@ -190,7 +190,7 @@ public class CmsInteroperabilityRouteBuilder extends RouteBuilder {
             .routeId(PRIORAUTH_INBD_ROUTE_ID)
             .to("log:" + PRIORAUTH_INBD_ROUTE_ID + "?showAll=true")
             .log("${exchangeId} fully processed")
-            .to("micrometer:counter:numProcessedFiles")
+            .to("micrometer:REST_Inbd_priorauth")
             .to("kafka:{{idaas.priorauth.topic.name}}?brokers={{idaas.kafka.brokers}}")
             //perform needed Actions to built the correct response
             //respond back with content
@@ -218,7 +218,7 @@ public class CmsInteroperabilityRouteBuilder extends RouteBuilder {
             .routeId(DEQM_INBD_ROUTE_ID)
             .to("log:" + DEQM_INBD_ROUTE_ID + "?showAll=true")
             .log("${exchangeId} fully processed")
-            .to("micrometer:counter:numProcessedFiles")
+            .to("micrometer:REST_Inbd_deqm")
             .to("kafka:{{idaas.deqm.topic.name}}?brokers={{idaas.kafka.brokers}}")
             //perform needed Actions to built the correct response
             //respond back with content
@@ -246,7 +246,7 @@ public class CmsInteroperabilityRouteBuilder extends RouteBuilder {
             .routeId(CEDX_INBD_ROUTE_ID)
             .to("log:" + CEDX_INBD_ROUTE_ID + "?showAll=true")
             .log("${exchangeId} fully processed")
-            .to("micrometer:counter:numProcessedFiles")
+            .to("REST_Inbd_cdex")
             .to("kafka:{{idaas.cedx.topic.name}}?brokers={{idaas.kafka.brokers}}")
             //perform needed Actions to built the correct response
             //respond back with content
@@ -274,7 +274,7 @@ public class CmsInteroperabilityRouteBuilder extends RouteBuilder {
             .routeId(PDEX_INBD_ROUTE_ID)
             .to("log:" + PDEX_INBD_ROUTE_ID + "?showAll=true")
             .log("${exchangeId} fully processed")
-            .to("micrometer:counter:numProcessedFiles")
+            .to("micrometer:REST_Inbd_pdex")
             .to("kafka:{{idaas.pdex.topic.name}}?brokers={{idaas.kafka.brokers}}")
             //perform needed Actions to built the correct response
             //respond back with content
@@ -304,7 +304,7 @@ public class CmsInteroperabilityRouteBuilder extends RouteBuilder {
             .routeId(EPDX_INBD_ROUTE_ID)
             .to("log:" + EPDX_INBD_ROUTE_ID + "?showAll=true")
             .log("${exchangeId} fully processed")
-            .to("micrometer:counter:numProcessedFiles")
+            .to("micrometer:REST_Inbd_pdex")
             .to("kafka:{{idaas.epdx.topic.name}}?brokers={{idaas.kafka.brokers}}")
             //perform needed Actions to built the correct response
             //respond back with content

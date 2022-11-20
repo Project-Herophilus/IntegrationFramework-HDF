@@ -16,8 +16,13 @@ metadata:
           'f:idaas.terminology.topic.name': {}
           'f:idaas.heda.topic.name': {}
           'f:idaas.publiccloud.topic.name': {}
-          'f:idaas.fhir.topic.name': {}
-          'f:idaas.iot.integration.topic.name': {}
+          'f:idaas.xds.topic.name': {}
+          'f:idaas.pixaddupdate.topic.name': {}
+          'f:idaas.providerreqdocs.topic.name': {}
+          'f:idaas.priorauth.topic.name': {}
+          'f:idaas.deqm.topic.name': {}
+          'f:idaas.pdex.topic.name': {}
+          'f:idaas.epdx.topic.name': {}
           'f:idaas.process.PublicCloud': {}
           'f:idaas.process.Terminologies': {}
           'f:idaas.process.Sdoh': {}
@@ -32,13 +37,19 @@ data:
   idaas.datatier.topic.name: datatier
   idaas.deidentification.topic.name: deidentification
   idaas.heda.topic.name: hedainbound
+  idaas.iot.integration.topic: iot
   idaas.kafka.brokers: localhost:9092
   idaas.publiccloud.topic.name: cloud
   idaas.sdoh.topic.name: sdoh
   idaas.terminology.topic.name: terminologies
   # Module Topics
-  idaas.iot.integration.topic: iot
-  idaas.fhir.topic.name: fhir
+  idaas.xds.topic.name: xdsb_inbd
+  idaas.pixaddupdate.topic.name: pixaddupdate_inbd
+  idaas.providerreqdocs.topic.name: providerreqdocs_inbd
+  idaas.priorauth.topic.name: priorauth_inbd
+  idaas.deqm.topic.name: deqm_inbd
+  idaas.pdex.topic.name: pdex_inbd
+  idaas.epdx.topic.name: epdx_inbd
   # Processes
   idaas.process.PublicCloud: true
   idaas.process.Terminologies: true
@@ -51,7 +62,3 @@ data:
   idaas.api.deidentification: http://localhost:8001/api/deidentification
   idaas.api.empi: http://localhost:8001/api/empi
   idaas.api.cloud: urlendpoint
-  # Custom Project Attributes
-  idaas.fhirServerURI: localhost:8888/fhir/
-  idaas.process.FHIR: true
-  idaas.process.FHIRBundles: false
