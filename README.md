@@ -84,11 +84,11 @@ Below is a generic visual of how this looks (the visual below is specific to iDa
 
 ![iDaaS Platform - Visuals - iDaaS Data Flow - Detailed](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/images/iDaaS-Platform/iDaaS-Mgmt-UI.png)
 
-Every asset has its own defined specific port, we have done this to ensure multiple solutions can be run simultaneously.
+For more specific details around the management and administrative capabilities you can go [here](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/AdministeringPlatform.md).
 
 ## Administrative Interface(s) Specifics
 For all the URL links we have made them localhost based, simply change them to the server the solution is running on.
-
+Every asset has its own defined specific port, we have done this to ensure multiple solutions can be run simultaneously.
 
 | iDaaS Connect Asset | Port | Admin URL                                        | JMX URL                                                                                   |                                                                                   
 |-------------------|------|--------------------------------------------------|-------------------------------------------------------------------------------------------| 
@@ -102,7 +102,6 @@ For all the URL links we have made them localhost based, simply change them to t
 | NCPDP | 9987 | http://localhost:9987/actuator/hawtio/index.html | http://localhost:9987/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
 | CMS-Interoperability | 9988 | http://localhost:9988/actuator/hawtio/index.html | http://localhost:9988/actuator/jolokia/read/org.apache.camel:context=*,type=routes,name=* |  
 
-For more specific details you can go [here](https://github.com/Project-Herophilus/Project-Herophilus-Assets/blob/main/AdministeringPlatform.md).
 
 # Platform General Pre-Requisites
 
