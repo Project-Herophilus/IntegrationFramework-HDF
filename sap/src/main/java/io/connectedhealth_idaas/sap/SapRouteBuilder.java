@@ -90,7 +90,7 @@ public class SapRouteBuilder extends RouteBuilder {
             .routeId(TERMINOLOGY_ROUTE_ID)
             .to("log:" + TERMINOLOGY_ROUTE_ID + "?showAll=true")
             //.log("${exchangeId} fully processed")
-            .to("micrometer:counter:terminologyTransactions")
+            .to("micrometer:counter:terminology_Inbd_Transactions")
             .to("kafka:{{idaas.terminology.topic.name}}?brokers={{idaas.kafka.brokers}}")
             .endChoice();
 
@@ -100,7 +100,7 @@ public class SapRouteBuilder extends RouteBuilder {
             .routeId(DATATIER_ROUTE_ID)
             .to("log:" + DATATIER_ROUTE_ID + "?showAll=true")
             //.log("${exchangeId} fully processed")
-            .to("micrometer:counter:datatierTransactions")
+            .to("micrometer:counter:datatier_Inbd_Transactions")
             .to("kafka:{{idaas.datatier.topic.name}}?brokers={{idaas.kafka.brokers}}")
             // to the deidentification API
             .endChoice();
@@ -111,7 +111,7 @@ public class SapRouteBuilder extends RouteBuilder {
             .routeId(DEIDENTIFICATION_ROUTE_ID)
             .to("log:" + DEIDENTIFICATION_ROUTE_ID + "?showAll=true")
             //.log("${exchangeId} fully processed")
-            .to("micrometer:counter:deidentificationTransactions")
+            .to("micrometer:counter:deidentification_Inbd_Transactions")
             .to("kafka:{{idaas.deidentification.topic.name}}?brokers={{idaas.kafka.brokers}}")
             // to the deidentification API
             .endChoice();
@@ -122,7 +122,7 @@ public class SapRouteBuilder extends RouteBuilder {
             .routeId(EMPI_ROUTE_ID)
             .to("log:" + EMPI_ROUTE_ID + "?showAll=true")
             //.log("${exchangeId} fully processed")
-            .to("micrometer:counter:deidentificationTransactions")
+            .to("micrometer:counter:empi_Inbd_Transactions")
             .to("kafka:{{idaas.deidentification.topic.name}}?brokers={{idaas.kafka.brokers}}")
             // to the empi API
             .endChoice();
@@ -133,7 +133,7 @@ public class SapRouteBuilder extends RouteBuilder {
             .routeId(HEDA_ROUTE_ID)
             .to("log:" + HEDA_ROUTE_ID + "?showAll=true")
             //.log("${exchangeId} fully processed")
-            .to("micrometer:counter:hedaTransactions")
+            .to("micrometer:counter:heda_Inbd_Transactions")
             .to("kafka:{{idaas.heda.topic.name}}?brokers={{idaas.kafka.brokers}}")
             .endChoice();
 
@@ -143,7 +143,7 @@ public class SapRouteBuilder extends RouteBuilder {
             .routeId(PUBLICCLOUD_ROUTE_ID)
             .to("log:" + PUBLICCLOUD_ROUTE_ID + "?showAll=true")
             //.log("${exchangeId} fully processed")
-            .to("micrometer:counter:publiccloudTransactions")
+            .to("micrometer:counter:publiccloud_Inbd_Transactions")
             .to("kafka:{{idaas.publiccloud.topic.name}}?brokers={{idaas.kafka.brokers}}")
             .endChoice();
 
@@ -153,7 +153,7 @@ public class SapRouteBuilder extends RouteBuilder {
             .routeId(SDOH_ROUTE_ID)
             .to("log:" + SDOH_ROUTE_ID + "?showAll=true")
             //.log("${exchangeId} fully processed")
-            .to("micrometer:counter:sdohTransactions")
+            .to("micrometer:counter:sdoh_Inbd_Transactions")
             .to("kafka:{{idaas.sdoh.topic.name}}?brokers={{idaas.kafka.brokers}}")
             .endChoice();
 
@@ -168,8 +168,8 @@ public class SapRouteBuilder extends RouteBuilder {
             .routeId(IDOCS_ROUTE_ID)
             .to("log:"+ IDOCS_ROUTE_ID + "?showAll=true")
             .log("${exchangeId} fully processed")
-            .to("micrometer:counter:idocsEventReceived")
-            .to("kafka:{{idaas.iot.integration.topic}}?brokers={{idaas.kafka.brokers}}")
+            .to("micrometer:counter: REST_idocs_Inbd")
+            .to("kafka:{{idaas.idocs.integration.topic}}?brokers={{idaas.kafka.brokers}}")
             .endRest();
 
 
