@@ -48,7 +48,7 @@ public class EdiRouteBuilder extends RouteBuilder {
     onException(Exception.class)
             .handled(true)
             .log(LoggingLevel.ERROR, "${exception}")
-            .to("micrometer:counter:edi_ExceptionHandled");
+            .to("micrometer:counter:edi_Exception");
 
     /*from("kafka:Topic278?brokers={{idaas.kafka.brokers}}&groupId=hl7-278&autoOffsetReset=earliest")
                 .log("Content received: ${body}")
@@ -69,7 +69,7 @@ public class EdiRouteBuilder extends RouteBuilder {
             .routeId(TERMINOLOGY_ROUTE_ID)
             .to("log:" + TERMINOLOGY_ROUTE_ID + "?showAll=true")
             //.log("${exchangeId} fully processed")
-            .to("micrometer:counter:terminology_Inbd_Transactions")
+            .to("micrometer:counter:Terminology_Inbd_Transactions")
             .to("kafka:{{idaas.terminology.topic.name}}?brokers={{idaas.kafka.brokers}}")
             .endChoice();
 
@@ -79,7 +79,7 @@ public class EdiRouteBuilder extends RouteBuilder {
             .routeId(DATATIER_ROUTE_ID)
             .to("log:" + DATATIER_ROUTE_ID + "?showAll=true")
             //.log("${exchangeId} fully processed")
-            .to("micrometer:counter:datatier_Inbd_Transactions")
+            .to("micrometer:counter:DataTier_Inbd_Transactions")
             .to("kafka:{{idaas.datatier.topic.name}}?brokers={{idaas.kafka.brokers}}")
             // to the deidentification API
             .endChoice();
@@ -90,7 +90,7 @@ public class EdiRouteBuilder extends RouteBuilder {
             .routeId(DEIDENTIFICATION_ROUTE_ID)
             .to("log:" + DEIDENTIFICATION_ROUTE_ID + "?showAll=true")
             //.log("${exchangeId} fully processed")
-            .to("micrometer:counter:deidentification_Inbd_Transactions")
+            .to("micrometer:counter:Deidentification_Inbd_Transactions")
             .to("kafka:{{idaas.deidentification.topic.name}}?brokers={{idaas.kafka.brokers}}")
             // to the deidentification API
             .endChoice();
@@ -101,7 +101,7 @@ public class EdiRouteBuilder extends RouteBuilder {
             .routeId(EMPI_ROUTE_ID)
             .to("log:" + EMPI_ROUTE_ID + "?showAll=true")
             //.log("${exchangeId} fully processed")
-            .to("micrometer:counter:empi_Inbd_Transactions")
+            .to("micrometer:counter:EMPI_Inbd_Transactions")
             .to("kafka:{{idaas.deidentification.topic.name}}?brokers={{idaas.kafka.brokers}}")
             // to the empi API
             .endChoice();
@@ -112,7 +112,7 @@ public class EdiRouteBuilder extends RouteBuilder {
             .routeId(HEDA_ROUTE_ID)
             .to("log:" + HEDA_ROUTE_ID + "?showAll=true")
             //.log("${exchangeId} fully processed")
-            .to("micrometer:counter:heda_Inbd_Transactions")
+            .to("micrometer:counter:HEDA_Inbd_Transactions")
             .to("kafka:{{idaas.heda.topic.name}}?brokers={{idaas.kafka.brokers}}")
             .endChoice();
 
@@ -122,7 +122,7 @@ public class EdiRouteBuilder extends RouteBuilder {
             .routeId(PUBLICCLOUD_ROUTE_ID)
             .to("log:" + PUBLICCLOUD_ROUTE_ID + "?showAll=true")
             //.log("${exchangeId} fully processed")
-            .to("micrometer:counter:publiccloud_Inbd_Transactions")
+            .to("micrometer:counter:PublicCloud_Inbd_Transactions")
             .to("kafka:{{idaas.publiccloud.topic.name}}?brokers={{idaas.kafka.brokers}}")
             .endChoice();
 
@@ -132,7 +132,7 @@ public class EdiRouteBuilder extends RouteBuilder {
             .routeId(SDOH_ROUTE_ID)
             .to("log:" + SDOH_ROUTE_ID + "?showAll=true")
             //.log("${exchangeId} fully processed")
-            .to("micrometer:counter:sdoh_Inbd_Transactions")
+            .to("micrometer:counter:SDOH_Inbd_Transactions")
             .to("kafka:{{idaas.sdoh.topic.name}}?brokers={{idaas.kafka.brokers}}")
             .endChoice();
 
@@ -146,7 +146,7 @@ public class EdiRouteBuilder extends RouteBuilder {
             .route()
             .to("log:" + EDI270_INBD_ROUTE_ID + "?showAll=true")
             .log("${exchangeId} fully processed")
-            .to("micrometer:counter:edi270_Rest_Inbd_ProcessedEvents")
+            .to("micrometer:counter:REST_edi270_Inbd_ProcessedEvents")
             .to("kafka:{{idaas.edi270.topic.name}}?brokers={{idaas.kafka.brokers}}")
             //perform needed checks
             //respond with a 271
@@ -174,7 +174,7 @@ public class EdiRouteBuilder extends RouteBuilder {
             .route()
             .to("log:" + EDI276_INBD_ROUTE_ID + "?showAll=true")
             .log("${exchangeId} fully processed")
-            .to("micrometer:counter:edi276_Rest_Inbd_ProcessedEvents")
+            .to("micrometer:counter:REST_edi276_Inbd_ProcessedEvents")
             .to("kafka:{{idaas.edi276.topic.name}}?brokers={{idaas.kafka.brokers}}")
             //perform needed checks
             //respond with a 277
@@ -202,7 +202,7 @@ public class EdiRouteBuilder extends RouteBuilder {
             .route()
             .to("log:" + EDI278_INBD_ROUTE_ID + "?showAll=true")
             .log("${exchangeId} fully processed")
-            .to("micrometer:counter:edi278_Rest_Inbd_ProcessedEvents")
+            .to("micrometer:counter:REST_edi278_Inbd_ProcessedEvents")
             .to("kafka:{{idaas.edi278.topic.name}}?brokers={{idaas.kafka.brokers}}")
             //perform needed checks
             //respond with a 277
@@ -229,7 +229,7 @@ public class EdiRouteBuilder extends RouteBuilder {
             .route()
             .to("log:" + EDI834_INBD_ROUTE_ID + "?showAll=true")
             .log("${exchangeId} fully processed")
-            .to("micrometer:counter:edi834_Rest_Inbd_ProcessedEvents")
+            .to("micrometer:counter:REST_edi834_Inbd_ProcessedEvents")
             .to("kafka:{{idaas.edi834.topic.name}}?brokers={{idaas.kafka.brokers}}")
             //perform needed checks
             .multicast().parallelProcessing()
@@ -255,7 +255,7 @@ public class EdiRouteBuilder extends RouteBuilder {
             .route()
             .to("log:" + EDI835_INBD_ROUTE_ID + "?showAll=true")
             .log("${exchangeId} fully processed")
-            .to("micrometer:counter:edi835_Rest_Inbd_ProcessedEvents")
+            .to("micrometer:counter:REST_edi835_Inbd_ProcessedEvents")
             .to("kafka:{{idaas.edi835.topic.name}}?brokers={{idaas.kafka.brokers}}")
             .multicast().parallelProcessing()
             // Process Terminologies
@@ -280,7 +280,7 @@ public class EdiRouteBuilder extends RouteBuilder {
             .route()
             .to("log:" + EDI837_INBD_ROUTE_ID + "?showAll=true")
             .log("${exchangeId} fully processed")
-            .to("micrometer:counter:edi837_Rest_Inbd_ProcessedEvents")
+            .to("micrometer:counter:REST_edi837_Inbd_ProcessedEvents")
             .to("kafka:{{idaas.edi837.topic.name}}?brokers={{idaas.kafka.brokers}}")
             //perform needed checks
             .multicast().parallelProcessing()
