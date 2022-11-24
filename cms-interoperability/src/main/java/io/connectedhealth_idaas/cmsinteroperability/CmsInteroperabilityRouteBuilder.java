@@ -149,7 +149,7 @@ public class CmsInteroperabilityRouteBuilder extends RouteBuilder {
             .routeId(XDS_INBD_ROUTE_ID)
             .to("log:" + XDS_INBD_ROUTE_ID + "?showAll=true")
             .log("${exchangeId} fully processed")
-            .to("micrometer:counter:REST_xdsrequest_Inbd_")
+            .to("micrometer:counter:REST_xdsrequest_Inbd_ProcessedEvent")
             .to("kafka:{{idaas.xds.topic.name}}?brokers={{idaas.kafka.brokers}}");
             //perform needed XDS Lookup
             //respond with a XDS Response
@@ -158,7 +158,7 @@ public class CmsInteroperabilityRouteBuilder extends RouteBuilder {
             .routeId(PIXAddUpdate_INBD_ROUTE_ID)
             .to("log:" + PIXAddUpdate_INBD_ROUTE_ID + "?showAll=true")
             .log("${exchangeId} fully processed")
-            .to("micrometer:REST_pixaddupdate_Inbd")
+            .to("micrometer:REST_pixaddupdate_Inbd_ProcessedEvent")
             .to("kafka:{{idaas.pixaddupdate.topic.name}}?brokers={{idaas.kafka.brokers}}");
             //perform needed Actions to persist PIX Documents to a XDS Repository/DataStore
     // Provide Required Docs
@@ -166,7 +166,7 @@ public class CmsInteroperabilityRouteBuilder extends RouteBuilder {
             .routeId(ProvideReqDocs_INBD_ROUTE_ID)
             .to("log:" + ProvideReqDocs_INBD_ROUTE_ID + "?showAll=true")
             .log("${exchangeId} fully processed")
-            .to("micrometer:REST_providerreqdocs_Inbd_")
+            .to("micrometer:REST_providerreqdocs_Inbd_ProcessedEvent")
             .to("kafka:{{idaas.providerreqdocs.topic.name}}?brokers={{idaas.kafka.brokers}}");
             //perform needed Actions to persist Provide Docs to a XDS Repository/DataStore
 
@@ -190,7 +190,7 @@ public class CmsInteroperabilityRouteBuilder extends RouteBuilder {
             .routeId(PRIORAUTH_INBD_ROUTE_ID)
             .to("log:" + PRIORAUTH_INBD_ROUTE_ID + "?showAll=true")
             .log("${exchangeId} fully processed")
-            .to("micrometer:REST_priorauth")
+            .to("micrometer:REST_priorauth_Inbd_ProcessedEvent")
             .to("kafka:{{idaas.priorauth.topic.name}}?brokers={{idaas.kafka.brokers}}")
             //perform needed Actions to built the correct response
             //respond back with content
@@ -218,7 +218,7 @@ public class CmsInteroperabilityRouteBuilder extends RouteBuilder {
             .routeId(DEQM_INBD_ROUTE_ID)
             .to("log:" + DEQM_INBD_ROUTE_ID + "?showAll=true")
             .log("${exchangeId} fully processed")
-            .to("micrometer:REST_deqm")
+            .to("micrometer:REST_deqm_Inbd_ProcessedEvent")
             .to("kafka:{{idaas.deqm.topic.name}}?brokers={{idaas.kafka.brokers}}")
             //perform needed Actions to built the correct response
             //respond back with content
@@ -246,7 +246,7 @@ public class CmsInteroperabilityRouteBuilder extends RouteBuilder {
             .routeId(CEDX_INBD_ROUTE_ID)
             .to("log:" + CEDX_INBD_ROUTE_ID + "?showAll=true")
             .log("${exchangeId} fully processed")
-            .to("REST_cdex")
+            .to("REST_cdex_Inbd_ProcessedEvent")
             .to("kafka:{{idaas.cedx.topic.name}}?brokers={{idaas.kafka.brokers}}")
             //perform needed Actions to built the correct response
             //respond back with content
@@ -274,7 +274,7 @@ public class CmsInteroperabilityRouteBuilder extends RouteBuilder {
             .routeId(PDEX_INBD_ROUTE_ID)
             .to("log:" + PDEX_INBD_ROUTE_ID + "?showAll=true")
             .log("${exchangeId} fully processed")
-            .to("micrometer:REST_pdex")
+            .to("micrometer:REST_pdex_Inbd_ProcessedEvent")
             .to("kafka:{{idaas.pdex.topic.name}}?brokers={{idaas.kafka.brokers}}")
             //perform needed Actions to built the correct response
             //respond back with content
@@ -304,7 +304,7 @@ public class CmsInteroperabilityRouteBuilder extends RouteBuilder {
             .routeId(EPDX_INBD_ROUTE_ID)
             .to("log:" + EPDX_INBD_ROUTE_ID + "?showAll=true")
             .log("${exchangeId} fully processed")
-            .to("micrometer:REST_pdex")
+            .to("micrometer:REST_pdex_Inbd_ProcessedEvent")
             .to("kafka:{{idaas.epdx.topic.name}}?brokers={{idaas.kafka.brokers}}")
             //perform needed Actions to built the correct response
             //respond back with content
