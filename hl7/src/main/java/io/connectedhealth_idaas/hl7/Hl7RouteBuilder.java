@@ -43,7 +43,7 @@ public class Hl7RouteBuilder extends RouteBuilder {
     public static final String PROCESSACKS_ROUTE_ID = "processacks-direct";
     public static final String SDOH_ROUTE_ID = "sdoh-direct";
     public static final String CCDAPOST_ROUTE_ID = "ccda-post-inbound";
-    public static final String HL7POST_ROUTE_ID = "ccda-post-inbound";
+    public static final String HL7POST_ROUTE_ID = "hl7-post-inbound";
     public static final String HL7ADT_ROUTE_ID = "hl7-adt-inbound";
 
     @Override
