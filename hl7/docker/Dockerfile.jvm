@@ -1,3 +1,3 @@
-FROM image-registry.openshift-image-registry.svc:5000/openshift/fuse7-java-openshift:1.10
+FROM image-registry.openshift-image-registry.svc:5000/openshift/fuse7-java11-openshift:1.10
 
 COPY target/*.jar /deployments/app.jar
