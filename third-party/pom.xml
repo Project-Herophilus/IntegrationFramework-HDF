@@ -92,7 +92,7 @@
             <artifactId>jakarta.xml.bind-api</artifactId>
         </dependency>
         <!-- Third Party JDBC Drivers -->
-        <!-- <dependency>
+         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
         </dependency>
@@ -103,17 +103,17 @@
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
-        </dependency> -->
+        </dependency>
         <dependency>
             <groupId>com.ibm.db2</groupId>
             <artifactId>jcc</artifactId>
         </dependency>
-
         <!-- iDaaS Event Builder -->
         <dependency>
             <groupId>io.connectedhealth-idaas</groupId>
             <artifactId>idaas-eventbuilder</artifactId>
         </dependency>
+        <!-- Logs -->
         <dependency>
             <groupId>ch.qos.logback.contrib</groupId>
             <artifactId>logback-jackson</artifactId>
@@ -122,6 +122,16 @@
             <groupId>ch.qos.logback.contrib</groupId>
             <artifactId>logback-json-classic</artifactId>
         </dependency>
+        <!-- UI -->
+        <!-- Only comment in if testing locally -->
+        <!--   <dependency>
+             <groupId>io.hawt</groupId>
+             <artifactId>hawtio-springboot</artifactId>
+         </dependency>
+         <dependency>
+             <groupId>org.jolokia</groupId>
+             <artifactId>jolokia-jvm</artifactId>
+         </dependency>-->
 
     </dependencies>
 

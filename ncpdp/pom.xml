@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>fhir</artifactId>
 
+    <artifactId>ncpdp</artifactId>
     <parent>
       <groupId>io.connectedhealth_idaas</groupId>
       <artifactId>idaas-connect</artifactId>
-      <version>3.9.8-SNAPSHOT</version>
+      <version>3.9.7-SNAPSHOT</version>
       <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -17,7 +17,7 @@
             <artifactId>camel-core</artifactId>
         </dependency>
         <!-- Spring Boot -->
-      <!--  <dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
         </dependency>
@@ -32,53 +32,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>spring-boot-starter-tomcat</artifactId>
-                    <groupId>org.springframework.boot</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-undertow</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-spring-boot-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-micrometer-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-micrometer</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-registry-prometheus</artifactId>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
         </dependency>
-        <!--Logs -->
+        <!-- Logs -->
         <dependency>
             <groupId>ch.qos.logback.contrib</groupId>
             <artifactId>logback-jackson</artifactId>
@@ -88,15 +47,10 @@
             <artifactId>logback-json-classic</artifactId>
         </dependency>
         <!-- Apache Camel Components -->
-        <!-- FHIR -->
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-fhir-starter</artifactId>
-        </dependency>
         <!-- HTTP -->
         <dependency>
             <groupId>org.apache.camel</groupId>
-            <artifactId>camel-http</artifactId>
+            <artifactId>camel-netty</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
@@ -107,15 +61,29 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-kafka</artifactId>
         </dependency>
-        <!-- Parsing to/from JSON -->
+        <!-- Http -->
         <dependency>
             <groupId>org.apache.camel</groupId>
-            <artifactId>camel-jackson-starter</artifactId>
+            <artifactId>camel-http</artifactId>
         </dependency>
-        <!-- iDaaS Event Builder -->
+        <!-- Parsers -->
         <dependency>
-            <groupId>io.connectedhealth-idaas</groupId>
-            <artifactId>idaas-eventbuilder</artifactId>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-bindy</artifactId>
+            <version>3.16.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-jackson</artifactId>
+        </dependency>
+        <!-- Logs -->
+        <dependency>
+            <groupId>ch.qos.logback.contrib</groupId>
+            <artifactId>logback-jackson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback.contrib</groupId>
+            <artifactId>logback-json-classic</artifactId>
         </dependency>
     </dependencies>
 
@@ -134,18 +102,14 @@
             <plugin>
                 <groupId>org.jboss.redhat-fuse</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <mainClass>io.connectedhealth_idaas.fhir.Application</mainClass>
-                </configuration>
-
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-               </executions>
-              </plugin>
+        				<executions>
+        					<execution>
+        						<goals>
+        							<goal>repackage</goal>
+        						</goals>
+        					</execution>
+        				</executions>
+            </plugin>
         </plugins>
     </build>
 </project>

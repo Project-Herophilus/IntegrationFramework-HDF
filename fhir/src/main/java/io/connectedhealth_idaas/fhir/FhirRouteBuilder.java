@@ -52,7 +52,7 @@
          onException(Exception.class)
                  .handled(true)
                  .log(LoggingLevel.ERROR,"${exception}")
-                 .to("micrometer:counter:fhir_exception_handled");
+                 .to("micrometer:counter:fhir_Exception");
 
          /*
           *   Direct Internal Processing
@@ -64,8 +64,8 @@
                      //.convertBodyTo(String.class).to("kafka:{{idaas.terminologyTopic}}?brokers={{idaas.kafkaBrokers}}");
                      .routeId(TERMINOLOGY_ROUTE_ID)
                      .to("log:" + TERMINOLOGY_ROUTE_ID + "?showAll=true")
-                     //.log("${exchangeId} fully processed")
-                     .to("micrometer:counter:terminologyTransactions")
+                     .log("${exchangeId} fully processed")
+                     .to("micrometer:counter:Terminology_Inbd_ProcessedEvent")
                      .to("kafka:{{idaas.terminology.topic.name}}?brokers={{idaas.kafka.brokers}}")
                  .endChoice();
 
@@ -75,7 +75,7 @@
                      .routeId(DATATIER_ROUTE_ID)
                      .to("log:" + DATATIER_ROUTE_ID + "?showAll=true")
                      //.log("${exchangeId} fully processed")
-                     .to("micrometer:counter:datatierTransactions")
+                     .to("micrometer:counter:DataTier_Inbd_ProcessedEvent")
                      .to("kafka:{{idaas.datatier.topic.name}}?brokers={{idaas.kafka.brokers}}")
                      // to the deidentification API
                  .endChoice();
@@ -86,7 +86,7 @@
                      .routeId(DEIDENTIFICATION_ROUTE_ID)
                      .to("log:" + DEIDENTIFICATION_ROUTE_ID + "?showAll=true")
                      //.log("${exchangeId} fully processed")
-                     .to("micrometer:counter:deidentificationTransactions")
+                     .to("micrometer:counter:Deidentification_Inbd_ProcessedEvent")
                      .to("kafka:{{idaas.deidentification.topic.name}}?brokers={{idaas.kafka.brokers}}")
                      // to the deidentification API
                  .endChoice();
@@ -97,7 +97,7 @@
                      .routeId(EMPI_ROUTE_ID)
                      .to("log:" + EMPI_ROUTE_ID + "?showAll=true")
                      //.log("${exchangeId} fully processed")
-                     .to("micrometer:counter:deidentificationTransactions")
+                     .to("micrometer:counter:EMPI_Inbd_ProcessedEvent")
                      .to("kafka:{{idaas.deidentification.topic.name}}?brokers={{idaas.kafka.brokers}}")
                  // to the empi API
                  .endChoice();
@@ -108,7 +108,7 @@
                      .routeId(HEDA_ROUTE_ID)
                      .to("log:" + HEDA_ROUTE_ID + "?showAll=true")
                      //.log("${exchangeId} fully processed")
-                     .to("micrometer:counter:hedaTransactions")
+                     .to("micrometer:counter:HEDA_Inbd_ProcessedEvent")
                      .to("kafka:{{idaas.heda.topic.name}}?brokers={{idaas.kafka.brokers}}")
                  .endChoice();
 
@@ -118,7 +118,7 @@
                      .routeId(PUBLICCLOUD_ROUTE_ID)
                      .to("log:" + PUBLICCLOUD_ROUTE_ID + "?showAll=true")
                      //.log("${exchangeId} fully processed")
-                     .to("micrometer:counter:publiccloudTransactions")
+                     .to("micrometer:counter:PublicCloud_Inbd_ProcessedEvent")
                      .to("kafka:{{idaas.publiccloud.topic.name}}?brokers={{idaas.kafka.brokers}}")
                  .endChoice();
 
@@ -128,7 +128,7 @@
                      .routeId(SDOH_ROUTE_ID)
                      .to("log:" + SDOH_ROUTE_ID + "?showAll=true")
                      //.log("${exchangeId} fully processed")
-                     .to("micrometer:counter:sdohTransactions")
+                     .to("micrometer:counter:SDOH_Inbd_ProcessedEvent")
                      .to("kafka:{{idaas.sdoh.topic.name}}?brokers={{idaas.kafka.brokers}}")
                  .endChoice();
 
@@ -137,15 +137,29 @@
                  .routeId("FHIRMessaging")
                  // we should test before even trying this because if there is no
                  // ${headers.resourcename} in the message it will never work
-                 .choice().when(simple("{{idaas.processToFHIR}}"))
-                 .setHeader(Exchange.CONTENT_TYPE,constant("application/json"))
-                 //.toD(getFHIRServerUri("AllergyIntolerance"))
-                 //.toD(String.valueOf(simple("${headers.resourcename}")))
-                 .setBody(simple("${body}"))
-                 .toD(("${idaas.fhirserverURI}"+"${headers.resourcename}?bridgeEndpoint=true"))
-                 // Process Response
-                 .convertBodyTo(String.class)
-         .endChoice();
+                 // https://camel.apache.org/components/3.18.x/languages/simple-language.html
+                 .choice().when(simple("${headers.resourcename} != null"))
+                 .to("micrometer:counter:fhirProcessing_Inbd_ProcessedEvent")
+                 // testing for null
+                 //simple("${header.baz} == null")
+                 // testing for not null
+                 //simple("${header.baz} != null")
+                    .log("${headers.resourcename} fully processed")
+                    // Persist to Topic
+                    .to("micrometer:counter:fhir_Topic_ProcessedEvent")
+                    .to("kafka:{{idaas.fhir.topic.name}}?brokers={{idaas.kafka.brokers}}")
+                    // Specific Topic for Each FHIR Resource
+                    .toD(String.valueOf("kafka:{{idaas.fhir.topic.name}}"+"_"+"${headers.resourcename}?brokers={{idaas.kafka.brokers}}"))
+                    .choice().when(simple("{{idaas.process.FHIR}}"))
+                        .to("micrometer:counter:REST_fhirServer_Inbd_ProcessedEvent")
+                        .setHeader(Exchange.CONTENT_TYPE,constant("application/json"))
+                        .setBody(simple("${body}"))
+                         //.toD(getFHIRServerUri("AllergyIntolerance"))
+                         //.toD(String.valueOf(simple("${headers.resourcename}")))
+                         // .toD(("${idaas.fhirserverURI}"+"${headers.resourcename}?bridgeEndpoint=true"))
+                         // Process Response
+                    .endChoice()
+                .endChoice();
 
          restConfiguration()
                  .component("servlet");
@@ -158,6 +172,7 @@
                  .produces(MediaType.TEXT_PLAIN_VALUE)
                  .route()
                  .routeId("FHIRProcessing")
+                 .to("micrometer:counter:REST_fhirendpoint_Inbd_ProcessedEvent")
                  .multicast().parallelProcessing()
                     // FHIR Regular Processing
                     .to("direct:fhirmessaging")

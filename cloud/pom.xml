@@ -37,6 +37,15 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-configuration-processor</artifactId>
     </dependency>
+    <!-- Logs -->
+    <dependency>
+      <groupId>ch.qos.logback.contrib</groupId>
+      <artifactId>logback-jackson</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback.contrib</groupId>
+      <artifactId>logback-json-classic</artifactId>
+    </dependency>
     <!-- Apache Camel Components -->
     <!-- Camel -->
     <dependency>
@@ -67,12 +76,11 @@
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-jackson-starter</artifactId>
     </dependency>
-
+    <!-- AWS -->
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-aws</artifactId>
     </dependency>
-    <!-- AMQ Using Native Camel as it should provide native connectivity-->
     <!-- amqP and JMS -->
     <dependency>
       <groupId>org.apache.camel</groupId>
@@ -98,6 +106,15 @@
     <dependency>
       <groupId>io.connectedhealth-idaas</groupId>
       <artifactId>idaas-eventbuilder</artifactId>
+    </dependency>
+    <!-- Logs -->
+    <dependency>
+      <groupId>ch.qos.logback.contrib</groupId>
+      <artifactId>logback-jackson</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback.contrib</groupId>
+      <artifactId>logback-json-classic</artifactId>
     </dependency>
     <dependency>
       <groupId>com.amazonaws</groupId>

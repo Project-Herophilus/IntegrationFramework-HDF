@@ -1,7 +1,8 @@
-package io.connectedhealth_idaas.thirdparty;
+package io.connectedhealth_idaas.cloud;
 
 import io.connectedhealth_idaas.eventbuilder.converters.ccda.CdaConversionService;
 import org.apache.camel.Exchange;
+import org.apache.camel.ExchangePattern;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.servlet.CamelHttpTransportServlet;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Component
-public class ThirdPartyRouteBuilder extends RouteBuilder {
+public class CloudRouteBuilder extends RouteBuilder {
     @Bean
     ServletRegistrationBean camelServlet() {
         // use a @Bean to register the Camel servlet which we need to do
@@ -25,8 +26,8 @@ public class ThirdPartyRouteBuilder extends RouteBuilder {
         mapping.addUrlMappings("/idaas/*");
         return mapping;
     }
-    //@Autowired
-    //private S3Bean s3Bean;
+    @Autowired
+    private S3Bean s3Bean;
 
     // Public Variables
     public static final String TERMINOLOGY_ROUTE_ID = "terminologies-direct";
@@ -41,13 +42,19 @@ public class ThirdPartyRouteBuilder extends RouteBuilder {
     public static final String HL7_ROUTE_ID = "hl7-third-party";
     public static final String DQAAS_ROUTE_ID = "dqass-third-party";
 
+    public static final String AWSS3_ROUTE_ID = "aws-s3-inbound";
+    public static final String AWSMQQUEUE_ROUTE_ID = "aws-mqqueue-inbound";
+    public static final String AWSMQTOPIC_ROUTE_ID = "aws-mqtopic-inbound";
+    public static final String AWSSQS_ROUTE_ID = "aws-sqs-inbound";
+    public static final String AWSKINESIS_ROUTE_ID = "aws-kinesis-inbound";
+
     @Override
     public void configure() throws Exception {
 
         onException(Exception.class)
                 .handled(true)
                 .log(LoggingLevel.ERROR,"${exception}")
-                .to("micrometer:counter:thirdparty_Exception")
+                .to("micrometer:counter:Cloud_Exception")
                 .setHeader(Exchange.CONTENT_TYPE, constant(MediaType.TEXT_PLAIN_VALUE))
                 .setHeader(Exchange.HTTP_RESPONSE_CODE, constant(500))
                 .setBody(simple("${exception}"));
@@ -83,7 +90,7 @@ public class ThirdPartyRouteBuilder extends RouteBuilder {
                 .routeId(DEIDENTIFICATION_ROUTE_ID)
                 .to("log:" + DEIDENTIFICATION_ROUTE_ID + "?showAll=true")
                 //.log("${exchangeId} fully processed")
-                .to("micrometer:counter: Deidentification_Inbd_ProcessedEvent")
+                .to("micrometer:counter:Deidentification_Inbd_ProcessedEvent")
                 .to("kafka:{{idaas.deidentification.topic.name}}?brokers={{idaas.kafka.brokers}}")
                 // to the deidentification API
                 .endChoice();
@@ -94,7 +101,7 @@ public class ThirdPartyRouteBuilder extends RouteBuilder {
                 .routeId(EMPI_ROUTE_ID)
                 .to("log:" + EMPI_ROUTE_ID + "?showAll=true")
                 //.log("${exchangeId} fully processed")
-                .to("micrometer:counter: EMPI_Inbd_ProcessedEvent")
+                .to("micrometer:counter:EMPI_Inbd_ProcessedEvent")
                 .to("kafka:{{idaas.deidentification.topic.name}}?brokers={{idaas.kafka.brokers}}")
                 // to the empi API
                 .endChoice();
@@ -105,7 +112,7 @@ public class ThirdPartyRouteBuilder extends RouteBuilder {
                 .routeId(HEDA_ROUTE_ID)
                 .to("log:" + HEDA_ROUTE_ID + "?showAll=true")
                 //.log("${exchangeId} fully processed")
-                .to("micrometer:counter: HEDA_Inbd_ProcessedEvent")
+                .to("micrometer:counter:HEDA_Inbd_ProcessedEvent")
                 .to("kafka:{{idaas.heda.topic.name}}?brokers={{idaas.kafka.brokers}}")
                 .endChoice();
 
@@ -130,46 +137,43 @@ public class ThirdPartyRouteBuilder extends RouteBuilder {
                 .endChoice();
 
         // Routes
-        // Comment back in after you properly populate the sftp parameters within the application properties
-        /*
-        from("sftp:{{sftp.host}}:{{sftp.port}}/{{sftp.hl7.dir}}?username={{sftp.username}}&password={{sftp.password}}&move={{sftp.dir.processed}}&moveFailed={{sftp.dir.error}}&include=^.*\\.(dat|hl7)$")
-                .routeId(HL7_ROUTE_ID)
-                .to("log:"+ HL7_ROUTE_ID + "?showAll=true")
-                .to("kafka:SftpFiles?brokers={{idaas.kafka.brokers}}")
-                .log("${exchangeId} fully processed")
-                .to("micrometer:counter:num_processed_files");
-
-        from("sftp:{{sftp.host}}:{{sftp.port}}/{{sftp.dqaas.dir}}?username={{sftp.username}}&password={{sftp.password}}&move={{sftp.dir.processed}}&moveFailed={{sftp.dir.error}}")
-                .routeId(DQAAS_ROUTE_ID)
-                .to("log:"+ DQAAS_ROUTE_ID + "?showAll=true")
-                .to("sftp:{{sftp.host}}:{{sftp.port}}/{{sftp.ct.dir}}?username={{sftp.username}}&password={{sftp.password}}")
-                .log("${exchangeId} fully processed")
-                .to("micrometer:counter:num_processed_files");
-        /*
         restConfiguration()
                 .component("servlet");
 
-        rest("/iot")
-            .post()
+        rest("/s3-file")
+                .get("/list-objects")
                 .produces(MediaType.TEXT_PLAIN_VALUE)
                 .route()
-                .routeId(IOT_ROUTE_ID)
-                .to("log:"+ IOT_ROUTE_ID + "?showAll=true")
-                .log("${exchangeId} fully processed")
-                .to("micrometer:counter:iotEventReceived")
-                .to("kafka:{{idaas.iot.integration.topic}}?brokers={{idaas.kafka.brokers}}")
-        .endRest();
-
-        rest("/file")
-            .get()
-                .produces(MediaType.TEXT_PLAIN_VALUE)
-                .route()
-                .routeId("FileList")
+                .routeId("s3-ObjectList")
                 .log("Request Received.")
                 .to("aws-s3://public-idaas?accessKey={{aws.access.key}}&secretKey={{aws.secret.key}}&region={{aws.region}}&operation=listObjects")
                 .bean(s3Bean,"list")
-            .endRest()
-            .get("/{file-name}")
+                .endRest()
+                .get("/list-buckets")
+                .produces(MediaType.TEXT_PLAIN_VALUE)
+                .route()
+                .routeId("s3-ListBuckets")
+                .log("Request Received.")
+                .to("aws-s3://public-idaas?accessKey={{aws.access.key}}&secretKey={{aws.secret.key}}&region={{aws.region}}&operation=listBuckets")
+                .bean(s3Bean,"list")
+                .endRest()
+                .get("/delete-buckets")
+                .produces(MediaType.TEXT_PLAIN_VALUE)
+                .route()
+                .routeId("s3-DeleteBuckets")
+                .log("Request Received.")
+                .to("aws-s3://public-idaas?accessKey={{aws.access.key}}&secretKey={{aws.secret.key}}&region={{aws.region}}&operation=deleteBucket")
+                .bean(s3Bean,"list")
+                .endRest()
+                .get("/delete-objects")
+                .produces(MediaType.TEXT_PLAIN_VALUE)
+                .route()
+                .routeId("s3-DeleteObjects")
+                .log("Request Received.")
+                .to("aws-s3://public-idaas?accessKey={{aws.access.key}}&secretKey={{aws.secret.key}}&region={{aws.region}}&operation=deleteObject")
+                .bean(s3Bean,"list")
+                .endRest()
+                .get("/{objectname}")
                 .produces(MediaType.APPLICATION_XML_VALUE)
                 .route()
                 .routeId("ExtractFile")
@@ -177,61 +181,31 @@ public class ThirdPartyRouteBuilder extends RouteBuilder {
                 .bean(s3Bean,"extract")
                 .to("kafka:S3Files?brokers={{idaas.kafka.brokers}}")
                 .setHeader(Exchange.CONTENT_TYPE, constant(MediaType.APPLICATION_XML_VALUE))
-                .to("micrometer:counter:num_files_request")
-        .end();
+                .to("micrometer:counter:num_objects_request")
+                .end();
 
-        rest("/db2")
-            .get("/membership")
-                .produces(MediaType.APPLICATION_JSON_VALUE)
-                .route()
-                .routeId("MembershipGetAll")
-                .log("Request for MEMBERSHIP received.")
-                .to("sql:select * from MEMBERSHIP")
-                .setHeader(Exchange.CONTENT_TYPE, constant(MediaType.APPLICATION_JSON_VALUE))
-                .marshal().json(JsonLibrary.Jackson)
-                .to("micrometer:counter:processed_membership_queries")
-            .endRest()
-            .get("/claims")
-                .produces(MediaType.APPLICATION_JSON_VALUE)
-                .route()
-                .routeId("ClaimsGetAll")
-                .log("Request for CLAIMS received.")
-                .to("sql:select * from CLAIMS")
-                .setHeader(Exchange.CONTENT_TYPE, constant(MediaType.APPLICATION_JSON_VALUE))
-                .marshal().json(JsonLibrary.Jackson)
-                .to("micrometer:counter:processed_claims_queries")
-        .end();
-
+        //https://camel.apache.org/components/3.18.x/aws2-sqs-component.html
         /*
-         *  Mandatory Reporting
-         *  Sample: Topic to Postgres
-         *
-         */
-
+        // Need to add correct aws2-sqs reference into master pom.xml with version and then in specific pom just reference
+        /
+        from("aws2-sqs://camel-1?accessKey={{aws.access.key}}&secretKey={{aws.secret.key}}&region={{aws.region}}")
+        .choice().when(simple("{{idaas.aws.SQS}}"))
+                // SQS Specifics
+                .routeId(AWSSQS_ROUTE_ID)
+                .to("log:" + AWSSQS_ROUTE_ID + "?showAll=true")
+                .log("${exchangeId} fully processed")
+                .to("micrometer:counter:awsSQSProcess_Inbd_ProcessedEvent")
+                .to("kafka:{{idaas.awssqs.topic.name}}?brokers={{idaas.kafka.brokers}}")
+       .endChoice();
         /*
-        from(getKafkaTopicUri("MandatoryReporting")).unmarshal(new JacksonDataFormat(ReportingOutput.class))
-        .process(new Processor() {
-        @Override
-        public void process(Exchange exchange) throws Exception {
-            final ReportingOutput payload = exchange.getIn().getBody(ReportingOutput.class);
-           }
-        })
-        .routeId("DBProcessing-MandatoryReporting")
-        .log(LoggingLevel.INFO, log, "Transaction Message: [${body}]")
-        .to("sql:insert into etl_mandatoryreporting (organizationid,patientaccountnumber, patientlastname, patientfirstname, zipcode, roombed, " +
-            "age, gender, admissiondate) values( :#${body.organizationId},:#${body.patientAccount},:#${body.patientLastName}," +
-            ":#${body.patientFirstName},:#${body.zipCode},:#${body.roomBed},:#${body.age},:#${body.gender},:#${body.admissionDate})");
-
-        from("file:{{covid.reporting.directory}}/")
-                .routeId("FileProcessing-CovidReporting")
-                .choice()
-                .when(simple("${file:ext} == 'csv'"))
-                //.when(simple("${file:ext} == ${covid.reporting.extension}"))
-                .split(body().tokenize("\n")).streaming()
-                .unmarshal(new BindyCsvDataFormat(CovidJohnHopkinsUSDailyData.class))
-                //.marshal(new JacksonDataFormat(CovidJohnHopkinsUSDailyData.class))
-                .to("kafka:CovidDailyData?brokers={{idaas.kafka.brokers}}")
-                .endChoice();
-         */
+        /*
+        // Kinesis
+        // .choice().when(simple("{{idaas.aws.Kinesis}}"))
+        // Kinesis
+            .setHeader(KinesisConstants.PARTITION_KEY,simple("Shard1"))
+                //.to(getAWSConfig("aws2-kinesis://testhealthcarekinesisstream?"))
+                .from("aws2-kinesis://testhealthcarekinesisstream?exchangePattern=OutOnly")
+                .endChoice()
+        */
     }
 }
