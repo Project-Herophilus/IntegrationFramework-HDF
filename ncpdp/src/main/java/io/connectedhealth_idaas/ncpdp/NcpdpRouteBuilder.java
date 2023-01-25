@@ -154,5 +154,12 @@ public class NcpdpRouteBuilder extends RouteBuilder {
               .to("direct:sdoh")
     .endRest();
 
+    // Need to add the following NCPDP events as REST endpoints
+    /*
+     *  CANRES, CANRX, CENSUS, CHGRES, GETMSG, NEWRX, PASCHG,
+     *  REFREQ, REFRES, RESUPP, RXCHG, RXHREQ, RXHRES, STATUS
+     *  VERIFY
+     */
+
   }
 }
