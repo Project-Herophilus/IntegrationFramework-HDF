@@ -4,16 +4,16 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.connectedhealth_idaas</groupId>
-    <artifactId>idaas-connect</artifactId>
+    <groupId>io.connectedhealth_intgrtnhdf</groupId>
+    <artifactId>integrationframework-hdf</artifactId>
     <version>3.9.8-SNAPSHOT</version>
     <name>iDAAS Connect</name>
     <packaging>pom</packaging>
 
     <scm>
-        <connection>scm:git:https://github.com/Project-Herophilus/iDaaS-Connect.git</connection>
-        <url>https://github.com/Project-Herophilus/iDaaS-Connect</url>
-        <developerConnection>scm:git:https://github.com/Project-Herophilus/iDaaS-Connect</developerConnection>
+        <connection>scm:git:https://github.com/Project-Herophilus/IntegrationFramework-HDF.git</connection>
+        <url>https://github.com/Project-Herophilus/IntegrationFramework-HDF</url>
+        <developerConnection>scm:git:https://github.com/Project-Herophilus/IntegrationFramework-HDF</developerConnection>
         <tag>v1.0.0</tag>
     </scm>
 

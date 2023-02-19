@@ -5,8 +5,8 @@
     <version>0.0.1</version>
 
     <parent>
-      <groupId>io.connectedhealth_idaas</groupId>
-      <artifactId>idaas-connect</artifactId>
+      <groupId>io.connectedhealth_intgrtnhdf</groupId>
+      <artifactId>integrationframework-hdf</artifactId>
       <version>3.9.8-SNAPSHOT</version>
       <relativePath>../pom.xml</relativePath>
     </parent>
