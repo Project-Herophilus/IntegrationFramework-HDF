@@ -29,7 +29,7 @@
 <!--        <module>cms-blue-button</module>-->
 <!--        <module>cms-interoperability</module>-->
 <!--        <module>cloud</module>-->
-<!--        <module>edi</module>-->
+        <module>edi</module>
         <module>fhir</module>
         <module>hl7</module>
 <!--        <module>sap</module>-->

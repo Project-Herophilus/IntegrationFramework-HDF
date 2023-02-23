@@ -2,7 +2,7 @@
  * Copyright 2019 Project-Herophilus
 
  */
-package io.connectedhealth_idaas.edi;
+package io.integration_framework.hdf.edi;
 
 //import javax.jms.ConnectionFactory;
 //import org.springframework.jms.connection.JmsTransactionManager;
