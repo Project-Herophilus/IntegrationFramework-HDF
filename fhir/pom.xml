@@ -2,11 +2,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>fhir</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
 
     <parent>
-      <groupId>io.connectedhealth_intgrtnhdf</groupId>
-      <artifactId>integrationframework-hdf</artifactId>
+    <groupId>io.integration_framework</groupId>
+      <artifactId>hdf</artifactId>
       <version>3.9.8-SNAPSHOT</version>
       <relativePath>../pom.xml</relativePath>
     </parent>
@@ -109,7 +109,7 @@
                 <groupId>org.jboss.redhat-fuse</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>io.connectedhealth_idaas.fhir.Application</mainClass>
+                    <mainClass>io.integration_framework.hdf.fhir.Application</mainClass>
                 </configuration>
 
                 <executions>

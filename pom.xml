@@ -30,7 +30,7 @@
 <!--        <module>cms-interoperability</module>-->
 <!--        <module>cloud</module>-->
 <!--        <module>edi</module>-->
-<!--        <module>fhir</module>-->
+        <module>fhir</module>
         <module>hl7</module>
 <!--        <module>sap</module>-->
 <!--        <module>third-party</module>-->
