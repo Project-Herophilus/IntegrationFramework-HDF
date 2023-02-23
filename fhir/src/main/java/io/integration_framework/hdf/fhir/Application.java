@@ -14,11 +14,10 @@
  * permissions and limitations under the License.
  *
  */
-package io.connectedhealth_idaas.edi;
+package io.integration_framework.hdf.fhir;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @SpringBootApplication
 public class Application {

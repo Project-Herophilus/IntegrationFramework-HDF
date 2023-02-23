@@ -1,16 +1,13 @@
-package io.connectedhealth_idaas.hl7;
+package io.integration_framework.hdf.hl7;
 
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 import org.apache.camel.component.servlet.CamelHttpTransportServlet;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.http.MediaType;
-// HL7 to FHIR Conversion
 import io.github.linuxforhealth.hl7.HL7ToFHIRConverter;
-// CCDA to FHIR Conversion
 import io.connectedhealth_idaas.eventbuilder.converters.ccda.CdaConversionService;
 
 @Component

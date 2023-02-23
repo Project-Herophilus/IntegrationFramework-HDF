@@ -14,7 +14,7 @@
   * permissions and limitations under the License.
   *
   */
- package io.connectedhealth_idaas.fhir;
+ package io.integration_framework.hdf.fhir;
 
  import io.connectedhealth_idaas.eventbuilder.converters.ccda.CdaConversionService;
  import org.apache.camel.Exchange;
