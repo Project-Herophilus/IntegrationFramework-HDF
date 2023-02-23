@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  *
  */
-package io.connectedhealth_idaas.hl7;
+package io.integration_framework.hdf.hl7;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

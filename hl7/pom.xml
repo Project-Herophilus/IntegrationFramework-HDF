@@ -1,19 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <artifactId>hl7</artifactId>
     <version>0.0.1</version>
 
     <parent>
-        <groupId>io.connectedhealth_intgrtnhdf</groupId>
-        <artifactId>integrationframework-hdf</artifactId>
+        <groupId>io.integration_framework</groupId>
+        <artifactId>hdf</artifactId>
         <version>3.9.8-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <dependencies>
-        <!-- Spring Boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -73,7 +71,6 @@
             <artifactId>micrometer-registry-prometheus</artifactId>
             <scope>runtime</scope>
         </dependency>
-        <!-- HL7 HAPI Specific Camel Support Libraries-->
         <dependency>
             <groupId>ca.uhn.hapi</groupId>
             <artifactId>hapi-structures-v21</artifactId>
@@ -114,30 +111,18 @@
             <artifactId>hapi-structures-v26</artifactId>
             <optional>true</optional>
         </dependency>
-        <!-- HAPI FHIR for CCDA Conversions -->
-        <!-- https://mvnrepository.com/artifact/ca.uhn.hapi.fhir/hapi-fhir-structures-r4 -->
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-structures-r4</artifactId>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/ca.uhn.hapi.fhir/hapi-fhir-base -->
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-base</artifactId>
         </dependency>
-        <!-- iDaaS Event Builder Repo or Local-->
-        <dependency>
-            <groupId>io.connectedhealth-idaas</groupId>
-            <artifactId>idaas-eventbuilder</artifactId>
-        </dependency>
-        <!--Linux for Health Dependencies-->
-        <!-- https://mvnrepository.com/artifact/io.github.linuxforhealth/hl7v2-fhir-converter -->
-        <!-- JDK 1.8 based implementations-->
         <dependency>
             <groupId>io.github.linuxforhealth</groupId>
             <artifactId>hl7v2-fhir-converter</artifactId>
         </dependency>
-        <!-- JDK 11 based implementations <dependency> <groupId>io.github.linuxforhealth</groupId> <artifactId>hl7v2-fhir-converter</artifactId> <version>1.0.18</version> </dependency>-->
         <!--Logs -->
         <dependency>
             <groupId>ch.qos.logback.contrib</groupId>
@@ -147,14 +132,10 @@
             <groupId>ch.qos.logback.contrib</groupId>
             <artifactId>logback-json-classic</artifactId>
         </dependency>
-        <!-- Mgmt UI -->
+        <!-- Internal Libraries -->
         <dependency>
-            <groupId>io.hawt</groupId>
-            <artifactId>hawtio-springboot</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jolokia</groupId>
-            <artifactId>jolokia-jvm</artifactId>
+            <groupId>io.connectedhealth-idaas</groupId>
+            <artifactId>idaas-eventbuilder</artifactId>
         </dependency>
     </dependencies>
 
@@ -177,7 +158,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <executable>true</executable>
-                    <mainClass>io.connectedhealth_idaas.hl7.Application</mainClass>
+                    <mainClass>io.integration_framework.hdf.hl7.Application</mainClass>
                 </configuration>
                 <executions>
                     <execution>

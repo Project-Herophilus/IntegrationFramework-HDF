@@ -1,4 +1,4 @@
-package io.connectedhealth_idaas.hl7;
+package io.integration_framework.hdf.hl7;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;

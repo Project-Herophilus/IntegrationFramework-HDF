@@ -1,4 +1,4 @@
-package io.connectedhealth_idaas.hl7;
+package io.integration_framework.hdf.hl7;
 
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.builder.RouteBuilder;
