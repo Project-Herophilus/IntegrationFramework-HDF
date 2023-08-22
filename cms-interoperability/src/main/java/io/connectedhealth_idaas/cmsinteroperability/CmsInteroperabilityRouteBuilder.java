@@ -44,7 +44,8 @@ public class CmsInteroperabilityRouteBuilder extends RouteBuilder {
   public static final String HEDA_ROUTE_ID = "heda-direct";
   public static final String PUBLICCLOUD_ROUTE_ID = "publiccloud-direct";
   public static final String SDOH_ROUTE_ID = "sdoh-direct";
-
+  public static final String CCDA_INBD_ROUTE_ID = "ccda-direct";
+  
   @Override
   public void configure() throws Exception {
 
@@ -169,7 +170,15 @@ public class CmsInteroperabilityRouteBuilder extends RouteBuilder {
             .to("micrometer:REST_providerreqdocs_Inbd_ProcessedEvent")
             .to("kafka:{{idaas.providerreqdocs.topic.name}}?brokers={{idaas.kafka.brokers}}");
             //perform needed Actions to persist Provide Docs to a XDS Repository/DataStore
-
+   // Provide Required Docs
+    from("rest:post:/idaas/ccda")
+            .routeId(CCDA_INBD_ROUTE_ID)
+            .to("log:" + ProvideReqDocs_INBD_ROUTE_ID + "?showAll=true")
+            .log("${exchangeId} fully processed")
+            .to("micrometer:REST_providerreqdocs_Inbd_ProcessedEvent")
+            .to("kafka:{{idaas.providerreqdocs.topic.name}}?brokers={{idaas.kafka.brokers}}");
+            //perform needed Actions to persist Provide Docs to a XDS Repository/DataStore    
+    
     // Davinci
     // General
     // https://confluence.hl7.org/display/DVP/Da+Vinci+Implementation+Guide+Dashboard
@@ -294,18 +303,33 @@ public class CmsInteroperabilityRouteBuilder extends RouteBuilder {
               //SDOH
               .to("direct:sdoh")
     .endRest();
-    // Pt Data Exchange
-    // Complete later
-    // Performing Lab Reporting
-    rest("/pdex")
+   
+    // Prior Auth
+   /* rest("/priorAuthorization")
+            .post()
+            .consumes(MediaType.TEXT_PLAIN_VALUE)
+            .produces(MediaType.TEXT_PLAIN_VALUE)
+            .route()
+            .routeId("priorAuthorization")
+            .convertBodyTo(String.class)
+            .log("Content received: ${body}")
+            .to("kafka:Topic278?brokers={{idaas.kafka.brokers}}")
+            .setHeader(Exchange.CONTENT_TYPE, constant(MediaType.TEXT_PLAIN_VALUE))
+            .setBody(constant("file published"))
+            .to("micrometer:counter:files_278_received");*/
+  }
+}
+
+ // General CCDA
+    rest("/ccda")
             .post()
             .produces(MediaType.TEXT_PLAIN_VALUE)
             .route()
-            .routeId(EPDX_INBD_ROUTE_ID)
-            .to("log:" + EPDX_INBD_ROUTE_ID + "?showAll=true")
+            .routeId(CCDA_ROUTE_ID)
+            .to("log:" + CCDA_INBD_ROUTE_ID + "?showAll=true")
             .log("${exchangeId} fully processed")
-            .to("micrometer:REST_pdex_Inbd_ProcessedEvent")
-            .to("kafka:{{idaas.epdx.topic.name}}?brokers={{idaas.kafka.brokers}}")
+            .to("micrometer:REST_ccda_Inbd_ProcessedEvent")
+            .to("kafka:{{idaas.ccda.topic.name}}?brokers={{idaas.kafka.brokers}}")
             //perform needed Actions to built the correct response
             //respond back with content
             .multicast().parallelProcessing()
@@ -323,19 +347,4 @@ public class CmsInteroperabilityRouteBuilder extends RouteBuilder {
               .to("direct:publiccloud")
               //SDOH
               .to("direct:sdoh")
-   .endRest();
-    // Prior Auth
-   /* rest("/priorAuthorization")
-            .post()
-            .consumes(MediaType.TEXT_PLAIN_VALUE)
-            .produces(MediaType.TEXT_PLAIN_VALUE)
-            .route()
-            .routeId("priorAuthorization")
-            .convertBodyTo(String.class)
-            .log("Content received: ${body}")
-            .to("kafka:Topic278?brokers={{idaas.kafka.brokers}}")
-            .setHeader(Exchange.CONTENT_TYPE, constant(MediaType.TEXT_PLAIN_VALUE))
-            .setBody(constant("file published"))
-            .to("micrometer:counter:files_278_received");*/
-  }
-}
+   .endRest();    
